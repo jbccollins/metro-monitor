@@ -1,9 +1,9 @@
-import { combineReducers } from "redux";
-import { connectRouter } from "connected-react-router";
-import { displayMode, data } from "./controls";
-export default history =>
-  combineReducers({
-    displayMode,
-    data,
-    router: connectRouter(history)
-  });
+import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
+import { trains, stations } from './metro';
+
+export default combineReducers({
+  trains,
+  stations,
+  router: routerReducer,
+});

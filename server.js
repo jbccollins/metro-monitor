@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import express from 'express';
 import path from 'path';
 import dotenv from 'dotenv';
@@ -17,3 +18,15 @@ app.use(express.static(__dirname + '/client/build'));
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });
+=======
+const express = require('express');
+
+const app = express();
+const port = process.env.PORT || 5001;
+
+app.get('/api/hello', (req, res) => {
+  res.send({ express: 'Hello From Express' });
+});
+
+app.listen(port, () => console.log(`Listening on port ${port}`));
+>>>>>>> Initial Commit for Metro Mania

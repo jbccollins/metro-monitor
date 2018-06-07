@@ -1,0 +1,7 @@
+No-collision labels (Maybe only show line end labels at high zoom)
+Consolidate line geojson (server side)
+Move api calls to server
+Put API_KEY in env
+Put trains and stations on consolidated geojson using closest point heuristic
+Animate train icons
+light vs dark theme

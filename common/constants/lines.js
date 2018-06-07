@@ -15,6 +15,17 @@ const LINE_NAMES = [
     ORANGE_RUSH
 ];
 
+const LINE_MERGES = [
+    {
+        // Fort Totten through L'Enfant Plaza
+        dominant: GREEN,
+        subordinate: YELLOW,
+        dominantRange: [529, 922],
+        subordinateRange: [1020, 1163],
+        reverseDominant: true
+    }
+];
+
 const LINE_PROPERTIES = {
     [RED]: {
         color: 'red',
@@ -43,12 +54,12 @@ const LINE_PROPERTIES = {
     },
     [SILVER]: {
         color: 'silver',
-        code: 'SL',
+        code: 'SV',
         trackLineID: 'Silver',
     },
     [ORANGE_RUSH]: {
         color: 'purple',
-        code: 'OR',
+        code: 'OR+',
         trackLineID: 'IDK MAN',
     }
 };
@@ -63,4 +74,5 @@ export {
     ORANGE_RUSH,
     LINE_NAMES,
     LINE_PROPERTIES,
+    LINE_MERGES,
 };

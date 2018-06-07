@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import { trains, stations } from './metro';
+import { trains, railStations, railLines } from './metro';
 
 export default combineReducers({
   trains,
-  stations,
-  router: routerReducer,
+  railStations,
+  railLines,
+  router: routerReducer
 });

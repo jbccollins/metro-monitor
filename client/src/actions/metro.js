@@ -1,82 +1,131 @@
-//api.wmata.com/TrainPositions/TrainPositions?contentType=json&api_key=a9803a4a2e0d43b586ed3c0893cbede5
-// https://dcmetrohero.com/apis
-// https://hub.arcgis.com/datasets/ead6291a71874bf8ba332d135036fbda_58?geometry=-77.326%2C38.873%2C-76.832%2C38.966
 import fetch from 'isomorphic-fetch';
-require('es6-promise').polyfill();
+import {
+  API_RAIL_STATIONS,
+  API_RAIL_LINES,
+  TRAIN_POSITIONS
+} from 'common/constants/urls';
 
-export const TRAINS_REQUESTED = 'metro/TRAINS_REQUESTED';
-export const TRAINS_RECEIVED = 'metro/TRAINS_RECEIVED';
-export const TRAINS_ERRORED = 'metro/TRAINS_ERRORED';
-export const STATIONS_REQUESTED = 'metro/STATIONS_REQUESTED';
-export const STATIONS_RECEIVED = 'metro/STATIONS_RECEIVED';
-export const STATIONS_ERRORED = 'metro/STATIONS_ERRORED';
+const TRAINS_REQUESTED = 'metro/TRAINS_REQUESTED';
+const TRAINS_RECEIVED = 'metro/TRAINS_RECEIVED';
+const TRAINS_ERRORED = 'metro/TRAINS_ERRORED';
+const RAIL_STATIONS_REQUESTED = 'metro/RAIL_STATIONS_REQUESTED';
+const RAIL_STATIONS_RECEIVED = 'metro/RAIL_STATIONS_RECEIVED';
+const RAIL_STATIONS_ERRORED = 'metro/RAIL_STATIONS_ERRORED';
+const RAIL_LINES_REQUESTED = 'metro/RAIL_LINES_REQUESTED';
+const RAIL_LINES_RECEIVED = 'metro/RAIL_LINES_RECEIVED';
+const RAIL_LINES_ERRORED = 'metro/RAIL_LINES_ERRORED';
 
-// const TRAIN_POSITIONS = "http://api.wmata.com/TrainPositions/TrainPositions?contentType=json&api_key=a9803a4a2e0d43b586ed3c0893cbede5";
-const TRAIN_POSITIONS = "https://gisservices.wmata.com/gisservices/rest/services/Public/TRAIN_LOC_WMS_PUB/MapServer/0/query?f=json&where=TRACKLINE%3C%3E%20%27Non-revenue%27%20and%20TRACKLINE%20is%20not%20null&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outFields=*";
-const STATION_LOCATIONS = "http://api.wmata.com/Rail.svc/json/jStations?api_key=a9803a4a2e0d43b586ed3c0893cbede5"
-
-export const requestStations = () => ({
-  type: STATIONS_REQUESTED
+const requestRailLines = () => ({
+  type: RAIL_LINES_REQUESTED
 });
 
-export const receiveStations = stations => ({
-  type: STATIONS_RECEIVED,
-  payload: { stations }
+const receiveRailLines = railLines => ({
+  type: RAIL_LINES_RECEIVED,
+  payload: { railLines }
 });
 
-export const handleStationsError = error => ({
-  type: STATIONS_ERRORED,
+const handleRailLinesError = error => ({
+  type: RAIL_LINES_ERRORED,
   payload: { error }
 });
 
-export function fetchStations() {
+const fetchRailLines = () => {
   return dispatch => {
-    dispatch(requestStations());
-    return fetch(STATION_LOCATIONS, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-        },
-      })
+    dispatch(requestRailLines());
+    return fetch(API_RAIL_LINES, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+      }
+    })
       .then(res => res.json())
-      .then(json => {
-        console.log(json['Stations']);
-        dispatch(receiveStations(json['Stations']));
-        return json['Stations'];
-      })
-      .catch(error => dispatch(handleStationsError(error)));
+      .then(railLines => {
+        dispatch(receiveRailLines(railLines));
+      });
   };
-}
+};
 
-export const requestTrains = () => ({
+const requestRailStations = () => ({
+  type: RAIL_STATIONS_REQUESTED
+});
+
+const receiveRailStations = railStations => ({
+  type: RAIL_STATIONS_RECEIVED,
+  payload: { railStations }
+});
+
+const handleRailStationsError = error => ({
+  type: RAIL_STATIONS_ERRORED,
+  payload: { error }
+});
+
+const fetchRailStations = () => {
+  return dispatch => {
+    dispatch(requestRailStations());
+    return fetch(API_RAIL_STATIONS, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(railStations => {
+        dispatch(receiveRailStations(railStations));
+      });
+  };
+};
+
+const requestTrains = () => ({
   type: TRAINS_REQUESTED
 });
 
-export const receiveTrains = trains => ({
+const receiveTrains = trains => ({
   type: TRAINS_RECEIVED,
   payload: { trains }
 });
 
-export const handleTrainsError = error => ({
+const handleTrainsError = error => ({
   type: TRAINS_ERRORED,
   payload: { error }
 });
 
-export function fetchTrains() {
+const fetchTrains = () => {
   return dispatch => {
     dispatch(requestTrains());
     return fetch(TRAIN_POSITIONS, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          //'Content-Type': 'application/json'
-        },
-      })
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+        //'Content-Type': 'application/json'
+      }
+    })
       .then(res => res.json())
       .then(json => {
         dispatch(receiveTrains(json));
-        return json;
-      })
-      .catch(error => dispatch(handleTrainsError(error)));
+      });
   };
-}
+};
+
+export {
+  TRAINS_REQUESTED,
+  TRAINS_RECEIVED,
+  TRAINS_ERRORED,
+  RAIL_STATIONS_REQUESTED,
+  RAIL_STATIONS_RECEIVED,
+  RAIL_STATIONS_ERRORED,
+  RAIL_LINES_REQUESTED,
+  RAIL_LINES_RECEIVED,
+  RAIL_LINES_ERRORED,
+  requestRailStations,
+  receiveRailStations,
+  handleRailStationsError,
+  requestTrains,
+  receiveTrains,
+  handleTrainsError,
+  requestRailLines,
+  receiveRailLines,
+  handleRailLinesError,
+  fetchTrains,
+  fetchRailStations,
+  fetchRailLines
+};

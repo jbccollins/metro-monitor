@@ -1,72 +1,109 @@
 import {
-    TRAINS_REQUESTED,
-    TRAINS_RECEIVED,
-    TRAINS_ERRORED,
-    STATIONS_REQUESTED,
-    STATIONS_RECEIVED,
-    STATIONS_ERRORED,
+  TRAINS_REQUESTED,
+  TRAINS_RECEIVED,
+  TRAINS_ERRORED,
+  RAIL_STATIONS_REQUESTED,
+  RAIL_STATIONS_RECEIVED,
+  RAIL_STATIONS_ERRORED,
+  RAIL_LINES_REQUESTED,
+  RAIL_LINES_RECEIVED,
+  RAIL_LINES_ERRORED
 } from '../actions/metro';
 
 const initialTrainState = {
   trains: null,
   fetching: false,
-  error: false,
+  error: false
 };
 
-const initialStationState = {
-  stations: null,
+const initialRailStationState = {
+  railStations: null,
   fetching: false,
-  error: false,
+  error: false
 };
 
-export const stations = (state = initialStationState, action) => {
+const initialRailLineState = {
+  railLines: null,
+  fetching: false,
+  error: false
+};
+
+const railStations = (state = initialRailStationState, action) => {
   switch (action.type) {
-    case STATIONS_REQUESTED:
+    case RAIL_STATIONS_REQUESTED:
       return {
         ...state,
-        fetching: true,
+        fetching: true
       };
-    case STATIONS_RECEIVED:
+    case RAIL_STATIONS_RECEIVED:
       return {
         ...state,
-        stations: action.payload.stations,
+        railStations: action.payload.railStations,
         fetching: false,
-        error: false,
+        error: false
       };
-    case STATIONS_ERRORED:
+    case RAIL_STATIONS_ERRORED:
       return {
         ...state,
-        stations: null,
+        railStations: null,
         fetching: false,
-        error: true,
+        error: true
       };
     default:
       return state;
   }
 };
 
-export const trains = (state = initialTrainState, action) => {
+const trains = (state = initialTrainState, action) => {
   switch (action.type) {
     case TRAINS_REQUESTED:
       return {
         ...state,
-        fetching: true,
+        fetching: true
       };
     case TRAINS_RECEIVED:
       return {
         ...state,
         trains: action.payload.trains,
         fetching: false,
-        error: false,
+        error: false
       };
     case TRAINS_ERRORED:
       return {
         ...state,
         trains: null,
         fetching: false,
-        error: true,
+        error: true
       };
     default:
       return state;
   }
 };
+
+const railLines = (state = initialRailLineState, action) => {
+  switch (action.type) {
+    case RAIL_LINES_REQUESTED:
+      return {
+        ...state,
+        fetching: true
+      };
+    case RAIL_LINES_RECEIVED:
+      return {
+        ...state,
+        railLines: action.payload.railLines,
+        fetching: false,
+        error: false
+      };
+    case RAIL_LINES_ERRORED:
+      return {
+        ...state,
+        railLines: null,
+        fetching: false,
+        error: true
+      };
+    default:
+      return state;
+  }
+};
+
+export { railLines, railStations, trains };

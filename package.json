@@ -3,13 +3,19 @@
   "version": "1.0.0",
   "scripts": {
     "client": "cd client && yarn start",
-    "server": "nodemon server.js",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+    "server": "NODE_ENV=development nodemon starter.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
+    "clean": "rm -rf node_modules rm -f package-lock.json && cd client && rm -rf node_modules && rm -f package-lock.json",
+    "rebuild": "yarn clean && yarn && cd client && yarn"
   },
   "dependencies": {
+    "@turf/turf": "^5.1.6",
     "express": "^4.16.2"
   },
   "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react-app": "^3.1.1",
+    "babel-register": "^6.26.0",
     "concurrently": "^3.5.0"
   }
 }

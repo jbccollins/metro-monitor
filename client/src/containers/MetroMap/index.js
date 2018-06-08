@@ -9,15 +9,23 @@ import {
   LayerGroup
 } from 'react-leaflet';
 import CustomLayerGroup from 'components/CustomLayerGroup';
-import { LINE_PROPERTIES } from 'common/constants/lines';
+import {
+  LINE_PROPERTIES,
+  LINE_NAMES,
+  RED,
+  ORANGE,
+  BLUE,
+  GREEN,
+  YELLOW,
+  SILVER
+} from 'common/constants/lines';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { fetchTrains, fetchRailStations, fetchRailLines } from 'actions/metro';
-import proj4 from 'proj4';
 import 'leaflet/dist/leaflet.css';
 import './style.scss';
-import flatten from 'lodash.flatten';
 import { mergeLines } from 'utilities/metro';
+import TrainMarker from 'components/TrainMarker';
 
 // https://github.com/PaulLeCam/react-leaflet/issues/255#issuecomment-269750542
 // The webpack bundling step can't find these images
@@ -27,11 +35,6 @@ L.Icon.Default.mergeOptions({
   iconUrl: require('leaflet/dist/images/marker-icon.png'),
   shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
-
-// WMATA train coordinates are in Longitude/Latitude, WGS84. Fuck that noise tho.
-const WMATA_PROJ = new proj4.Proj('EPSG:4326');
-// Default Leaflet coordinates are in meters, global spherical mercators projection.
-const LEAFLET_PROJ = new proj4.Proj('EPSG:3785');
 
 const generateLineSegment = (coords, NAME, multiIndex) => {
   let nextC = null;
@@ -99,7 +102,7 @@ class MetroMap extends React.Component {
     fetchRailLines();
     fetchRailStations();
     fetchTrains();
-    setInterval(fetchTrains, 4000);
+    setInterval(fetchTrains, 5000);
   }
 
   orderLayers(nextState) {
@@ -109,16 +112,17 @@ class MetroMap extends React.Component {
       trainsLayerGroup
     } = nextState;
     this.setState({ layersNeedOrdering: false });
-    // Ugh I give up. Fucking layers won't respect my ordering without at timeout.
+    //Ugh I give up. Fucking layers won't respect my ordering without at timeout.
     setTimeout(() => {
-      [railLinesLayerGroup, railStationsLayerGroup, trainsLayerGroup].forEach(
-        layerGroup => {
-          layerGroup.getLayers().forEach(layer => {
-            layer.bringToFront();
-          });
-        }
-      );
-    }, 1000);
+      [
+        railLinesLayerGroup,
+        railStationsLayerGroup /*trainsLayerGroup*/
+      ].forEach(layerGroup => {
+        layerGroup.getLayers().forEach(layer => {
+          layer.bringToFront();
+        });
+      });
+    }, 2000);
   }
 
   handleMapLoad = () => {
@@ -139,7 +143,6 @@ class MetroMap extends React.Component {
 
   render() {
     const { trains, railStations, railLines } = this.props;
-    console.log(railStations);
     return (
       <div className="MetroMap">
         <Map
@@ -149,28 +152,68 @@ class MetroMap extends React.Component {
           <TileLayer
             className="MapboxTileLayer"
             crossOrigin
-            url="https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiamJjY29sbGlucyIsImEiOiJjamd3dXgyengwNmZnMndsbG9nYnM0Ynh6In0.oZwMIjuVePaRgp0ibE0pZg"
+            url="https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiamJjY29sbGlucyIsImEiOiJjamd3dXgyengwNmZnMndsbG9nYnM0Ynh6In0.oZwMIjuVePaRgp0ibE0pZg"
           />
-          <CustomLayerGroup onReady={this.handleRailLinesReady}>
+          {/* <CustomLayerGroup onReady={this.handleRailLinesReady}>
             {railLines &&
               railLines.features.map(f => {
                 const {
                   properties: { NAME },
                   geometry: { type, coordinates }
                 } = f;
-                let coords = coordinates;
-                return (
-                  <GeoJSON
-                    key={NAME}
-                    data={f}
-                    weight={NAME === 'yellow' ? 10 : 5}
-                    color={LINE_PROPERTIES[NAME]['color']}
-                    onEachFeature={(f, l) => {
-                      l.bindPopup(`${NAME}`);
-                    }}
-                  />
-                );
-              })}
+                return (generateLineSegment(coordinates, NAME));
+              })
+            }
+          </CustomLayerGroup> */}
+          <CustomLayerGroup onReady={this.handleRailLinesReady}>
+            {railLines &&
+              [3, 2, 1].map(p => {
+                const prioritizedSegments = [];
+                return [RED, ORANGE, BLUE, GREEN, YELLOW, SILVER].map(name => {
+                  const priorities = LINE_PROPERTIES[name]['priorities'].filter(
+                    ({ priority }) => priority === p
+                  );
+                  const railLine = railLines.features.find(
+                    ({ properties: { NAME } }) => name === NAME
+                  );
+                  return priorities.map(
+                    ({ priority, range, lineCap }, index) => (
+                      <GeoJSON
+                        key={`${name}-${priority}-${index}`}
+                        data={{
+                          type: 'Feature',
+                          geometry: {
+                            type: 'LineString',
+                            coordinates: railLine.geometry.coordinates.slice(
+                              range[0],
+                              range[1] + 2
+                            )
+                          }
+                        }}
+                        lineCap={lineCap}
+                        weight={priority * 4}
+                        color={LINE_PROPERTIES[name]['color']}
+                      />
+                    )
+                  );
+                });
+                // return false;
+              })
+            // railLines.features.map(f => {
+            //   const {properties: { NAME }} = f;
+            //   return (
+            //     <GeoJSON
+            //       key={NAME}
+            //       data={f}
+            //       weight={LINE_PROPERTIES[NAME]['weight']}
+            //       color={LINE_PROPERTIES[NAME]['color']}
+            //       onEachFeature={(f, l) => {
+            //         l.bindPopup(`${NAME}`);
+            //       }}
+            //     />
+            //   );
+            // })
+            }
           </CustomLayerGroup>
           <CustomLayerGroup onReady={this.handleRailStationsReady}>
             {railStations &&
@@ -180,11 +223,11 @@ class MetroMap extends React.Component {
                     <CircleMarker
                       onReady={this.handleRailStationsReady}
                       key={Code}
-                      radius={3}
+                      radius={4}
                       color={'black'}
                       opacity={1}
                       fillOpacity={1}
-                      style={{ zIndex: 1 }}
+                      fillColor="white"
                       center={[Lat, Lon]}>
                       <Popup>
                         <div>
@@ -198,36 +241,55 @@ class MetroMap extends React.Component {
                 }
               )}
           </CustomLayerGroup>
-          <CustomLayerGroup onReady={this.handleTrainsLayerReady}>
+          {/* <CustomLayerGroup onReady={this.handleTrainsLayerReady}>
             {trains &&
-              trains.features.map(t => {
-                const { geometry, attributes } = t;
-                const { TRACKLINE } = attributes;
-                const { x, y } = geometry;
-                const lineProperties = Object.values(LINE_PROPERTIES).find(
-                  ({ trackLineID }) => trackLineID === TRACKLINE
-                );
-                const transformedGeometry = proj4.transform(
-                  LEAFLET_PROJ,
-                  WMATA_PROJ,
-                  [x, y]
-                );
+              trains.map(t => {
+                const { geometry, properties } = t;
+                const { TRACKLINE, ITT } = properties;
+                const [Lat, Lon] = geometry['coordinates'];
+                const lineProperties = Object.values(LINE_PROPERTIES).find(({ trackLineID }) => trackLineID === TRACKLINE);
                 return (
                   <CircleMarker
                     onReady={this.handleTrainsLayerReady}
-                    key={attributes['ITT']}
-                    style={{ zIndex: 2 }}
+                    key={ITT}
                     radius={5}
                     color={lineProperties['color']}
                     opacity={1}
                     fillOpacity={1}
-                    center={[transformedGeometry.y, transformedGeometry.x]}>
+                    center={[Lat, Lon]}>
                     <Popup>
                       <div>
                         A pretty CSS3 popup. <br /> Easily customizable.
                       </div>
                     </Popup>
                   </CircleMarker>
+                );
+              })}
+          </CustomLayerGroup> */}
+          <CustomLayerGroup onReady={this.handleTrainsLayerReady}>
+            {trains &&
+              trains.map(t => {
+                const { geometry, properties } = t;
+                const { TRACKLINE, ITT } = properties;
+                const [Lat, Lon] = geometry['coordinates'];
+                const lineProperties = Object.values(LINE_PROPERTIES).find(
+                  ({ trackLineID }) => trackLineID === TRACKLINE
+                );
+                return (
+                  <TrainMarker
+                    key={ITT}
+                    radius={5}
+                    color={lineProperties['color']}
+                    rotationAngle={properties['rotationAngle']}
+                    opacity={1}
+                    fillOpacity={1}
+                    position={L.latLng([Lat, Lon])}>
+                    <Popup>
+                      <div>
+                        A pretty CSS3 popup. <br /> Easily customizable.
+                      </div>
+                    </Popup>
+                  </TrainMarker>
                 );
               })}
           </CustomLayerGroup>

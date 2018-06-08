@@ -2,7 +2,7 @@ import fetch from 'isomorphic-fetch';
 import {
   API_RAIL_STATIONS,
   API_RAIL_LINES,
-  TRAIN_POSITIONS
+  API_TRAIN_POSITIONS
 } from 'common/constants/urls';
 
 const TRAINS_REQUESTED = 'metro/TRAINS_REQUESTED';
@@ -41,6 +41,10 @@ const fetchRailLines = () => {
       .then(res => res.json())
       .then(railLines => {
         dispatch(receiveRailLines(railLines));
+      })
+      .catch(e => {
+        dispatch(handleRailLinesError(e));
+        console.warn(e);
       });
   };
 };
@@ -71,6 +75,10 @@ const fetchRailStations = () => {
       .then(res => res.json())
       .then(railStations => {
         dispatch(receiveRailStations(railStations));
+      })
+      .catch(e => {
+        dispatch(handleRailStationsError(e));
+        console.warn(e);
       });
   };
 };
@@ -92,7 +100,7 @@ const handleTrainsError = error => ({
 const fetchTrains = () => {
   return dispatch => {
     dispatch(requestTrains());
-    return fetch(TRAIN_POSITIONS, {
+    return fetch(API_TRAIN_POSITIONS, {
       method: 'GET',
       headers: {
         Accept: 'application/json'
@@ -102,6 +110,10 @@ const fetchTrains = () => {
       .then(res => res.json())
       .then(json => {
         dispatch(receiveTrains(json));
+      })
+      .catch(e => {
+        dispatch(handleTrainsError(e));
+        console.warn(e);
       });
   };
 };

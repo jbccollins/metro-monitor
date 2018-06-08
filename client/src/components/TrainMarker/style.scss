@@ -1,0 +1,25 @@
+.TrainMarker {
+    border: 1px dashed white;
+    //outline: 2px solid black; 
+    box-shadow: 0 0 0 1px white;
+    border-radius: 2px;
+    &.red {
+        background-color: red;
+    }
+    &.orange {
+        background-color: orange;
+    }
+    &.yellow {
+        background-color: yellow;
+        border: 1px dashed black;
+    }
+    &.green {
+        background-color: green;
+    }
+    &.blue {
+        background-color: blue;
+    }
+    &.silver {
+        background-color: silver;
+    }
+}

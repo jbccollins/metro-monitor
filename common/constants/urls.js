@@ -15,10 +15,12 @@ const ALERTS = "https://www.wmata.com/customcf/jsAlertServiceData.cfm";
 // Internal
 const API_RAIL_STATIONS = "/api/railStations";
 const API_RAIL_LINES = "/api/railLines";
+const API_TRAIN_POSITIONS = "/api/trainPositions";
 
 export {
     ALERTS,
     API_RAIL_STATIONS,
     API_RAIL_LINES,
+    API_TRAIN_POSITIONS,
     TRAIN_POSITIONS,
 };

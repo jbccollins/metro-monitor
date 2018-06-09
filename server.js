@@ -8,7 +8,6 @@ import {
   LINE_MERGES,
 } from './common/constants/lines';
 import { 
-  mergeLines, 
   snapStations,
   snapTrains,
 } from './utils';
@@ -36,8 +35,6 @@ const port = process.env.PORT || DEFAULT_PORT;
 bindEndpoints(app);
 runApp(app, port);
 
-// TODO: merge lines modifies the railLines param which is not ideal
-mergeLines(railLines, LINE_MERGES);
 const snappedStations = snapStations(railLines, railStations);
 let trains = null;
 

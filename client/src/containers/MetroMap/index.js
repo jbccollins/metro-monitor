@@ -24,8 +24,8 @@ import { connect } from 'react-redux';
 import { fetchTrains, fetchRailStations, fetchRailLines } from 'actions/metro';
 import 'leaflet/dist/leaflet.css';
 import './style.scss';
-import { mergeLines } from 'utilities/metro';
 import TrainMarker from 'components/TrainMarker';
+import { nearestPointOnLine, lineString, point } from '@turf/turf';
 
 // https://github.com/PaulLeCam/react-leaflet/issues/255#issuecomment-269750542
 // The webpack bundling step can't find these images
@@ -69,13 +69,60 @@ const generateLineSegment = (coords, NAME, multiIndex) => {
   );
 };
 
+const weights = [2, 2, 2, 2, 2, 2, 3, 4, 4, 4, 5, 6, 6, 6, 6, 7, 7, 7];
+const scaleMultiples = [
+  -0.3,
+  -0.3,
+  -0.3,
+  -0.2,
+  -0.1,
+  -0.05,
+  -0.03,
+  -0.015,
+  -0.008,
+  -0.0045,
+  -0.0023,
+  -0.006,
+  -0.003,
+  -0.0015,
+  -0.0001,
+  0,
+  0,
+  0
+];
+
+const offsetLatLngs = (latLngs, zoom) => {
+  const first = latLngs[0];
+  const last = latLngs[latLngs.length - 1];
+  let dx = first[1] - last[1];
+  let dy = first[0] - last[0];
+  if (dx === 0 && dy === 0) {
+    // Let's avoid division by 0
+    return latLngs;
+  }
+  const vectorLength = Math.sqrt(dx * dx + dy * dy);
+  dx = dx / vectorLength;
+  dy = dy / vectorLength;
+  const latMult = dx;
+  const lngMult = -1 * dy;
+  const scaleMultiple = scaleMultiples[zoom];
+  const offsetLat = scaleMultiple * latMult;
+  const offsetLng = scaleMultiple * lngMult;
+  const newLatLngs = latLngs.map(([lat, lng]) => {
+    return [lat + offsetLat, lng + offsetLng];
+  });
+  return newLatLngs;
+};
+
 class MetroMap extends React.Component {
   state = {
     railStationsLayerGroup: null,
     railLinesLayerGroup: null,
     trainsLayerGroup: null,
+    //hilightsLayerGroup: null,
     layersNeedOrdering: true,
-    mapLoaded: false
+    leafletMapElt: false,
+    zoom: 12
   };
 
   componentWillUpdate(nextProps, nextState) {
@@ -83,14 +130,16 @@ class MetroMap extends React.Component {
       railStationsLayerGroup,
       railLinesLayerGroup,
       trainsLayerGroup,
+      //hilightsLayerGroup,
       layersNeedOrdering,
-      mapLoaded
+      leafletMapElt
     } = nextState;
     if (
       layersNeedOrdering &&
-      mapLoaded &&
+      leafletMapElt &&
       railStationsLayerGroup &&
       railLinesLayerGroup &&
+      //hilightsLayerGroup &&
       trainsLayerGroup
     ) {
       this.orderLayers(nextState);
@@ -110,13 +159,15 @@ class MetroMap extends React.Component {
       railStationsLayerGroup,
       railLinesLayerGroup,
       trainsLayerGroup
+      //hilightsLayerGroup,
     } = nextState;
     this.setState({ layersNeedOrdering: false });
     //Ugh I give up. Fucking layers won't respect my ordering without at timeout.
     setTimeout(() => {
       [
         railLinesLayerGroup,
-        railStationsLayerGroup /*trainsLayerGroup*/
+        railStationsLayerGroup
+        //hilightsLayerGroup, /*trainsLayerGroup*/
       ].forEach(layerGroup => {
         layerGroup.getLayers().forEach(layer => {
           layer.bringToFront();
@@ -125,9 +176,13 @@ class MetroMap extends React.Component {
     }, 2000);
   }
 
-  handleMapLoad = () => {
-    this.setState({ mapLoaded: true });
+  handleMapLoad = ({ target }) => {
+    this.setState({ leafletMapElt: target });
   };
+
+  // handleHilightsReady = hilightsLayerGroup => {
+  //   this.setState({hilightsLayerGroup});
+  // }
 
   handleRailStationsReady = railStationsLayerGroup => {
     this.setState({ railStationsLayerGroup });
@@ -143,12 +198,14 @@ class MetroMap extends React.Component {
 
   render() {
     const { trains, railStations, railLines } = this.props;
+    const { leafletMapElt, zoom } = this.state;
     return (
       <div className="MetroMap">
         <Map
           whenReady={this.handleMapLoad}
           center={[38.9072, -77.0369]}
-          zoom={11}>
+          onZoomEnd={() => this.setState({ zoom: leafletMapElt.getZoom() })}
+          zoom={zoom}>
           <TileLayer
             className="MapboxTileLayer"
             crossOrigin
@@ -197,23 +254,7 @@ class MetroMap extends React.Component {
                     )
                   );
                 });
-                // return false;
-              })
-            // railLines.features.map(f => {
-            //   const {properties: { NAME }} = f;
-            //   return (
-            //     <GeoJSON
-            //       key={NAME}
-            //       data={f}
-            //       weight={LINE_PROPERTIES[NAME]['weight']}
-            //       color={LINE_PROPERTIES[NAME]['color']}
-            //       onEachFeature={(f, l) => {
-            //         l.bindPopup(`${NAME}`);
-            //       }}
-            //     />
-            //   );
-            // })
-            }
+              })}
           </CustomLayerGroup>
           <CustomLayerGroup onReady={this.handleRailStationsReady}>
             {railStations &&
@@ -270,29 +311,85 @@ class MetroMap extends React.Component {
             {trains &&
               trains.map(t => {
                 const { geometry, properties } = t;
-                const { TRACKLINE, ITT } = properties;
+                const {
+                  TRACKLINE,
+                  ITT,
+                  DEST_STATION,
+                  TRIP_DIRECTION,
+                  closestLineSegment
+                } = properties;
                 const [Lat, Lon] = geometry['coordinates'];
                 const lineProperties = Object.values(LINE_PROPERTIES).find(
                   ({ trackLineID }) => trackLineID === TRACKLINE
                 );
+                let nearestSegmentCoords = [
+                  t.properties.closestLineSegment.l.geometry.coordinates[0],
+                  t.properties.closestLineSegment.l.geometry.coordinates[1]
+                ];
+                if (TRIP_DIRECTION === '1') {
+                  nearestSegmentCoords = nearestSegmentCoords.reverse();
+                }
+                const offsetLine = lineString(
+                  offsetLatLngs(nearestSegmentCoords, zoom)
+                );
+                const nearestOnLine = nearestPointOnLine(
+                  offsetLine,
+                  point([Lon, Lat])
+                );
                 return (
                   <TrainMarker
-                    key={ITT}
+                    key={`${ITT}-${zoom}`}
                     radius={5}
                     color={lineProperties['color']}
                     rotationAngle={properties['rotationAngle']}
                     opacity={1}
                     fillOpacity={1}
-                    position={L.latLng([Lat, Lon])}>
+                    closestLineSegment={properties['closestLineSegment']}
+                    position={L.latLng([
+                      nearestOnLine.geometry.coordinates[1],
+                      nearestOnLine.geometry.coordinates[0]
+                    ])}>
                     <Popup>
                       <div>
-                        A pretty CSS3 popup. <br /> Easily customizable.
+                        <div>Destination: {DEST_STATION}</div>
+                        <div>Direction: {TRIP_DIRECTION}</div>
+                        <div>{ITT}</div>
+                        <div>
+                          {Lat}, {Lon}
+                        </div>
                       </div>
                     </Popup>
                   </TrainMarker>
                 );
               })}
           </CustomLayerGroup>
+          {/* <CustomLayerGroup onReady={this.handleHilightsReady}>
+            {trains && leafletMapElt &&
+              trains.map((t, index) => {
+                const data = {
+                  type: 'Feature',
+                  geometry: {
+                    type: 'LineString',
+                    coordinates: offsetLatLngs(
+                      [
+                        t.properties.closestLineSegment.l.geometry.coordinates[0].reverse(),
+                        t.properties.closestLineSegment.l.geometry.coordinates[1].reverse(),
+                      ],
+                      leafletMapElt.getZoom()
+                    )
+                  }
+                };
+                return (
+                  <GeoJSON
+                    key={`${Math.random()}-${zoom}`}
+                    data={data}
+                    weight={10}
+                    color={'pink'}
+                  />
+                )
+              })
+            }
+          </CustomLayerGroup> */}
         </Map>
       </div>
     );

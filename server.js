@@ -17,7 +17,6 @@ import {
   LINE_MERGES,
 } from './common/constants/lines';
 import { 
-  mergeLines, 
   snapStations,
   snapTrains,
 } from './utils';
@@ -31,8 +30,6 @@ import { railLines, railStations } from './common/data/CleanMetroData';
 //   process.exit(1);
 // }
 
-// TODO: merge lines modifies the railLines param which is not ideal
-mergeLines(railLines, LINE_MERGES);
 const snappedStations = snapStations(railLines, railStations);
 let trains = null;
 

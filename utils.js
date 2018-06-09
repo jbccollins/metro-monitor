@@ -1,29 +1,15 @@
-/*
-var LINE_MERGES = [
-    {
-        // Fort Totten through L'Enfant Plaza
-        dominant: green,
-        subordinate: yellow,
-        dominantRange: [529, 920],
-        subordinateRange: [1020, 1163],
-    }
-];
-
-var yellowStart = yellow.geometry.coordinates.slice(0, 1020);
-var yellowEnd = yellow.geometry.coordinates.slice(1163, yellow.length - 1);
-var greenMiddle = green.geometry.coordinates.slice(529, 920).reverse();
-
-var yellowCoords = yellowStart.concat(greenMiddle, yellowEnd);
-
-console.log(yellowCoords);
-
-yellow.geometry.coordinates = yellowCoords;
-*/
 import {
     LINE_NAMES,
     LINE_PROPERTIES,
 } from './common/constants/lines';
-import { point, lineString, nearestPointOnLine, nearestPoint, featureCollection } from '@turf/turf';
+import { 
+    point, 
+    lineString, 
+    nearestPointOnLine, 
+    nearestPoint, 
+    featureCollection,
+    pointToLineDistance,
+} from '@turf/turf';
 import proj4 from 'proj4';
 
 // WMATA train coordinates are in Longitude/Latitude, WGS84. Fuck that noise tho.
@@ -35,27 +21,6 @@ const calcAngleDegrees = (p1, p2) => {
   return Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
 }
 
-const offsetLatLngs = latLngs => {
-    const first = latLngs[0];
-    const last = latLngs[latLngs.length - 1];
-    let dx = first[0] - last[0];
-    let dy = first[1] - last[1];
-    if(dx === 0 && dy === 0){ // Let's avoid division by 0
-      return latLngs;
-    }
-    const vectorLength = Math.sqrt((dx*dx) + (dy*dy));
-    dx = dx / vectorLength;
-    dy = dy / vectorLength;
-    const latMult = dx;
-    const lngMult = -1 * dy;
-    const offsetLat = -0.0023 * latMult;
-    const offsetLng = -0.0023 * lngMult;
-    const newLatLngs = latLngs.map(([lat, lng]) => {
-      return [lat + offsetLat, lng + offsetLng];
-    });
-    return newLatLngs;
-}
-
 const mergeLines = (railLines, merges) => {
     let dominantLine = null;
     let subordinateLine = null;
@@ -63,7 +28,6 @@ const mergeLines = (railLines, merges) => {
     let subordinateEnd = null;
     let dominateMiddle = null;
     let mergeCoords = null;
-    console.log('HELLO', merges);
     merges.forEach(({
         dominant,
         subordinate,
@@ -78,7 +42,6 @@ const mergeLines = (railLines, merges) => {
             subordinateRange[1], 
             subordinateLine.geometry.coordinates.length - 1
         );
-        console.log(subordinateLine);
         dominateMiddle = dominantLine.geometry.coordinates.slice(dominantRange[0], dominantRange[1]);
         if (reverseDominant) {
             dominateMiddle = dominateMiddle.reverse();
@@ -131,45 +94,64 @@ const snapTrains = (railLines, nextTrains, currentTrains) => {
     LINE_NAMES.forEach(name => {
         const {geometry: {coordinates}} = railLines.features.find(({properties: {NAME}}) => NAME === name);
         const line = lineString(coordinates);
-        //const offsetLine = lineString(offsetLatLngs(coordinates));
-        //const reversedOffsetLine = lineString(offsetLatLngs(coordinates.slice().reverse()))
         const lineFeatureCollection = featureCollection(coordinates.map(([Lat, Lon]) => point([Lat, Lon])));
         normalizedTrains
             .filter(({properties: {TRACKLINE}}) => TRACKLINE === LINE_PROPERTIES[name]['trackLineID'])
             .forEach(train => {
                 const [Lat, Lon] = train['geometry']['coordinates'];
-                const { TRIP_DIRECTION } = train;
                 // Get the nearest point on the railLine
                 const nearestOnLine = nearestPointOnLine(line, point([Lon, Lat]));
-                const {properties: {index}} = nearestOnLine;
-                // TODO: Pick next or previous depending on train direction.
-                // For now this is to just stop trains from doing sick 360 burnouts
+                const {properties: {index, dist}} = nearestOnLine;
                 let nearestOnLineCoords = nearestOnLine.geometry.coordinates;
-                if (index > 0) {
-                    nearestOnLineCoords = coordinates[index - 1];
+                //console.log(nearestOnLineCoords);
+                // For some reason the API sometimes puts trains in the middle of the ocean :/
+                if (dist > 10 && currentTrainITTList.includes(train['properties']['ITT'])){
+                    const currentTrainInstance = currentTrains.find(({properties: {ITT}}) => ITT === train['properties']['ITT']);
+                    nearestOnLineCoords = currentTrainInstance['geometry']['coordinates'].reverse();
                 }
-                // TODO: Probably gonna need to use the nearest reversed point based on offset.
-                // const nearestOnOffsetLine =  nearestPointOnLine(
-                //     Number(TRIP_DIRECTION) === 1 ? reversedOffsetLine : offsetLine,
-                //     point([Lon, Lat])
-                // );
-                // Get the nearest point that exists with in the set of coordinates that define the railLine
+
+                // Get the nearest point that exists within the set of coordinates that define the railLine
                 const nearest = nearestPoint(point([Lon, Lat]), lineFeatureCollection);
+                const {properties: {featureIndex}} = nearest;
+                const closestLineSegmentCandidates = [];
+                if (featureIndex > 0) {
+                    closestLineSegmentCandidates.push({
+                        indices: [featureIndex - 1, featureIndex],
+                        l: lineString([coordinates[featureIndex - 1], coordinates[featureIndex]])
+                    });
+                }
+                if (featureIndex < coordinates.length - 1) {
+                    closestLineSegmentCandidates.push({
+                        indices: [featureIndex, featureIndex + 1],
+                        l: lineString([coordinates[featureIndex], coordinates[featureIndex + 1]])
+                    });
+                }
+                let smallestDistance = Infinity;
+                let smallestIndex = 0;
+                closestLineSegmentCandidates.forEach(({indices, l}, index) => {
+                    const dist = pointToLineDistance(point([Lon, Lat]), l);
+                    if (dist < smallestDistance) {
+                        smallestDistance = dist;
+                        smallestIndex = index;
+                    }
+                })
+                const closestLineSegment = closestLineSegmentCandidates[smallestIndex];
+
                 const snappedTrain = {...train};
+
+                snappedTrain['properties']['closestLineSegment'] = closestLineSegment; 
                 snappedTrain['geometry']['coordinates'] = [
                     nearestOnLineCoords[1], 
                     nearestOnLineCoords[0]
-                    // nearestOnOffsetLine.geometry.coordinates[1], 
-                    // nearestOnOffsetLine.geometry.coordinates[0]
                 ];
                 snappedTrain['properties']['rotationAngle'] = calcAngleDegrees(
                     {
-                        x: nearest['geometry']['coordinates'][1],
-                        y: nearest['geometry']['coordinates'][0],
+                        x: closestLineSegment.l.geometry.coordinates[0][1],
+                        y: closestLineSegment.l.geometry.coordinates[0][0],
                     },
                     {
-                        x: nearestOnLineCoords[1],
-                        y: nearestOnLineCoords[0],
+                        x: closestLineSegment.l.geometry.coordinates[1][1],
+                        y: closestLineSegment.l.geometry.coordinates[1][0],
                     }
                 );
                 if (currentTrainITTList.includes(train['properties']['ITT'])) {

@@ -45,7 +45,15 @@ const LINE_MERGES = [
     // }
 ];
 
+const directions = {
+    1: 'forward',
+    2: 'backward'
+};
 
+const invertedDirections = {
+    1: 'backward',
+    2: 'forward',
+};
 
 const LINE_PROPERTIES = {
     [RED]: {
@@ -56,6 +64,9 @@ const LINE_PROPERTIES = {
         priorities: [
             { range: [0, 1975], priority: 3, lineCap: 'round' } // entire red line
         ],
+        directions: invertedDirections,
+        invertGeometry: true,
+        complementColor: 'white',
     },
     [ORANGE]: {
         color: 'orange',
@@ -65,6 +76,9 @@ const LINE_PROPERTIES = {
         priorities: [
             { range: [0, 5975], priority: 3, lineCap: 'round' } // entire orange line
         ],
+        directions: directions,
+        invertGeometry: false,
+        complementColor: 'black',
     },
     [YELLOW]: {
         color: 'yellow',
@@ -76,7 +90,10 @@ const LINE_PROPERTIES = {
             { range: [56, 778], priority: 1, lineCap: 'butt' }, // blue > yellow
             { range: [779, 971], priority: 3, lineCap: 'round' }, // only yellow
             { range: [972, 1362], priority: 1, lineCap: 'round' }, // green > yellow
-        ]
+        ],
+        directions: directions,
+        invertGeometry: false,
+        complementColor: 'black',
     },
     [GREEN]: {
         color: 'green',
@@ -86,6 +103,9 @@ const LINE_PROPERTIES = {
         priorities: [
             { range: [0, 1716], priority: 3, lineCap: 'round' } // entire green line
         ],
+        directions: invertedDirections,
+        invertGeometry: true,
+        complementColor: 'white',
     },
     [BLUE]: {
         color: 'blue',
@@ -97,6 +117,9 @@ const LINE_PROPERTIES = {
             { range: [1326, 2382], priority: 2, lineCap: 'butt' }, // orange > blue > silver
             { range: [2383, 2617], priority: 3, lineCap: 'round' }, // blue > silver
         ],
+        directions: directions,
+        invertGeometry: false,
+        complementColor: 'white',
     },
     [SILVER]: {
         color: 'silver',
@@ -109,6 +132,9 @@ const LINE_PROPERTIES = {
             { range: [2253, 3310], priority: 1, lineCap: 'butt' }, // silver orange and blue
             { range: [3311, 3545], priority: 1, lineCap: 'round' }, // silver and blue
         ],
+        directions: directions,
+        invertGeometry: false,
+        complementColor: 'black',
     }
 };
 

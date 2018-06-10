@@ -3,15 +3,14 @@ import L from 'leaflet';
 import {
   Map,
   TileLayer,
+  Marker,
   GeoJSON,
   CircleMarker,
-  Popup,
-  LayerGroup
+  Popup
 } from 'react-leaflet';
 import CustomLayerGroup from 'components/CustomLayerGroup';
 import {
   LINE_PROPERTIES,
-  LINE_NAMES,
   RED,
   ORANGE,
   BLUE,
@@ -36,40 +35,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
 
-const generateLineSegment = (coords, NAME, multiIndex) => {
-  let nextC = null;
-  const i = typeof multiIndex !== 'undefined' ? `-${multiIndex}` : null;
-  return (
-    <LayerGroup key={`${NAME}${i ? i : ''}`}>
-      {coords.map((c, index) => {
-        if (index < coords.length - 1) {
-          nextC = coords[index + 1];
-        } else {
-          return false;
-        }
-        return (
-          <GeoJSON
-            onEachFeature={(f, l) => {
-              l.bindPopup(`${index} ${NAME}${i ? i : ''}`);
-            }}
-            data={{
-              type: 'Feature',
-              geometry: {
-                type: 'LineString',
-                coordinates: [c, nextC]
-              }
-            }}
-            key={index}
-            weight={NAME === 'yellow' ? 10 : 5}
-            color={index % 2 ? LINE_PROPERTIES[NAME]['color'] : 'black'}
-          />
-        );
-      })}
-    </LayerGroup>
-  );
-};
-
-const weights = [2, 2, 2, 2, 2, 2, 3, 4, 4, 4, 5, 6, 6, 6, 6, 7, 7, 7];
+//const weights = [2, 2, 2, 2, 2, 2, 3, 4, 4, 4, 5, 6, 6, 6, 6, 7, 7, 7];
 const scaleMultiples = [
   -0.3,
   -0.3,
@@ -85,10 +51,11 @@ const scaleMultiples = [
   -0.006,
   -0.003,
   -0.0015,
+  -0.0008,
+  -0.0004,
   -0.0001,
-  0,
-  0,
-  0
+  -0.00008,
+  -0.00008
 ];
 
 const offsetLatLngs = (latLngs, zoom) => {
@@ -119,7 +86,6 @@ class MetroMap extends React.Component {
     railStationsLayerGroup: null,
     railLinesLayerGroup: null,
     trainsLayerGroup: null,
-    //hilightsLayerGroup: null,
     layersNeedOrdering: true,
     leafletMapElt: false,
     zoom: 12
@@ -130,7 +96,6 @@ class MetroMap extends React.Component {
       railStationsLayerGroup,
       railLinesLayerGroup,
       trainsLayerGroup,
-      //hilightsLayerGroup,
       layersNeedOrdering,
       leafletMapElt
     } = nextState;
@@ -139,7 +104,6 @@ class MetroMap extends React.Component {
       leafletMapElt &&
       railStationsLayerGroup &&
       railLinesLayerGroup &&
-      //hilightsLayerGroup &&
       trainsLayerGroup
     ) {
       this.orderLayers(nextState);
@@ -159,16 +123,11 @@ class MetroMap extends React.Component {
       railStationsLayerGroup,
       railLinesLayerGroup,
       trainsLayerGroup
-      //hilightsLayerGroup,
     } = nextState;
     this.setState({ layersNeedOrdering: false });
     //Ugh I give up. Fucking layers won't respect my ordering without at timeout.
     setTimeout(() => {
-      [
-        railLinesLayerGroup,
-        railStationsLayerGroup
-        //hilightsLayerGroup, /*trainsLayerGroup*/
-      ].forEach(layerGroup => {
+      [railLinesLayerGroup, railStationsLayerGroup].forEach(layerGroup => {
         layerGroup.getLayers().forEach(layer => {
           layer.bringToFront();
         });
@@ -179,10 +138,6 @@ class MetroMap extends React.Component {
   handleMapLoad = ({ target }) => {
     this.setState({ leafletMapElt: target });
   };
-
-  // handleHilightsReady = hilightsLayerGroup => {
-  //   this.setState({hilightsLayerGroup});
-  // }
 
   handleRailStationsReady = railStationsLayerGroup => {
     this.setState({ railStationsLayerGroup });
@@ -211,17 +166,6 @@ class MetroMap extends React.Component {
             crossOrigin
             url="https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiamJjY29sbGlucyIsImEiOiJjamd3dXgyengwNmZnMndsbG9nYnM0Ynh6In0.oZwMIjuVePaRgp0ibE0pZg"
           />
-          {/* <CustomLayerGroup onReady={this.handleRailLinesReady}>
-            {railLines &&
-              railLines.features.map(f => {
-                const {
-                  properties: { NAME },
-                  geometry: { type, coordinates }
-                } = f;
-                return (generateLineSegment(coordinates, NAME));
-              })
-            }
-          </CustomLayerGroup> */}
           <CustomLayerGroup onReady={this.handleRailLinesReady}>
             {railLines &&
               [3, 2, 1].map(p => {
@@ -234,9 +178,29 @@ class MetroMap extends React.Component {
                     ({ properties: { NAME } }) => name === NAME
                   );
                   return priorities.map(
-                    ({ priority, range, lineCap }, index) => (
+                    ({ priority, range, lineCap }, index) => [
+                      // non-transparent underlay. not visible.
                       <GeoJSON
-                        key={`${name}-${priority}-${index}`}
+                        key={`${name}-${priority}-${index}-fake`}
+                        opacity={1}
+                        data={{
+                          type: 'Feature',
+                          geometry: {
+                            type: 'LineString',
+                            coordinates: railLine.geometry.coordinates.slice(
+                              range[0],
+                              range[1] + 2
+                            )
+                          }
+                        }}
+                        lineCap={lineCap}
+                        weight={priority * 4}
+                        color={'#2b2b2b'}
+                      />,
+                      // real colored line
+                      <GeoJSON
+                        key={`${name}-${priority}-${index}-real`}
+                        opacity={0.6}
                         data={{
                           type: 'Feature',
                           geometry: {
@@ -251,7 +215,7 @@ class MetroMap extends React.Component {
                         weight={priority * 4}
                         color={LINE_PROPERTIES[name]['color']}
                       />
-                    )
+                    ]
                   );
                 });
               })}
@@ -282,31 +246,6 @@ class MetroMap extends React.Component {
                 }
               )}
           </CustomLayerGroup>
-          {/* <CustomLayerGroup onReady={this.handleTrainsLayerReady}>
-            {trains &&
-              trains.map(t => {
-                const { geometry, properties } = t;
-                const { TRACKLINE, ITT } = properties;
-                const [Lat, Lon] = geometry['coordinates'];
-                const lineProperties = Object.values(LINE_PROPERTIES).find(({ trackLineID }) => trackLineID === TRACKLINE);
-                return (
-                  <CircleMarker
-                    onReady={this.handleTrainsLayerReady}
-                    key={ITT}
-                    radius={5}
-                    color={lineProperties['color']}
-                    opacity={1}
-                    fillOpacity={1}
-                    center={[Lat, Lon]}>
-                    <Popup>
-                      <div>
-                        A pretty CSS3 popup. <br /> Easily customizable.
-                      </div>
-                    </Popup>
-                  </CircleMarker>
-                );
-              })}
-          </CustomLayerGroup> */}
           <CustomLayerGroup onReady={this.handleTrainsLayerReady}>
             {trains &&
               trains.map(t => {
@@ -326,7 +265,10 @@ class MetroMap extends React.Component {
                   t.properties.closestLineSegment.l.geometry.coordinates[0],
                   t.properties.closestLineSegment.l.geometry.coordinates[1]
                 ];
-                if (TRIP_DIRECTION === '1') {
+                if (TRIP_DIRECTION === '2') {
+                  nearestSegmentCoords = nearestSegmentCoords.reverse();
+                }
+                if (lineProperties['invertGeometry']) {
                   nearestSegmentCoords = nearestSegmentCoords.reverse();
                 }
                 const offsetLine = lineString(
@@ -339,12 +281,12 @@ class MetroMap extends React.Component {
                 return (
                   <TrainMarker
                     key={`${ITT}-${zoom}`}
-                    radius={5}
                     color={lineProperties['color']}
+                    borderColor={lineProperties['complementColor']}
+                    direction={lineProperties['directions'][TRIP_DIRECTION]}
                     rotationAngle={properties['rotationAngle']}
                     opacity={1}
                     fillOpacity={1}
-                    closestLineSegment={properties['closestLineSegment']}
                     position={L.latLng([
                       nearestOnLine.geometry.coordinates[1],
                       nearestOnLine.geometry.coordinates[0]
@@ -363,33 +305,6 @@ class MetroMap extends React.Component {
                 );
               })}
           </CustomLayerGroup>
-          {/* <CustomLayerGroup onReady={this.handleHilightsReady}>
-            {trains && leafletMapElt &&
-              trains.map((t, index) => {
-                const data = {
-                  type: 'Feature',
-                  geometry: {
-                    type: 'LineString',
-                    coordinates: offsetLatLngs(
-                      [
-                        t.properties.closestLineSegment.l.geometry.coordinates[0].reverse(),
-                        t.properties.closestLineSegment.l.geometry.coordinates[1].reverse(),
-                      ],
-                      leafletMapElt.getZoom()
-                    )
-                  }
-                };
-                return (
-                  <GeoJSON
-                    key={`${Math.random()}-${zoom}`}
-                    data={data}
-                    weight={10}
-                    color={'pink'}
-                  />
-                )
-              })
-            }
-          </CustomLayerGroup> */}
         </Map>
       </div>
     );

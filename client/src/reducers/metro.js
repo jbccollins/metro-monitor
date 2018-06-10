@@ -7,7 +7,10 @@ import {
   RAIL_STATIONS_ERRORED,
   RAIL_LINES_REQUESTED,
   RAIL_LINES_RECEIVED,
-  RAIL_LINES_ERRORED
+  RAIL_LINES_ERRORED,
+  RAIL_ALERTS_REQUESTED,
+  RAIL_ALERTS_RECEIVED,
+  RAIL_ALERTS_ERRORED
 } from '../actions/metro';
 
 const initialTrainState = {
@@ -26,6 +29,38 @@ const initialRailLineState = {
   railLines: null,
   fetching: false,
   error: false
+};
+
+const initialRailAlerts = {
+  railAlerts: null,
+  fetching: false,
+  error: false
+};
+
+const railAlerts = (state = initialRailAlerts, action) => {
+  switch (action.type) {
+    case RAIL_ALERTS_REQUESTED:
+      return {
+        ...state,
+        fetching: true
+      };
+    case RAIL_ALERTS_RECEIVED:
+      return {
+        ...state,
+        railAlerts: action.payload.railAlerts,
+        fetching: false,
+        error: false
+      };
+    case RAIL_ALERTS_ERRORED:
+      return {
+        ...state,
+        railAlerts: null,
+        fetching: false,
+        error: true
+      };
+    default:
+      return state;
+  }
 };
 
 const railStations = (state = initialRailStationState, action) => {
@@ -106,4 +141,4 @@ const railLines = (state = initialRailLineState, action) => {
   }
 };
 
-export { railLines, railStations, trains };
+export { railLines, railStations, railAlerts, trains };

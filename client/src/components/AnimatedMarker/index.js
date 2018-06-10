@@ -1,9 +1,8 @@
-import { Marker } from 'react-leaflet';
 import RotatedMarker from 'react-leaflet-rotatedmarker';
 
 const ANIMATION_STYLE = 'transform 1s';
 
-const translate3dRegex = /translate3d\(.*\)/;
+// const translate3dRegex = /translate3d\(.*\)/;
 class AnimatedMarker extends RotatedMarker {
   componentDidMount() {
     super.componentDidMount();

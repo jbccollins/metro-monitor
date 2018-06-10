@@ -1,11 +1,14 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
 import MetroMap from 'containers/MetroMap';
+import RailAlerts from 'containers/RailAlerts';
+import SideMenu from 'containers/SideMenu';
 
 const App = () => (
   <div>
     <main>
-      <Route exact path="/" component={MetroMap} />
+      <SideMenu />
+      <MetroMap />
+      <RailAlerts />
     </main>
   </div>
 );

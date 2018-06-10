@@ -69,7 +69,7 @@ const snapStations = (railLines, stations) => {
   return snappedStations;
 }
 
-const snapTrains = (railLines, nextTrains, currentTrains) => {
+const snapTrains = (railLines, nextTrains, currentTrains, potentiallyClearedTrainITTMap) => {
     const normalizedTrains = [];
     const snappedTrains = [];
     const currentTrainITTList = currentTrains ? currentTrains.map(({properties: {ITT}}) => ITT) : [];
@@ -89,27 +89,52 @@ const snapTrains = (railLines, nextTrains, currentTrains) => {
             }
         }
         normalizedTrains.push(trainGeojson)
+    });
+
+    // Trains can flicker in and out if sensors derp. This is to buffer for that
+    // so that there isn't annoying flickering of trains on the front-end UI.
+    const nextTrainITTList = normalizedTrains.map(({properties: {ITT}}) => ITT);
+    currentTrainITTList.forEach(ITT => {
+        if (!nextTrainITTList.includes(ITT)) {
+            const pcITT = potentiallyClearedTrainITTMap[ITT];
+            if (typeof pcITT !== 'undefined') {
+                // A train gets three refreshes to prove it still exists
+                if (pcITT < 3) {
+                    potentiallyClearedTrainITTMap[ITT] = pcITT + 1;
+                } else {
+                    delete potentiallyClearedTrainITTMap[ITT];
+                }
+            } else {
+                potentiallyClearedTrainITTMap[ITT] = 1;
+            }
+        } else {
+            delete potentiallyClearedTrainITTMap[ITT];
+        }
     })
+
+    const potentiallyClearedTrains = currentTrains.filter(currTrain => {
+        return Object.keys(potentiallyClearedTrainITTMap).includes(currTrain['properties']['ITT'])
+    });
 
     LINE_NAMES.forEach(name => {
         const {geometry: {coordinates}} = railLines.features.find(({properties: {NAME}}) => NAME === name);
         const line = lineString(coordinates);
         const lineFeatureCollection = featureCollection(coordinates.map(([Lat, Lon]) => point([Lat, Lon])));
         normalizedTrains
+            .concat(potentiallyClearedTrains)
             .filter(({properties: {TRACKLINE}}) => TRACKLINE === LINE_PROPERTIES[name]['trackLineID'])
             .forEach(train => {
-                const [Lat, Lon] = train['geometry']['coordinates'];
+                let [Lat, Lon] = train['geometry']['coordinates'];
+                // For some reason the API sometimes puts trains in the middle of the ocean :/
+                // When this happens don't move the train. Leave it at it's last position.
+                // If a train starts in the middle of the ocean then oh well.
+                if (Lat === 0 && Lon === 0 && currentTrainITTList.includes(train['properties']['ITT'])){
+                    const currentTrainInstance = currentTrains.find(({properties: {ITT}}) => ITT === train['properties']['ITT']);
+                    [Lat, Lon] = currentTrainInstance['geometry']['coordinates'];
+                }
                 // Get the nearest point on the railLine
                 const nearestOnLine = nearestPointOnLine(line, point([Lon, Lat]));
-                const {properties: {index, dist}} = nearestOnLine;
-                let nearestOnLineCoords = nearestOnLine.geometry.coordinates;
-                //console.log(nearestOnLineCoords);
-                // For some reason the API sometimes puts trains in the middle of the ocean :/
-                if (dist > 10 && currentTrainITTList.includes(train['properties']['ITT'])){
-                    const currentTrainInstance = currentTrains.find(({properties: {ITT}}) => ITT === train['properties']['ITT']);
-                    nearestOnLineCoords = currentTrainInstance['geometry']['coordinates'].reverse();
-                }
-
+                const nearestOnLineCoords = nearestOnLine.geometry.coordinates;
                 // Get the nearest point that exists within the set of coordinates that define the railLine
                 const nearest = nearestPoint(point([Lon, Lat]), lineFeatureCollection);
                 const {properties: {featureIndex}} = nearest;
@@ -138,7 +163,6 @@ const snapTrains = (railLines, nextTrains, currentTrains) => {
                 const closestLineSegment = closestLineSegmentCandidates[smallestIndex];
 
                 const snappedTrain = {...train};
-
                 snappedTrain['properties']['closestLineSegment'] = closestLineSegment; 
                 snappedTrain['geometry']['coordinates'] = [
                     nearestOnLineCoords[1], 
@@ -154,12 +178,6 @@ const snapTrains = (railLines, nextTrains, currentTrains) => {
                         y: closestLineSegment.l.geometry.coordinates[1][0],
                     }
                 );
-                if (currentTrainITTList.includes(train['properties']['ITT'])) {
-                    const currentCoordinates = currentTrains.find(({properties: {ITT}}) => ITT)['geometry']['coordinates'];                    
-                    snappedTrain['properties']['lastPosition'] = currentCoordinates;
-                } else {
-                    snappedTrain['properties']['lastPosition'] = null;
-                }
                 snappedTrains.push(snappedTrain);
             });
     });

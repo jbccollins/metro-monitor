@@ -1,25 +1,63 @@
 .TrainMarker {
-    border: 1px dashed white;
-    //outline: 2px solid black; 
-    box-shadow: 0 0 0 1px white;
-    border-radius: 2px;
-    &.red {
-        background-color: red;
-    }
-    &.orange {
-        background-color: orange;
-    }
-    &.yellow {
-        background-color: yellow;
-        border: 1px dashed black;
-    }
-    &.green {
-        background-color: green;
-    }
-    &.blue {
-        background-color: blue;
-    }
-    &.silver {
-        background-color: silver;
-    }
+    // border: 1px dashed white;
+    // //outline: 2px solid black; 
+    // box-shadow: 0 0 0 1px white;
+    // border-radius: 2px;
+    // &.red {
+    //     background-color: red;
+    // }
+    // &.orange {
+    //     background-color: orange;
+    // }
+    // &.yellow {
+    //     background-color: yellow;
+    //     border: 1px dashed black;
+    // }
+    // &.green {
+    //     background-color: green;
+    // }
+    // &.blue {
+    //     background-color: blue;
+    // }
+    // &.silver {
+    //     background-color: silver;
+    // }
+    // .forward, .backward {
+    //     width: 0; 
+    //     height: 0; 
+    //     border-left: 5px solid transparent;
+    //     border-right: 5px solid transparent;
+    //     margin-left: -2px;
+    // }
+    // .colored-forward, .colored-backward {
+    //     width: 0; 
+    //     height: 0; 
+    //     border-left: 4px solid transparent;
+    //     border-right: 4px solid transparent;
+    //     margin-left: -3px;
+    // }
+    // .colored-forward {
+    //     border-top-left-radius: 0px;
+    //     border-top-right-radius: 0px;
+    //     border-bottom: 6px solid black;
+    //     margin-top: -8px;
+    // }
+    // .colored-backward {
+    //     border-bottom-left-radius: 0px;
+    //     border-bottom-right-radius: 0px;
+    //     border-bottom: 6px solid black;
+    //     margin-top: 19px;
+    // }
+    // .forward {
+    //     border-top-left-radius: 0px;
+    //     border-top-right-radius: 0px;
+    //     border-bottom: 8px solid white;
+    //     margin-top: -8px;
+    // }
+    // .backward {
+    //     border-bottom-left-radius: 0px;
+    //     border-bottom-right-radius: 0px;
+    //     border-top: 8px solid white;
+    //     margin-top: 19px;
+    // }
 }

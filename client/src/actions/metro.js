@@ -2,7 +2,8 @@ import fetch from 'isomorphic-fetch';
 import {
   API_RAIL_STATIONS,
   API_RAIL_LINES,
-  API_TRAIN_POSITIONS
+  API_TRAIN_POSITIONS,
+  API_RAIL_ALERTS
 } from 'common/constants/urls';
 
 const TRAINS_REQUESTED = 'metro/TRAINS_REQUESTED';
@@ -14,6 +15,43 @@ const RAIL_STATIONS_ERRORED = 'metro/RAIL_STATIONS_ERRORED';
 const RAIL_LINES_REQUESTED = 'metro/RAIL_LINES_REQUESTED';
 const RAIL_LINES_RECEIVED = 'metro/RAIL_LINES_RECEIVED';
 const RAIL_LINES_ERRORED = 'metro/RAIL_LINES_ERRORED';
+const RAIL_ALERTS_REQUESTED = 'metro/RAIL_ALERTS_REQUESTED';
+const RAIL_ALERTS_RECEIVED = 'metro/RAIL_ALERTS_RECEIVED';
+const RAIL_ALERTS_ERRORED = 'metro/RAIL_ALERTS_ERRORED';
+
+const requestRailAlerts = () => ({
+  type: RAIL_ALERTS_REQUESTED
+});
+
+const receiveRailAlerts = railAlerts => ({
+  type: RAIL_ALERTS_RECEIVED,
+  payload: { railAlerts }
+});
+
+const handleRailAlertsError = error => ({
+  type: RAIL_ALERTS_ERRORED,
+  payload: { error }
+});
+
+const fetchRailAlerts = () => {
+  return dispatch => {
+    dispatch(requestRailAlerts());
+    return fetch(API_RAIL_ALERTS, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(railAlerts => {
+        dispatch(receiveRailAlerts(railAlerts));
+      })
+      .catch(e => {
+        dispatch(handleRailAlertsError(e));
+        console.warn(e);
+      });
+  };
+};
 
 const requestRailLines = () => ({
   type: RAIL_LINES_REQUESTED
@@ -128,6 +166,9 @@ export {
   RAIL_LINES_REQUESTED,
   RAIL_LINES_RECEIVED,
   RAIL_LINES_ERRORED,
+  RAIL_ALERTS_REQUESTED,
+  RAIL_ALERTS_RECEIVED,
+  RAIL_ALERTS_ERRORED,
   requestRailStations,
   receiveRailStations,
   handleRailStationsError,
@@ -137,7 +178,11 @@ export {
   requestRailLines,
   receiveRailLines,
   handleRailLinesError,
+  requestRailAlerts,
+  receiveRailAlerts,
+  handleRailAlertsError,
   fetchTrains,
   fetchRailStations,
-  fetchRailLines
+  fetchRailLines,
+  fetchRailAlerts
 };

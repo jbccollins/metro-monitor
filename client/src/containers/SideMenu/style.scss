@@ -1,0 +1,60 @@
+.SideMenu {
+    .toggle-wrapper {
+        width: 100%;
+        display: inline-block;
+        position: relative;
+        label {
+            display: inline-block;
+            width: 100%;
+        }
+    }
+    .react-toggle {
+        cursor: default;
+        .react-toggle-thumb {
+            border-color: #2b2b2b;
+        }
+        float: left;
+        display: block;
+    }
+    .toggle-label {
+        float: left;
+        height: 24px;
+        margin-left: 5px;
+    }
+    .react-toggle--focus .react-toggle-thumb {
+        box-shadow: none;
+    }
+
+    .custom-toggle.react-toggle--checked {
+        &.red {
+            .react-toggle-track {
+                background-color: red;
+            }
+        }
+        &.orange {
+            .react-toggle-track {
+                background-color: orange;
+            }
+        }
+        &.yellow {
+            .react-toggle-track {
+                background-color: yellow;
+            }
+        }
+        &.green {
+            .react-toggle-track {
+                background-color: green;
+            }
+        }
+        &.blue {
+            .react-toggle-track {
+                background-color: blue;
+            }
+        }
+        &.silver {
+            .react-toggle-track {
+                background-color: silver;
+            }
+        }
+    }
+}

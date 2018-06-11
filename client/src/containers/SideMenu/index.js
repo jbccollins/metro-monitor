@@ -1,10 +1,12 @@
 import React from 'react';
 import { LINE_PROPERTIES, LINE_NAMES } from 'common/constants/lines';
-import moment from 'moment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { slide as Menu } from 'react-burger-menu';
 import './style.scss';
+import 'react-toggle/style.css';
+import Toggle from 'react-toggle';
+import { setVisibleRailLines } from 'actions/controls';
 
 class MenuWrap extends React.Component {
   constructor(props) {
@@ -50,9 +52,9 @@ var styles = {
   bmBurgerButton: {
     position: 'fixed',
     width: '36px',
-    height: '30px',
-    left: '36px',
-    top: '36px'
+    height: '36px',
+    left: '10px',
+    top: '10px'
   },
   bmBurgerBars: {
     background: 'white'
@@ -65,7 +67,7 @@ var styles = {
     background: '#bdc3c7'
   },
   bmMenu: {
-    background: '#373a47',
+    background: '#2b2b2b',
     padding: '2.5em 1.5em 0',
     fontSize: '1.15em'
   },
@@ -73,30 +75,53 @@ var styles = {
     fill: '#373a47'
   },
   bmItemList: {
-    color: '#b8b7ad',
+    color: 'white',
     padding: '0.8em'
   },
   bmOverlay: {
+    display: 'none',
     background: 'rgba(0, 0, 0, 0.3)'
   }
 };
 
 class SideMenu extends React.Component {
+  state = {
+    checked: true
+  };
+
+  toggleRailLineVisibility = railLineName => {
+    const { visibleRailLines, setVisibleRailLines } = this.props;
+    const index = visibleRailLines.indexOf(railLineName);
+    if (index > -1) {
+      const newVisibleLines = [].concat(visibleRailLines);
+      newVisibleLines.splice(index, 1);
+      setVisibleRailLines(newVisibleLines);
+    } else {
+      setVisibleRailLines([].concat(visibleRailLines, railLineName));
+    }
+  };
+
   render() {
-    console.log(this.props.visibleRailLines);
+    const { visibleRailLines } = this.props;
     return (
       <div className="SideMenu">
         <MenuWrap wait={20}>
           <Menu styles={styles}>
-            <a id="home" className="menu-item" href="/">
-              Home
-            </a>
-            <a id="about" className="menu-item" href="/about">
-              About
-            </a>
-            <a id="contact" className="menu-item" href="/contact">
-              Contact
-            </a>
+            {LINE_NAMES.map(name => (
+              <div className="toggle-wrapper" key={name}>
+                <label>
+                  <Toggle
+                    icons={false}
+                    className={`custom-toggle ${name}`}
+                    checked={visibleRailLines.includes(name)}
+                    onChange={() => this.toggleRailLineVisibility(name)}
+                  />
+                  <span className="toggle-label">
+                    {LINE_PROPERTIES[name]['trackLineID']}
+                  </span>
+                </label>
+              </div>
+            ))}
           </Menu>
         </MenuWrap>
       </div>
@@ -111,7 +136,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      //fetchSideMenu,
+      setVisibleRailLines
     },
     dispatch
   );

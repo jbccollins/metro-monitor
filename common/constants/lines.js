@@ -62,7 +62,11 @@ const LINE_PROPERTIES = {
         trackLineID: 'Red',
         weight: 5,
         priorities: [
-            { range: [0, 1975], priority: 3, lineCap: 'round' } // entire red line
+            { // entire red line
+                range: [0, 1975], 
+                priority: () => 3, 
+                lineCap: 'round'
+            }
         ],
         directions: invertedDirections,
         invertGeometry: true,
@@ -74,7 +78,11 @@ const LINE_PROPERTIES = {
         trackLineID: 'Orange',
         weight: 10,
         priorities: [
-            { range: [0, 5975], priority: 3, lineCap: 'round' } // entire orange line
+            { // entire orange line
+                range: [0, 5975],
+                priority: () => 3,
+                lineCap: 'round'
+            }
         ],
         directions: directions,
         invertGeometry: false,
@@ -86,10 +94,36 @@ const LINE_PROPERTIES = {
         trackLineID: 'Yellow',
         weight: 10,
         priorities: [
-            { range: [0, 55], priority: 3, lineCap: 'round' }, // only yellow
-            { range: [56, 778], priority: 1, lineCap: 'butt' }, // blue > yellow
-            { range: [779, 971], priority: 3, lineCap: 'round' }, // only yellow
-            { range: [972, 1362], priority: 1, lineCap: 'round' }, // green > yellow
+            { // only yellow
+                range: [0, 55], 
+                priority: () => 3, 
+                lineCap: 'round'
+            },
+            { // blue > yellow
+                range: [56, 778],
+                priority: lines => {
+                    if (lines.includes(BLUE)) {
+                        return 1;
+                    }
+                    return 3;
+                },
+                lineCap: 'butt'
+            },
+            { // only yellow
+                range: [779, 971],
+                priority: () => 3,
+                lineCap: 'round'
+            },
+            { // green > yellow
+                range: [972, 1362],
+                priority: lines => {
+                    if (lines.includes(GREEN)) {
+                        return 1;
+                    }
+                    return 3;
+                },
+                lineCap: 'round'
+            },
         ],
         directions: directions,
         invertGeometry: false,
@@ -101,7 +135,11 @@ const LINE_PROPERTIES = {
         trackLineID: 'Green',
         weight: 5,
         priorities: [
-            { range: [0, 1716], priority: 3, lineCap: 'round' } // entire green line
+            { // entire green line
+                range: [0, 1716],
+                priority: () => 3,
+                lineCap:'round'
+            }
         ],
         directions: invertedDirections,
         invertGeometry: true,
@@ -113,9 +151,29 @@ const LINE_PROPERTIES = {
         trackLineID: 'Blue',
         weight: 14,
         priorities: [
-            { range: [0, 1325], priority: 3, lineCap: 'round' }, // only blue as well as blue and yellow. blue > yellow.
-            { range: [1326, 2382], priority: 2, lineCap: 'butt' }, // orange > blue > silver
-            { range: [2383, 2617], priority: 3, lineCap: 'round' }, // blue > silver
+            { // only blue as well as blue and yellow. blue > yellow.
+                range: [0, 1325],
+                priority: () => 3,
+                lineCap: 'round'
+            },
+            { // orange > blue > silver
+                range: [1326, 2382],
+                priority: lines => {
+                    if (lines.includes(ORANGE)) {
+                        if (lines.includes(SILVER)) {
+                            return 2;
+                        }
+                        return 1;
+                    }
+                    return 3;
+                },
+                lineCap: 'butt'
+            },
+            { // blue > silver
+                range: [2383, 2617],
+                priority: () => 3,
+                lineCap: 'round'
+            },
         ],
         directions: directions,
         invertGeometry: false,
@@ -127,16 +185,45 @@ const LINE_PROPERTIES = {
         trackLineID: 'Silver',
         weight: 5,
         priorities: [
-            { range: [0, 384], priority: 3, lineCap: 'round' }, // only silver
-            { range: [385, 2252], priority: 1, lineCap: 'butt' }, // silver and orange
-            { range: [2253, 3310], priority: 1, lineCap: 'butt' }, // silver orange and blue
-            { range: [3311, 3545], priority: 1, lineCap: 'round' }, // silver and blue
+            { range: [0, 384], priority: () => 3, lineCap: 'round' }, // only silver
+            { // silver and orange
+                range: [385, 2252],
+                priority: lines => {
+                    if (lines.includes(ORANGE)) {
+                        return 1;
+                    }
+                    return 3;
+                },
+                lineCap: 'round'
+            },
+            { // silver orange and blue
+                range: [2253, 3310],
+                priority: lines => {
+                    if (lines.includes(ORANGE) || lines.includes(BLUE)) {
+                        return 1;
+                    }
+                    return 3;
+                },
+                lineCap: 'butt'
+            },
+            { // silver and blue
+                range: [3311, 3545],
+                priority: lines => {
+                    if (lines.includes(BLUE)) {
+                        return 1;
+                    }
+                    return 3;
+                },
+                lineCap: 'round'
+            },
         ],
         directions: directions,
         invertGeometry: false,
         complementColor: 'black',
     }
 };
+
+const LINE_DRAW_ORDER = [RED, ORANGE, BLUE, GREEN, YELLOW, SILVER];
 
 export {
     RED,
@@ -148,4 +235,5 @@ export {
     LINE_NAMES,
     LINE_PROPERTIES,
     LINE_MERGES,
+    LINE_DRAW_ORDER,
 };

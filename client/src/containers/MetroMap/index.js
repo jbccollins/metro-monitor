@@ -11,12 +11,8 @@ import {
 import CustomLayerGroup from 'components/CustomLayerGroup';
 import {
   LINE_PROPERTIES,
-  RED,
-  ORANGE,
-  BLUE,
-  GREEN,
-  YELLOW,
-  SILVER
+  LINE_DRAW_ORDER,
+  LINE_NAMES
 } from 'common/constants/lines';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -110,6 +106,17 @@ class MetroMap extends React.Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.visibleRailLines !== this.props.visibleRailLines &&
+      this.state.railLinesLayerGroup
+    ) {
+      this.state.railStationsLayerGroup.getLayers().forEach(layer => {
+        layer.bringToFront();
+      });
+    }
+  }
+
   componentWillMount() {
     const { fetchTrains, fetchRailStations, fetchRailLines } = this.props;
     fetchRailLines();
@@ -152,7 +159,7 @@ class MetroMap extends React.Component {
   };
 
   render() {
-    const { trains, railStations, railLines } = this.props;
+    const { trains, railStations, railLines, visibleRailLines } = this.props;
     const { leafletMapElt, zoom } = this.state;
     return (
       <div className="MetroMap">
@@ -169,54 +176,53 @@ class MetroMap extends React.Component {
           <CustomLayerGroup onReady={this.handleRailLinesReady}>
             {railLines &&
               [3, 2, 1].map(p => {
-                const prioritizedSegments = [];
-                return [RED, ORANGE, BLUE, GREEN, YELLOW, SILVER].map(name => {
+                return LINE_DRAW_ORDER.filter(l =>
+                  visibleRailLines.includes(l)
+                ).map(name => {
                   const priorities = LINE_PROPERTIES[name]['priorities'].filter(
-                    ({ priority }) => priority === p
+                    ({ priority }) => priority(visibleRailLines) === p
                   );
                   const railLine = railLines.features.find(
                     ({ properties: { NAME } }) => name === NAME
                   );
-                  return priorities.map(
-                    ({ priority, range, lineCap }, index) => [
-                      // non-transparent underlay. not visible.
-                      <GeoJSON
-                        key={`${name}-${priority}-${index}-fake`}
-                        opacity={1}
-                        data={{
-                          type: 'Feature',
-                          geometry: {
-                            type: 'LineString',
-                            coordinates: railLine.geometry.coordinates.slice(
-                              range[0],
-                              range[1] + 2
-                            )
-                          }
-                        }}
-                        lineCap={lineCap}
-                        weight={priority * 4}
-                        color={'#2b2b2b'}
-                      />,
-                      // real colored line
-                      <GeoJSON
-                        key={`${name}-${priority}-${index}-real`}
-                        opacity={0.6}
-                        data={{
-                          type: 'Feature',
-                          geometry: {
-                            type: 'LineString',
-                            coordinates: railLine.geometry.coordinates.slice(
-                              range[0],
-                              range[1] + 2
-                            )
-                          }
-                        }}
-                        lineCap={lineCap}
-                        weight={priority * 4}
-                        color={LINE_PROPERTIES[name]['color']}
-                      />
-                    ]
-                  );
+                  return priorities.map(({ range, lineCap }, index) => [
+                    // non-transparent underlay. not visible.
+                    <GeoJSON
+                      key={`${name}-${p}-${index}-fake`}
+                      opacity={1}
+                      data={{
+                        type: 'Feature',
+                        geometry: {
+                          type: 'LineString',
+                          coordinates: railLine.geometry.coordinates.slice(
+                            range[0],
+                            range[1] + 2
+                          )
+                        }
+                      }}
+                      lineCap={lineCap}
+                      weight={p * 4}
+                      color={'#2b2b2b'}
+                    />,
+                    // real colored line
+                    <GeoJSON
+                      key={`${name}-${p}-${index}-real`}
+                      opacity={0.6}
+                      data={{
+                        type: 'Feature',
+                        geometry: {
+                          type: 'LineString',
+                          coordinates: railLine.geometry.coordinates.slice(
+                            range[0],
+                            range[1] + 2
+                          )
+                        }
+                      }}
+                      lineCap={lineCap}
+                      weight={p * 4}
+                      color={LINE_PROPERTIES[name]['color']}
+                    />
+                  ]);
                 });
               })}
           </CustomLayerGroup>
@@ -224,6 +230,16 @@ class MetroMap extends React.Component {
             {railStations &&
               railStations.map(
                 ({ Code, Name, Lat, Lon, LineCode1, LineCode2, LineCode3 }) => {
+                  const lineNames = [LineCode1, LineCode2, LineCode3].map(c => {
+                    return LINE_NAMES.find(
+                      l => LINE_PROPERTIES[l]['code'] === c
+                    );
+                  });
+                  if (
+                    !lineNames.some(name => visibleRailLines.includes(name))
+                  ) {
+                    return false;
+                  }
                   return (
                     <CircleMarker
                       onReady={this.handleRailStationsReady}
@@ -258,9 +274,13 @@ class MetroMap extends React.Component {
                   closestLineSegment
                 } = properties;
                 const [Lat, Lon] = geometry['coordinates'];
-                const lineProperties = Object.values(LINE_PROPERTIES).find(
-                  ({ trackLineID }) => trackLineID === TRACKLINE
+                const lineName = LINE_NAMES.find(
+                  name => LINE_PROPERTIES[name]['trackLineID'] === TRACKLINE
                 );
+                if (!visibleRailLines.includes(lineName)) {
+                  return false;
+                }
+                const lineProperties = LINE_PROPERTIES[lineName];
                 let nearestSegmentCoords = [
                   t.properties.closestLineSegment.l.geometry.coordinates[0],
                   t.properties.closestLineSegment.l.geometry.coordinates[1]
@@ -314,7 +334,8 @@ class MetroMap extends React.Component {
 const mapStateToProps = state => ({
   trains: state.trains.trains,
   railStations: state.railStations.railStations,
-  railLines: state.railLines.railLines
+  railLines: state.railLines.railLines,
+  visibleRailLines: state.visibleRailLines
 });
 
 const mapDispatchToProps = dispatch =>

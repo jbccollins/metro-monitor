@@ -16,7 +16,12 @@ import {
 } from 'common/constants/lines';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fetchTrains, fetchRailStations, fetchRailLines } from 'actions/metro';
+import {
+  fetchTrains,
+  fetchRailStations,
+  fetchRailLines,
+  setSelectedRailStations
+} from 'actions/metro';
 import 'leaflet/dist/leaflet.css';
 import './style.scss';
 import TrainMarker from 'components/TrainMarker';
@@ -30,6 +35,21 @@ L.Icon.Default.mergeOptions({
   iconUrl: require('leaflet/dist/images/marker-icon.png'),
   shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
+
+//  Workaround for 1px lines appearing in Chrome due to fractional transforms
+//  and resulting anti-aliasing.
+//  https://github.com/Leaflet/Leaflet/issues/3575
+if (window.navigator.userAgent.indexOf('Chrome') > -1) {
+  var originalInitTile = L.GridLayer.prototype._initTile;
+  L.GridLayer.include({
+    _initTile: function(tile) {
+      originalInitTile.call(this, tile);
+      var tileSize = this.getTileSize();
+      tile.style.width = tileSize.x + 1 + 'px';
+      tile.style.height = tileSize.y + 1 + 'px';
+    }
+  });
+}
 
 //const weights = [2, 2, 2, 2, 2, 2, 3, 4, 4, 4, 5, 6, 6, 6, 6, 7, 7, 7];
 const scaleMultiples = [
@@ -158,6 +178,18 @@ class MetroMap extends React.Component {
     this.setState({ trainsLayerGroup });
   };
 
+  handleStationClick = stationCode => {
+    const { railStations, setSelectedRailStations } = this.props;
+    const { Code, StationTogether1 } = railStations.find(
+      ({ Code }) => Code === stationCode
+    );
+    let lineCodes = [Code];
+    if (StationTogether1 !== '') {
+      lineCodes.push(StationTogether1);
+    }
+    setSelectedRailStations(lineCodes);
+  };
+
   render() {
     const { trains, railStations, railLines, visibleRailLines } = this.props;
     const { leafletMapElt, zoom } = this.state;
@@ -249,15 +281,9 @@ class MetroMap extends React.Component {
                       opacity={1}
                       fillOpacity={1}
                       fillColor="white"
-                      center={[Lat, Lon]}>
-                      <Popup>
-                        <div>
-                          <div>{Name}</div>
-                          <div>{Code}</div>
-                          <div>{LineCode1}</div>
-                        </div>
-                      </Popup>
-                    </CircleMarker>
+                      onClick={() => this.handleStationClick(Code)}
+                      center={[Lat, Lon]}
+                    />
                   );
                 }
               )}
@@ -343,7 +369,8 @@ const mapDispatchToProps = dispatch =>
     {
       fetchTrains,
       fetchRailStations,
-      fetchRailLines
+      fetchRailLines,
+      setSelectedRailStations
     },
     dispatch
   );

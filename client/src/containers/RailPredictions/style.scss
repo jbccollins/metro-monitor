@@ -1,0 +1,57 @@
+.RailPredictions {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    width: 288px;
+    background: #2b2b2b;
+    border: 1px solid grey;
+    border-radius: 2px;
+    z-index: 999;
+    color: white;
+    padding: 5px;
+    max-height: calc(100vh - 58px);
+    overflow-y: auto;
+
+    table {
+        width: 100%;
+    }
+    .station-name {
+        font-weight: bold;
+        float: left;
+    }
+    th {
+        font-size: 12px;
+    }
+    td, tr {
+        text-align: left;
+    }
+    td {
+        height: 27px;
+        line-height: 27px;
+    }
+    .first-row {
+        border-top: 1px solid;
+    }
+    .line-indicator {
+        width: 20px;
+        height: 20px;
+        line-height: 22px;
+        text-align: center;
+        border-radius: 50%;
+        font-size: 11px;
+        margin-left: 11px;
+        margin-top: 1px;
+        float: left;
+    }
+    .close-button {
+        height: 18px;
+        width: 18px;
+        user-select: none;
+        text-align: center;
+        background-position: center; 
+        background-repeat: no-repeat;
+        background-image: url('../../assets/close.png');
+        background-size: 18px 18px;
+        float: right;
+    }
+}

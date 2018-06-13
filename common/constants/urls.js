@@ -9,20 +9,26 @@
 
 // External
 const TRAIN_POSITIONS = "https://gisservices.wmata.com/gisservices/rest/services/Public/TRAIN_LOC_WMS_PUB/MapServer/0/query?f=json&where=TRACKLINE%3C%3E%20%27Non-revenue%27%20and%20TRACKLINE%20is%20not%20null&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outFields=*";
-const STATION_LOCATIONS = "http://api.wmata.com/Rail.svc/json/jStations?api_key=";
 const RAIL_ALERTS = "https://api.wmata.com/Incidents.svc/json/Incidents?api_key=";
+const RAIL_PREDICTIONS = "https://api.wmata.com/StationPrediction.svc/json/GetPrediction/all?api_key=";
+
+
+//https://www.wmata.com/components/stations.cfc?method=getNextTrains&StationCode=B01%2CF01&returnFormat=JSON&_=1528918594607
 
 // Internal
 const API_RAIL_STATIONS = "/api/railStations";
 const API_RAIL_LINES = "/api/railLines";
 const API_TRAIN_POSITIONS = "/api/trainPositions";
 const API_RAIL_ALERTS = "/api/railAlerts";
+const API_RAIL_PREDICTIONS = "/api/railPredictions";
 
 export {
     RAIL_ALERTS,
+    RAIL_PREDICTIONS,
     API_RAIL_STATIONS,
     API_RAIL_LINES,
     API_TRAIN_POSITIONS,
     API_RAIL_ALERTS,
+    API_RAIL_PREDICTIONS,
     TRAIN_POSITIONS,
 };

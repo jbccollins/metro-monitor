@@ -51,8 +51,8 @@ class MenuWrap extends React.Component {
 var styles = {
   bmBurgerButton: {
     position: 'fixed',
-    width: '36px',
-    height: '36px',
+    width: '30px',
+    height: '28px',
     left: '10px',
     top: '10px'
   },

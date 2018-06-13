@@ -36,7 +36,9 @@
     "find-process": "^1.4.1",
     "isomorphic-fetch": "^2.2.1",
     "pg": "^7.8.1",
+    "lodash.groupby": "^4.6.0",
     "proj4": "^2.4.4",
+    "url": "^0.11.0",
     "yargs": "^13.2.1"
   },
   "devDependencies": {

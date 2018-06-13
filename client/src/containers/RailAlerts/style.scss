@@ -25,7 +25,8 @@
         position: fixed;
         right: 12px;
         top: 12px;
-        transition: width 0.2s, max-height 0.2s;
+        //transition: width 0.2s, max-height 0.2s;
+        transition: transform 0.2s;
     }
 
     .no-alerts {

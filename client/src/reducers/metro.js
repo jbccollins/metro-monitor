@@ -10,7 +10,11 @@ import {
   RAIL_LINES_ERRORED,
   RAIL_ALERTS_REQUESTED,
   RAIL_ALERTS_RECEIVED,
-  RAIL_ALERTS_ERRORED
+  RAIL_ALERTS_ERRORED,
+  RAIL_PREDICTIONS_REQUESTED,
+  RAIL_PREDICTIONS_RECEIVED,
+  RAIL_PREDICTIONS_ERRORED,
+  SET_SELECTED_RAIL_STATIONS
 } from '../actions/metro';
 
 const initialTrainState = {
@@ -31,13 +35,45 @@ const initialRailLineState = {
   error: false
 };
 
-const initialRailAlerts = {
+const initialRailAlertsState = {
   railAlerts: null,
   fetching: false,
   error: false
 };
 
-const railAlerts = (state = initialRailAlerts, action) => {
+const initialRailPredictionsState = {
+  railPredictions: null,
+  fetching: false,
+  error: false
+};
+
+const railPredictions = (state = initialRailPredictionsState, action) => {
+  switch (action.type) {
+    case RAIL_PREDICTIONS_REQUESTED:
+      return {
+        ...state,
+        fetching: true
+      };
+    case RAIL_PREDICTIONS_RECEIVED:
+      return {
+        ...state,
+        railPredictions: action.payload.railPredictions,
+        fetching: false,
+        error: false
+      };
+    case RAIL_PREDICTIONS_ERRORED:
+      return {
+        ...state,
+        railPredictions: null,
+        fetching: false,
+        error: true
+      };
+    default:
+      return state;
+  }
+};
+
+const railAlerts = (state = initialRailAlertsState, action) => {
   switch (action.type) {
     case RAIL_ALERTS_REQUESTED:
       return {
@@ -141,4 +177,20 @@ const railLines = (state = initialRailLineState, action) => {
   }
 };
 
-export { railLines, railStations, railAlerts, trains };
+const selectedRailStations = (state = null, action) => {
+  switch (action.type) {
+    case SET_SELECTED_RAIL_STATIONS:
+      return action.payload.selectedRailStations;
+    default:
+      return state;
+  }
+};
+
+export {
+  railLines,
+  railStations,
+  railAlerts,
+  railPredictions,
+  selectedRailStations,
+  trains
+};

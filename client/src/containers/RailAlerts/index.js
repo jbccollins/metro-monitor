@@ -8,58 +8,10 @@ import './style.scss';
 import ReactDOMServer from 'react-dom/server';
 const KNOWN_ALERT_TYPES = ['Alert', 'Delay'];
 
-const PHRASES = [];
-
-LINE_NAMES.forEach(n => {
-  PHRASES.push({
-    phrase: `${n} line`,
-    style: { backgroundColor: LINE_PROPERTIES[n]['color'] }
-  });
-  PHRASES.push({
-    phrase: n,
-    style: { backgroundColor: LINE_PROPERTIES[n]['color'] }
-  });
-});
-
 const getAffectedLineCodes = linesAffected =>
   linesAffected.split(/;[\s]?/).filter(l => l !== '');
 
 class RailAlert extends React.Component {
-  state = {
-    htmlDescription: ''
-  };
-
-  componentWillMount() {
-    const { Description } = this.props;
-    let htmlDescription = Description;
-    PHRASES.forEach(({ phrase, style }) => {
-      htmlDescription = htmlDescription.replace(
-        new RegExp(phrase, 'gi'),
-        ReactDOMServer.renderToStaticMarkup(<span style={style}>{phrase}</span>)
-      );
-    });
-    this.setState({ htmlDescription });
-  }
-
-  getIndicesOf = (searchStr, str, caseSensitive) => {
-    const searchStrLen = searchStr.length;
-    if (searchStrLen == 0) {
-      return [];
-    }
-    let startIndex = 0;
-    let index = 0;
-    const indices = [];
-    if (!caseSensitive) {
-      str = str.toLowerCase();
-      searchStr = searchStr.toLowerCase();
-    }
-    while ((index = str.indexOf(searchStr, startIndex)) > -1) {
-      startIndex = index + searchStrLen;
-      indices.push([index, startIndex]);
-    }
-    return indices;
-  };
-
   render() {
     const {
       IncidentID,
@@ -68,7 +20,6 @@ class RailAlert extends React.Component {
       LinesAffected,
       DateUpdated
     } = this.props;
-    const { htmlDescription } = this.state;
     const affectedLines = getAffectedLineCodes(LinesAffected);
     const alert = {
       lines: LINE_NAMES.filter(l =>
@@ -100,7 +51,6 @@ class RailAlert extends React.Component {
             {'(' + moment(DateUpdated).fromNow() + ')'}
           </div>
         </div>
-        {/* <div dangerouslySetInnerHTML={{ __html: htmlDescription }} className="description"/> */}
         <div className="description">{Description}</div>
       </div>
     );
@@ -161,8 +111,9 @@ class RailAlerts extends React.Component {
           <div
             className="alerts-container"
             style={{
-              maxHeight: expanded ? '' : '0px',
-              width: expanded ? '' : '0px'
+              //maxHeight: expanded ? '' : '0px',
+              //width: expanded ? '' : '0px'
+              transform: expanded ? '' : 'scale(0)'
             }}>
             {railAlerts &&
               railAlerts.length > 0 &&

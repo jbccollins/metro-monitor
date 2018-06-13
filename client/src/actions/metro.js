@@ -3,7 +3,8 @@ import {
   API_RAIL_STATIONS,
   API_RAIL_LINES,
   API_TRAIN_POSITIONS,
-  API_RAIL_ALERTS
+  API_RAIL_ALERTS,
+  API_RAIL_PREDICTIONS
 } from 'common/constants/urls';
 
 const TRAINS_REQUESTED = 'metro/TRAINS_REQUESTED';
@@ -18,6 +19,56 @@ const RAIL_LINES_ERRORED = 'metro/RAIL_LINES_ERRORED';
 const RAIL_ALERTS_REQUESTED = 'metro/RAIL_ALERTS_REQUESTED';
 const RAIL_ALERTS_RECEIVED = 'metro/RAIL_ALERTS_RECEIVED';
 const RAIL_ALERTS_ERRORED = 'metro/RAIL_ALERTS_ERRORED';
+const RAIL_PREDICTIONS_REQUESTED = 'metro/RAIL_PREDICTIONS_REQUESTED';
+const RAIL_PREDICTIONS_RECEIVED = 'metro/RAIL_PREDICTIONS_RECEIVED';
+const RAIL_PREDICTIONS_ERRORED = 'metro/RAIL_PREDICTIONS_ERRORED';
+const SET_SELECTED_RAIL_STATIONS = 'metro/SET_SELECTED_RAIL_STATIONS';
+
+const setSelectedRailStations = selectedRailStations => {
+  return dispatch => {
+    dispatch({
+      type: SET_SELECTED_RAIL_STATIONS,
+      payload: { selectedRailStations }
+    });
+  };
+};
+
+const requestRailPredictions = () => ({
+  type: RAIL_PREDICTIONS_REQUESTED
+});
+
+const receiveRailPredictions = railPredictions => ({
+  type: RAIL_PREDICTIONS_RECEIVED,
+  payload: { railPredictions }
+});
+
+const handleRailPredictionsError = error => ({
+  type: RAIL_PREDICTIONS_ERRORED,
+  payload: { error }
+});
+
+const fetchRailPredictions = stationCodes => {
+  return dispatch => {
+    dispatch(requestRailPredictions());
+    return fetch(
+      API_RAIL_PREDICTIONS + `?stationCodes=${stationCodes.join(',')}`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json'
+        }
+      }
+    )
+      .then(res => res.json())
+      .then(railPredictions => {
+        dispatch(receiveRailPredictions(railPredictions));
+      })
+      .catch(e => {
+        dispatch(handleRailPredictionsError(e));
+        console.warn(e);
+      });
+  };
+};
 
 const requestRailAlerts = () => ({
   type: RAIL_ALERTS_REQUESTED
@@ -169,6 +220,10 @@ export {
   RAIL_ALERTS_REQUESTED,
   RAIL_ALERTS_RECEIVED,
   RAIL_ALERTS_ERRORED,
+  RAIL_PREDICTIONS_REQUESTED,
+  RAIL_PREDICTIONS_RECEIVED,
+  RAIL_PREDICTIONS_ERRORED,
+  SET_SELECTED_RAIL_STATIONS,
   requestRailStations,
   receiveRailStations,
   handleRailStationsError,
@@ -184,5 +239,7 @@ export {
   fetchTrains,
   fetchRailStations,
   fetchRailLines,
-  fetchRailAlerts
+  fetchRailAlerts,
+  fetchRailPredictions,
+  setSelectedRailStations
 };

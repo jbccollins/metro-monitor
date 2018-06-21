@@ -115,21 +115,22 @@ class RailAlerts extends React.Component {
               //width: expanded ? '' : '0px'
               transform: expanded ? '' : 'scale(0)'
             }}>
-            {railAlerts &&
-              railAlerts.length > 0 &&
-              railAlerts.map((alert, index) => (
-                <RailAlert {...alert} key={alert['IncidentID']} />
-              ))}
-            {(!railAlerts || railAlerts.length === 0) && (
-              <div className="no-alerts">
-                WMATA is not reporting any problems at this time :)
-              </div>
-            )}
+            <div className="alert-menu-title">WMATA Alerts</div>
+            <div className="rail-alerts">
+              {railAlerts &&
+                railAlerts.length > 0 &&
+                railAlerts.map((alert, index) => (
+                  <RailAlert {...alert} key={alert['IncidentID']} />
+                ))}
+              {(!railAlerts || railAlerts.length === 0) && (
+                <div className="no-alerts">No alerts right now :)</div>
+              )}
+            </div>
           </div>
           <div
             className={`expand-button-shadow${
-              hasNewUnreadAlerts ? ' new-alerts' : ''
-            }`}
+              expanded ? ' expanded' : ' closed'
+            }${hasNewUnreadAlerts ? ' new-alerts' : ''}`}
           />
         </div>
       </div>

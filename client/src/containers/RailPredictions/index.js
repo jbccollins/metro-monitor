@@ -53,14 +53,60 @@ class RailPredictions extends React.Component {
               }}
             />
             {fetching && !railPredictions && <div>loading</div>}
-            {railPredictions && (
+            <div className="table-header">
+              <div className="line-cell cell">Line</div>
+              <div className="destination-cell cell">Destination</div>
+              <div className="minutes-cell cell">Minutes</div>
+              <div className="car-cell cell">Cars</div>
+            </div>
+            <div className="table-body">
+              {groups.map((g, groupIndex) => {
+                return railPredictions[g].map(
+                  ({ Car, Destination, Line, Min }, index) => {
+                    const line = LINE_NAMES.find(
+                      l => LINE_PROPERTIES[l]['code'] === Line
+                    );
+                    if (!line) {
+                      return false;
+                    }
+                    return (
+                      <div
+                        //key={`${g}-${index}`}
+                        key={Math.random()}
+                        className={`table-row${
+                          index === 0 && groupIndex > 0 ? ' first-row' : ''
+                        }`}>
+                        <div className="line-cell cell">
+                          <div
+                            className="line-indicator"
+                            style={{
+                              background: LINE_PROPERTIES[line]['color'],
+                              color: LINE_PROPERTIES[line]['complementColor']
+                            }}>
+                            {LINE_PROPERTIES[line]['code']}
+                          </div>
+                        </div>
+                        <div className="destination-cell cell">
+                          {Destination}
+                        </div>
+                        <div className="minutes-cell cell">
+                          {Min === '' ? '---' : Min}
+                        </div>
+                        <div className="car-cell cell">{Car}</div>
+                      </div>
+                    );
+                  }
+                );
+              })}
+            </div>
+            {/*railPredictions && (
               <table>
                 <thead>
                   <tr>
-                    <th style={{ width: '50px' }}>Line</th>
-                    <th>Destination</th>
-                    <th>Minutes</th>
-                    <th>Cars</th>
+                    <th className='line-cell'>Line</th>
+                    <th className='destination-cell'>Destination</th>
+                    <th className='minutes-cell'>Minutes</th>
+                    <th className='car-cell'>Cars</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -77,7 +123,7 @@ class RailPredictions extends React.Component {
                           <tr
                             key={Math.random()}
                             className={index === 0 ? 'first-row' : ''}>
-                            <td>
+                            <td className='line-cell'>
                               <div
                                 className="line-indicator"
                                 style={{
@@ -88,9 +134,9 @@ class RailPredictions extends React.Component {
                                 {LINE_PROPERTIES[line]['code']}
                               </div>
                             </td>
-                            <td>{Destination}</td>
-                            <td>{Min === '' ? '---' : Min}</td>
-                            <td>{Car}</td>
+                            <td className='destination-cell'>{Destination}</td>
+                            <td className='minutes-cell'>{Min === '' ? '---' : Min}</td>
+                            <td className='car-cell'>{Car}</td>
                           </tr>
                         );
                       }
@@ -98,7 +144,7 @@ class RailPredictions extends React.Component {
                   })}
                 </tbody>
               </table>
-            )}
+            )*/}
           </div>
         )}
       </div>

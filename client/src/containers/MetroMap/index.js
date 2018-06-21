@@ -13,7 +13,8 @@ import CustomLayerGroup from 'components/CustomLayerGroup';
 import {
   LINE_PROPERTIES,
   LINE_DRAW_ORDER,
-  LINE_NAMES
+  LINE_NAMES,
+  DUPLICATE_STATION_CODES
 } from 'common/constants/lines';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -212,6 +213,7 @@ class MetroMap extends React.Component {
         <Map
           whenReady={this.handleMapLoad}
           center={[38.9072, -77.0369]}
+          onClick={e => console.log(e)}
           onZoomEnd={() => this.setState({ zoom: leafletMapElt.getZoom() })}
           zoom={zoom}>
           {showTiles && (
@@ -337,6 +339,9 @@ class MetroMap extends React.Component {
                       l => LINE_PROPERTIES[l]['code'] === c
                     );
                   });
+                  if (DUPLICATE_STATION_CODES.includes(Code)) {
+                    return false;
+                  }
                   if (
                     !lineNames.some(name => visibleRailLines.includes(name))
                   ) {

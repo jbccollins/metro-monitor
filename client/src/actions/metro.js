@@ -32,6 +32,13 @@ const setSelectedRailStations = selectedRailStations => {
       type: SET_SELECTED_RAIL_STATIONS,
       payload: { selectedRailStations }
     });
+    // clear fetched data
+    if (selectedRailStations === null) {
+      dispatch({
+        type: RAIL_PREDICTIONS_RECEIVED,
+        payload: { selectedRailStations }
+      });
+    }
   };
 };
 

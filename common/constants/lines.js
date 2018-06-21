@@ -115,7 +115,7 @@ const LINE_PROPERTIES = {
                 lineCap: 'round'
             },
             { // green > yellow
-                range: [972, 1362],
+                range: [972, 1363],
                 priority: lines => {
                     if (lines.includes(GREEN)) {
                         return 1;
@@ -225,6 +225,13 @@ const LINE_PROPERTIES = {
 
 const LINE_DRAW_ORDER = [RED, ORANGE, BLUE, GREEN, YELLOW, SILVER];
 
+const DUPLICATE_STATION_CODES = [
+    'E06', // Green/Yellow Ft Totten
+    'F01', // Green/Yellow Gallery Place
+    'C01', // Blue/Orange/Silver Metro Center
+    'D03', // Blue/Orange/Silver L'Enfant Plaza
+];
+
 export {
     RED,
     ORANGE,
@@ -236,4 +243,5 @@ export {
     LINE_PROPERTIES,
     LINE_MERGES,
     LINE_DRAW_ORDER,
+    DUPLICATE_STATION_CODES,
 };

@@ -121,5 +121,5 @@ app.get(API_RAIL_PREDICTIONS, (req, res) => {
 app.use(express.static(__dirname + '/client/build'));
 
 app.get('/', (req, res) => {
-  res.render('index');
+  res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });

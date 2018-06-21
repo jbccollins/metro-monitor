@@ -42,12 +42,12 @@ const snappedStations = snapStations(railLines, railStations);
 let trains = [];
 let railPredictions = [];
 let railAlerts = [
-  {"IncidentID":"8F2E1A3D-8528-4C06-AA20-1594617187D1","Description":"Red Line: Trains operate every 20-25 min w/ single tracking btwn Farragut North & Judiciary Square due to scheduled track work.","StartLocationFullName":null,"EndLocationFullName":null,"PassengerDelay":0.0,"DelaySeverity":null,"IncidentType":"Alert","EmergencyText":null,"LinesAffected":"RD;OR;YL;GR;BL;SV;","DateUpdated":"2018-06-08T22:25:10"},
+  /*{"IncidentID":"8F2E1A3D-8528-4C06-AA20-1594617187D1","Description":"Red Line: Trains operate every 20-25 min w/ single tracking btwn Farragut North & Judiciary Square due to scheduled track work.","StartLocationFullName":null,"EndLocationFullName":null,"PassengerDelay":0.0,"DelaySeverity":null,"IncidentType":"Alert","EmergencyText":null,"LinesAffected":"RD;OR;YL;GR;BL;SV;","DateUpdated":"2018-06-08T22:25:10"},
   {"IncidentID":"FDB0A82A-2B8D-40A5-A5CF-7686B1EBA812","Description":"Orange Line: Dunn Loring & Vienna stations are closed due to scheduled maintenance.","StartLocationFullName":null,"EndLocationFullName":null,"PassengerDelay":0,"DelaySeverity":null,"IncidentType":"Delay","EmergencyText":null,"LinesAffected":"OR;","DateUpdated":"2018-06-13T06:58:49"},
   {"IncidentID":"502D77F1-099B-4245-A5C4-25B7A3AA7D24","Description":"Orange Line: Thru Sunday's closing, buses replace trains btwn Vienna & West Falls Church due to scheduled maintenance.","StartLocationFullName":null,"EndLocationFullName":null,"PassengerDelay":0,"DelaySeverity":null,"IncidentType":"Alert","EmergencyText":null,"LinesAffected":"OR;","DateUpdated":"2018-06-09T06:56:24"},
   {"IncidentID":"602D77F1-099B-4245-A5C4-25B7A3AA7D24","Description":"Orange Line: Thru Sunday's closing, buses replace trains btwn Vienna & West Falls Church due to scheduled maintenance.","StartLocationFullName":null,"EndLocationFullName":null,"PassengerDelay":0,"DelaySeverity":null,"IncidentType":"Alert","EmergencyText":null,"LinesAffected":"OR;","DateUpdated":"2018-06-09T06:56:24"},
   {"IncidentID":"702D77F1-099B-4245-A5C4-25B7A3AA7D24","Description":"Orange Line: Thru Sunday's closing, buses replace trains btwn Vienna & West Falls Church due to scheduled maintenance.","StartLocationFullName":null,"EndLocationFullName":null,"PassengerDelay":0,"DelaySeverity":null,"IncidentType":"Alert","EmergencyText":null,"LinesAffected":"OR;","DateUpdated":"2018-06-09T06:56:24"},
-];
+*/];
 
 const fetchTrains = async () => {
   let nextTrains = await fetch(TRAIN_POSITIONS, {
@@ -69,7 +69,7 @@ const fetchRailAlerts = async () => {
     }
   });
   res = await res.json();
-  //railAlerts = res["Incidents"];
+  railAlerts = res["Incidents"];
 };
 
 const fetchRailPredictions = async () => {

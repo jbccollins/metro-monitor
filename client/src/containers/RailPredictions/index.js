@@ -11,10 +11,6 @@ class RailPredictions extends React.Component {
     stationRefreshInterval: null
   };
 
-  componentWillMount() {
-    this.props.fetchRailPredictions(['A01']);
-  }
-
   componentWillReceiveProps(nextProps) {
     const { selectedRailStations, fetchRailPredictions } = nextProps;
     if (!selectedRailStations) {
@@ -47,53 +43,58 @@ class RailPredictions extends React.Component {
       : [];
     return (
       <div className="RailPredictions">
-        <div className="station-name">{name}</div>
-        {railPredictions && <div className="close-button" />}
-        {fetching && !railPredictions && <div>loading</div>}
-        {railPredictions && (
-          <table>
-            <thead>
-              <tr>
-                <th style={{ width: '50px' }}>Line</th>
-                <th>Destination</th>
-                <th>Minutes</th>
-                <th>Cars</th>
-              </tr>
-            </thead>
-            <tbody>
-              {groups.map(g => {
-                return railPredictions[g].map(
-                  ({ Car, Destination, Line, Min }, index) => {
-                    const line = LINE_NAMES.find(
-                      l => LINE_PROPERTIES[l]['code'] === Line
+        {groups.length > 0 && (
+          <div className="predicitons-container">
+            <div className="station-name">{name}</div>
+            {railPredictions && <div className="close-button" />}
+            {fetching && !railPredictions && <div>loading</div>}
+            {railPredictions && (
+              <table>
+                <thead>
+                  <tr>
+                    <th style={{ width: '50px' }}>Line</th>
+                    <th>Destination</th>
+                    <th>Minutes</th>
+                    <th>Cars</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {groups.map(g => {
+                    return railPredictions[g].map(
+                      ({ Car, Destination, Line, Min }, index) => {
+                        const line = LINE_NAMES.find(
+                          l => LINE_PROPERTIES[l]['code'] === Line
+                        );
+                        if (!line) {
+                          return false;
+                        }
+                        return (
+                          <tr
+                            key={Math.random()}
+                            className={index === 0 ? 'first-row' : ''}>
+                            <td>
+                              <div
+                                className="line-indicator"
+                                style={{
+                                  background: LINE_PROPERTIES[line]['color'],
+                                  color:
+                                    LINE_PROPERTIES[line]['complementColor']
+                                }}>
+                                {LINE_PROPERTIES[line]['code']}
+                              </div>
+                            </td>
+                            <td>{Destination}</td>
+                            <td>{Min === '' ? '---' : Min}</td>
+                            <td>{Car}</td>
+                          </tr>
+                        );
+                      }
                     );
-                    if (!line) {
-                      return false;
-                    }
-                    return (
-                      <tr
-                        key={Math.random()}
-                        className={index === 0 ? 'first-row' : ''}>
-                        <td>
-                          <div
-                            className="line-indicator"
-                            style={{
-                              background: LINE_PROPERTIES[line]['color'],
-                              color: LINE_PROPERTIES[line]['complementColor']
-                            }}>
-                            {LINE_PROPERTIES[line]['code']}
-                          </div>
-                        </td>
-                        <td>{Destination}</td>
-                        <td>{Min === '' ? '---' : Min}</td>
-                        <td>{Car}</td>
-                      </tr>
-                    );
-                  }
-                );
-              })}
-            </tbody>
-          </table>
+                  })}
+                </tbody>
+              </table>
+            )}
+          </div>
         )}
       </div>
     );

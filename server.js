@@ -136,6 +136,6 @@ app.get('/google28ef7306b50928cb.html', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/google28ef7306b50928cb.html'));
 });
 
-app.get('/*', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });

@@ -17,7 +17,7 @@ const visibleRailLines = (state = initialVisibleRailLines, action) => {
   }
 };
 
-const showTiles = (state = false, action) => {
+const showTiles = (state = true, action) => {
   switch (action.type) {
     case SET_SHOW_TILES:
       return action.payload.showTiles;

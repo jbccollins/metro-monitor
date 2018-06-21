@@ -23,12 +23,23 @@ const RAIL_PREDICTIONS_REQUESTED = 'metro/RAIL_PREDICTIONS_REQUESTED';
 const RAIL_PREDICTIONS_RECEIVED = 'metro/RAIL_PREDICTIONS_RECEIVED';
 const RAIL_PREDICTIONS_ERRORED = 'metro/RAIL_PREDICTIONS_ERRORED';
 const SET_SELECTED_RAIL_STATIONS = 'metro/SET_SELECTED_RAIL_STATIONS';
+const SET_SELECTED_DESTINATION_RAIL_STATIONS =
+  'metro/SET_SELECTED_DESTINATION_RAIL_STATIONS';
 
 const setSelectedRailStations = selectedRailStations => {
   return dispatch => {
     dispatch({
       type: SET_SELECTED_RAIL_STATIONS,
       payload: { selectedRailStations }
+    });
+  };
+};
+
+const setSelectedDestinationRailStations = selectedDestinationRailStations => {
+  return dispatch => {
+    dispatch({
+      type: SET_SELECTED_DESTINATION_RAIL_STATIONS,
+      payload: { selectedDestinationRailStations }
     });
   };
 };
@@ -224,6 +235,7 @@ export {
   RAIL_PREDICTIONS_RECEIVED,
   RAIL_PREDICTIONS_ERRORED,
   SET_SELECTED_RAIL_STATIONS,
+  SET_SELECTED_DESTINATION_RAIL_STATIONS,
   requestRailStations,
   receiveRailStations,
   handleRailStationsError,
@@ -241,5 +253,6 @@ export {
   fetchRailLines,
   fetchRailAlerts,
   fetchRailPredictions,
-  setSelectedRailStations
+  setSelectedRailStations,
+  setSelectedDestinationRailStations
 };

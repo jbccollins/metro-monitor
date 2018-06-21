@@ -142,10 +142,11 @@ module.exports = {
           // Process JS with Babel.
           {
             test: /\.(js|jsx|mjs)$/,
-            include: paths.appSrc,
+            include: [paths.appSrc, path.resolve(__dirname, '../../common')],
             loader: require.resolve('babel-loader'),
             options: {
-              compact: true
+              compact: true,
+              presets: ['react-app']
             }
           },
           // The notation here is somewhat confusing.

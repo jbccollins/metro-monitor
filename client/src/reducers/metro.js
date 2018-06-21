@@ -1,3 +1,4 @@
+import { LINE_NAMES } from 'common/constants/lines';
 import {
   TRAINS_REQUESTED,
   TRAINS_RECEIVED,
@@ -14,7 +15,8 @@ import {
   RAIL_PREDICTIONS_REQUESTED,
   RAIL_PREDICTIONS_RECEIVED,
   RAIL_PREDICTIONS_ERRORED,
-  SET_SELECTED_RAIL_STATIONS
+  SET_SELECTED_RAIL_STATIONS,
+  SET_SELECTED_DESTINATION_RAIL_STATIONS
 } from '../actions/metro';
 
 const initialTrainState = {
@@ -186,11 +188,29 @@ const selectedRailStations = (state = null, action) => {
   }
 };
 
+const initialSelectedDestinationRailStations = {};
+LINE_NAMES.forEach(name => {
+  initialSelectedDestinationRailStations[name] = [];
+});
+
+const selectedDestinationRailStations = (
+  state = initialSelectedDestinationRailStations,
+  action
+) => {
+  switch (action.type) {
+    case SET_SELECTED_DESTINATION_RAIL_STATIONS:
+      return action.payload.selectedDestinationRailStations;
+    default:
+      return state;
+  }
+};
+
 export {
   railLines,
   railStations,
   railAlerts,
   railPredictions,
   selectedRailStations,
+  selectedDestinationRailStations,
   trains
 };

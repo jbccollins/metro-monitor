@@ -742,7 +742,7 @@
     "@babel/helper-plugin-utils" "^7.0.0"
     "@babel/plugin-transform-typescript" "^7.3.2"
 
-"@babel/runtime@7.4.3", "@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.3.4", "@babel/runtime@^7.4.2":
+"@babel/runtime@7.4.3", "@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.2.0", "@babel/runtime@^7.3.1", "@babel/runtime@^7.3.4":
   version "7.4.3"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.4.3.tgz#79888e452034223ad9609187a0ad1fe0d2ad4bdc"
   integrity sha512-9lsJwJLxDh/T3Q3SZszfWOTkk3pHbkmH+3KY+zwIDmsNlxsumuhS2TH3NIpktU4kNvfzy+k3eLT7aTJSPTo0OA==
@@ -9225,7 +9225,7 @@ prompts@^2.0.1:
     kleur "^3.0.2"
     sisteransi "^1.0.0"
 
-prop-types@^15.5.4, prop-types@^15.6.0, prop-types@^15.6.1:
+prop-types@^15.6.0, prop-types@^15.6.1:
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
   dependencies:
@@ -9463,7 +9463,7 @@ react-event-listener@^0.6.2:
     prop-types "^15.6.0"
     warning "^4.0.1"
 
-react-is@^16.6.3, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.2, react-is@^16.8.4:
+react-is@^16.6.0, react-is@^16.6.3, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.2, react-is@^16.8.4:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
@@ -9904,7 +9904,7 @@ resolve@1.1.7:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b"
 
-resolve@1.10.0, resolve@^1.10.0, resolve@^1.8.1, resolve@^1.9.0:
+resolve@1.10.0, resolve@^1.8.1, resolve@^1.9.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.10.0.tgz#3bdaaeaf45cc07f375656dfd2e54ed0810b101ba"
   integrity sha512-3sUr9aq5OfSg2S9pNtPA9hL1FVEAjvfOC4leW0SNf/mpnaakz2a9femSd6LqAww2RaFctwyf1lCqnTHuF1rxDg==

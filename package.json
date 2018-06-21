@@ -7,7 +7,7 @@
   "scripts": {
     "client": "cd client && yarn start",
     "server": "NODE_ENV=development nodemon starter.js",
-    "start": "API_KEY=a9803a4a2e0d43b586ed3c0893cbede NODE_ENV=production node starter.js",
+    "start": "API_KEY=a9803a4a2e0d43b586ed3c0893cbede5 NODE_ENV=production node starter.js",
     "postinstall": "cd client && yarn && yarn build",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "clean": "rm -rf node_modules rm -f package-lock.json && cd client && rm -rf node_modules && rm -f package-lock.json",

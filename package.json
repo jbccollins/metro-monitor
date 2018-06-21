@@ -1,9 +1,13 @@
 {
   "name": "metro-monitor",
   "version": "1.0.0",
+  "engines": {
+    "node": "10.0.0"
+  },
   "scripts": {
     "client": "cd client && yarn start",
     "server": "NODE_ENV=development nodemon starter.js",
+    "start": "NODE_ENV=production node starter.js",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "clean": "rm -rf node_modules rm -f package-lock.json && cd client && rm -rf node_modules && rm -f package-lock.json",
     "rebuild": "yarn clean && yarn && cd client && yarn"

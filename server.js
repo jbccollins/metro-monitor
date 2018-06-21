@@ -117,3 +117,9 @@ app.get(API_RAIL_PREDICTIONS, (req, res) => {
   })
   res.send(groupBy(toReturn, 'UniqueGroup'));
 });
+
+app.use(express.static(__dirname + '/client/build'));
+
+app.get('/', (req, res) => {
+  res.render('index');
+});

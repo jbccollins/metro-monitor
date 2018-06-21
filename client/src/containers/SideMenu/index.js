@@ -6,7 +6,9 @@ import { slide as Menu } from 'react-burger-menu';
 import './style.scss';
 import 'react-toggle/style.css';
 import Toggle from 'react-toggle';
-import { setVisibleRailLines } from 'actions/controls';
+import { setVisibleRailLines, setShowTiles } from 'actions/controls';
+import { setSelectedDestinationRailStations } from 'actions/metro';
+import Select from 'react-select';
 
 class MenuWrap extends React.Component {
   constructor(props) {
@@ -84,6 +86,32 @@ var styles = {
   }
 };
 
+const selectStyles = {
+  control: styles => ({
+    ...styles,
+    color: 'black',
+    minHeight: '20px',
+    maxHeight: '20px',
+    fontSize: '10px',
+    marginBottom: '10px'
+  }),
+  option: styles => ({
+    ...styles,
+    color: 'black',
+    minHeight: '20px',
+    maxHeight: '20px',
+    fontSize: '12px',
+    lineHeight: '12px',
+    paddingTop: '4px',
+    paddingBottom: '4px',
+    wordWrap: 'nowrap',
+    textOverflow: 'ellipsis'
+  }),
+  multiValue: styles => ({ ...styles, color: 'black', maxWidth: '100px' }),
+  multiValueLabel: styles => ({ ...styles, color: 'black' }),
+  multiValueRemove: styles => ({ ...styles, color: 'black' })
+};
+
 class SideMenu extends React.Component {
   state = {
     checked: true
@@ -101,27 +129,79 @@ class SideMenu extends React.Component {
     }
   };
 
+  handleDestinationStationChange = (line, selectedStations) => {
+    const {
+      setSelectedDestinationRailStations,
+      selectedDestinationRailStations
+    } = this.props;
+    setSelectedDestinationRailStations({
+      ...selectedDestinationRailStations,
+      [line]: selectedStations
+    });
+    console.log(line, selectedStations);
+  };
+
   render() {
-    const { visibleRailLines } = this.props;
+    const {
+      visibleRailLines,
+      railStations,
+      selectedDestinationRailStations,
+      showTiles
+    } = this.props;
     return (
       <div className="SideMenu">
         <MenuWrap wait={20}>
           <Menu styles={styles}>
-            {LINE_NAMES.map(name => (
-              <div className="toggle-wrapper" key={name}>
+            <div>
+              <div className="toggle-wrapper">
                 <label>
+                  <span className="toggle-label">Show Map Tiles</span>
                   <Toggle
                     icons={false}
-                    className={`custom-toggle ${name}`}
-                    checked={visibleRailLines.includes(name)}
-                    onChange={() => this.toggleRailLineVisibility(name)}
+                    className={`custom-toggle show-tiles`}
+                    checked={showTiles}
+                    onChange={() => this.props.setShowTiles(!showTiles)}
                   />
-                  <span className="toggle-label">
-                    {LINE_PROPERTIES[name]['trackLineID']}
-                  </span>
                 </label>
               </div>
-            ))}
+              {LINE_NAMES.map(name => (
+                <div className="toggle-wrapper" key={name}>
+                  <label>
+                    <span className="toggle-label">
+                      {LINE_PROPERTIES[name]['trackLineID']}
+                    </span>
+                    <Toggle
+                      icons={false}
+                      className={`custom-toggle ${name}`}
+                      checked={visibleRailLines.includes(name)}
+                      onChange={() => this.toggleRailLineVisibility(name)}
+                    />
+                  </label>
+                  {railStations && (
+                    <Select
+                      isMulti
+                      styles={selectStyles}
+                      placeholder={`All ${name} line destinations...`}
+                      value={selectedDestinationRailStations[name]}
+                      onChange={s =>
+                        this.handleDestinationStationChange(name, s)
+                      }
+                      options={railStations
+                        .filter(({ LineCode1, LineCode2, LineCode3 }) =>
+                          [LineCode1, LineCode2, LineCode3].includes(
+                            LINE_PROPERTIES[name]['code']
+                          )
+                        )
+                        .sort((a, b) => a.Name.localeCompare(b.Name))
+                        .map(({ Code, Name }) => ({
+                          value: Code,
+                          label: Name
+                        }))}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
           </Menu>
         </MenuWrap>
       </div>
@@ -130,13 +210,18 @@ class SideMenu extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  visibleRailLines: state.visibleRailLines
+  visibleRailLines: state.visibleRailLines,
+  railStations: state.railStations.railStations,
+  selectedDestinationRailStations: state.selectedDestinationRailStations,
+  showTiles: state.showTiles
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      setVisibleRailLines
+      setVisibleRailLines,
+      setSelectedDestinationRailStations,
+      setShowTiles
     },
     dispatch
   );

@@ -6,9 +6,10 @@ import {
   railLines,
   railAlerts,
   railPredictions,
-  selectedRailStations
+  selectedRailStations,
+  selectedDestinationRailStations
 } from './metro';
-import { visibleRailLines } from './controls';
+import { visibleRailLines, showTiles, displayMode } from './controls';
 export default combineReducers({
   trains,
   railStations,
@@ -17,5 +18,8 @@ export default combineReducers({
   railPredictions,
   visibleRailLines,
   selectedRailStations,
+  selectedDestinationRailStations,
+  showTiles,
+  displayMode,
   router: routerReducer
 });

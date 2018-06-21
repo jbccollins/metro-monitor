@@ -92,6 +92,7 @@ module.exports = {
       containers: path.resolve(__dirname, '../src/containers/'),
       assets: path.resolve(__dirname, '../src/assets/'),
       constants: path.resolve(__dirname, '../src/constants/'),
+      utilities: path.resolve(__dirname, '../src/utilities/'),
       // Outside of src
       common: path.resolve(__dirname, '../../common/')
     }
@@ -138,13 +139,14 @@ module.exports = {
           // Process JS with Babel.
           {
             test: /\.(js|jsx|mjs)$/,
-            include: paths.appSrc,
+            include: [paths.appSrc, path.resolve(__dirname, '../../common')],
             loader: require.resolve('babel-loader'),
             options: {
               // This is a feature of `babel-loader` for webpack (not Babel itself).
               // It enables caching results in ./node_modules/.cache/babel-loader/
               // directory for faster rebuilds.
-              cacheDirectory: true
+              cacheDirectory: true,
+              presets: ['react-app']
             }
           },
           // "postcss" loader applies autoprefixer to our CSS.

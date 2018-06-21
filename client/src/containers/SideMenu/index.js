@@ -55,8 +55,8 @@ var styles = {
     position: 'fixed',
     width: '30px',
     height: '28px',
-    left: '10px',
-    top: '10px'
+    left: '12px',
+    top: '12px'
   },
   bmBurgerBars: {
     background: 'white'

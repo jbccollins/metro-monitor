@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { slide as Menu } from 'react-burger-menu';
 import './style.scss';
-import { fetchRailPredictions } from 'actions/metro';
+import { fetchRailPredictions, setSelectedRailStations } from 'actions/metro';
 import { LINE_PROPERTIES, LINE_NAMES } from 'common/constants/lines';
 
 class RailPredictions extends React.Component {
@@ -44,9 +44,14 @@ class RailPredictions extends React.Component {
     return (
       <div className="RailPredictions">
         {groups.length > 0 && (
-          <div className="predicitons-container">
+          <div className="predictions-container">
             <div className="station-name">{name}</div>
-            {railPredictions && <div className="close-button" />}
+            <div
+              className="close-button"
+              onClick={() => {
+                this.props.setSelectedRailStations(null);
+              }}
+            />
             {fetching && !railPredictions && <div>loading</div>}
             {railPredictions && (
               <table>
@@ -110,7 +115,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      fetchRailPredictions
+      fetchRailPredictions,
+      setSelectedRailStations
     },
     dispatch
   );

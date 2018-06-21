@@ -16,11 +16,11 @@ const RAIL_PREDICTIONS = "https://api.wmata.com/StationPrediction.svc/json/GetPr
 //https://www.wmata.com/components/stations.cfc?method=getNextTrains&StationCode=B01%2CF01&returnFormat=JSON&_=1528918594607
 
 // Internal
-const API_RAIL_STATIONS = "https://metro-mania.herokuapp.com/api/railStations";
-const API_RAIL_LINES = "https://metro-mania.herokuapp.com/api/railLines";
-const API_TRAIN_POSITIONS = "https://metro-mania.herokuapp.com/api/trainPositions";
-const API_RAIL_ALERTS = "https://metro-mania.herokuapp.com/api/railAlerts";
-const API_RAIL_PREDICTIONS = "https://metro-mania.herokuapp.com/api/railPredictions";
+const API_RAIL_STATIONS = "/api/railStations";
+const API_RAIL_LINES = "/api/railLines";
+const API_TRAIN_POSITIONS = "/api/trainPositions";
+const API_RAIL_ALERTS = "/api/railAlerts";
+const API_RAIL_PREDICTIONS = "/api/railPredictions";
 
 export {
     RAIL_ALERTS,

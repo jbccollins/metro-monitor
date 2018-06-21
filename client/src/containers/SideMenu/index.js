@@ -81,7 +81,6 @@ var styles = {
     padding: '0.8em'
   },
   bmOverlay: {
-    display: 'none',
     background: 'rgba(0, 0, 0, 0.3)'
   }
 };

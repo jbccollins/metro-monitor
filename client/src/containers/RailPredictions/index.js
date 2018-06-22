@@ -86,7 +86,7 @@ class RailPredictions extends React.Component {
                                   color:
                                     LINE_PROPERTIES[line]['complementColor']
                                 }}>
-                                {LINE_PROPERTIES[line]['code']}
+                                {/*LINE_PROPERTIES[line]['code']*/}
                               </div>
                             </div>
                             <div className="destination-cell cell">

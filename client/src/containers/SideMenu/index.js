@@ -91,15 +91,16 @@ const selectStyles = {
     ...styles,
     color: 'black',
     minHeight: '20px',
-    maxHeight: '20px',
-    fontSize: '10px',
-    marginBottom: '10px'
+    //height: '20px',
+    //maxHeight: '20px',
+    fontSize: '12px'
+    //marginBottom: '10px'
   }),
   option: styles => ({
     ...styles,
     color: 'black',
     minHeight: '20px',
-    maxHeight: '20px',
+    //maxHeight: '20px',
     fontSize: '12px',
     lineHeight: '12px',
     paddingTop: '4px',
@@ -153,19 +154,11 @@ class SideMenu extends React.Component {
         <MenuWrap wait={20}>
           <Menu styles={styles}>
             <div>
-              <div className="toggle-wrapper">
-                <label>
-                  <span className="toggle-label">Show Map Tiles</span>
-                  <Toggle
-                    icons={false}
-                    className={`custom-toggle show-tiles`}
-                    checked={showTiles}
-                    onChange={() => this.props.setShowTiles(!showTiles)}
-                  />
-                </label>
-              </div>
               {LINE_NAMES.map(name => (
-                <div className="toggle-wrapper" key={name}>
+                <div
+                  className="toggle-wrapper"
+                  key={name}
+                  style={{ borderColor: LINE_PROPERTIES[name]['color'] }}>
                   <label>
                     <span className="toggle-label">
                       {LINE_PROPERTIES[name]['trackLineID']}
@@ -178,29 +171,45 @@ class SideMenu extends React.Component {
                     />
                   </label>
                   {railStations && (
-                    <Select
-                      isMulti
-                      styles={selectStyles}
-                      placeholder={`All ${name} line destinations...`}
-                      value={selectedDestinationRailStations[name]}
-                      onChange={s =>
-                        this.handleDestinationStationChange(name, s)
-                      }
-                      options={railStations
-                        .filter(({ LineCode1, LineCode2, LineCode3 }) =>
-                          [LineCode1, LineCode2, LineCode3].includes(
-                            LINE_PROPERTIES[name]['code']
+                    <div
+                      className={`select-container ${
+                        visibleRailLines.includes(name) ? 'visible' : 'hidden'
+                      }`}>
+                      <Select
+                        isMulti
+                        styles={selectStyles}
+                        placeholder={`All destinations...`}
+                        value={selectedDestinationRailStations[name]}
+                        onChange={s =>
+                          this.handleDestinationStationChange(name, s)
+                        }
+                        options={railStations
+                          .filter(({ LineCode1, LineCode2, LineCode3 }) =>
+                            [LineCode1, LineCode2, LineCode3].includes(
+                              LINE_PROPERTIES[name]['code']
+                            )
                           )
-                        )
-                        .sort((a, b) => a.Name.localeCompare(b.Name))
-                        .map(({ Code, Name }) => ({
-                          value: Code,
-                          label: Name
-                        }))}
-                    />
+                          .sort((a, b) => a.Name.localeCompare(b.Name))
+                          .map(({ Code, Name }) => ({
+                            value: Code,
+                            label: Name
+                          }))}
+                      />
+                    </div>
                   )}
                 </div>
               ))}
+              <div className="toggle-wrapper">
+                <label>
+                  <span className="toggle-label">Show Map Tiles</span>
+                  <Toggle
+                    icons={false}
+                    className={`custom-toggle show-tiles`}
+                    checked={showTiles}
+                    onChange={() => this.props.setShowTiles(!showTiles)}
+                  />
+                </label>
+              </div>
             </div>
           </Menu>
         </MenuWrap>

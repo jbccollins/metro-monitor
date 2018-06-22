@@ -1,8 +1,21 @@
 .SideMenu {
+    .select-container {
+        transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+        &.visible {
+            max-height: 10000px;
+        }
+        &.hidden {
+            overflow: hidden;
+            max-height: 0;
+        }    
+    }
     .toggle-wrapper {
         width: 100%;
+        margin-bottom: 10px;
+        border-left: 2px solid;
         display: inline-block;
         position: relative;
+        padding-left: 10px;
         label {
             display: inline-block;
             width: 100%;

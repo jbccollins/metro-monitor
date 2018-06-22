@@ -1,13 +1,15 @@
 .SideMenu {
     .select-container {
         transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+        //transition: transform 0.2s cubic-bezier(0, 1, 0, 1);
         &.visible {
             max-height: 10000px;
         }
         &.hidden {
             overflow: hidden;
             max-height: 0;
-        }    
+            //transform: scale(0);
+        }
     }
     .toggle-wrapper {
         width: 100%;

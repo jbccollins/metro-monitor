@@ -43,7 +43,7 @@ class RailPredictions extends React.Component {
       : [];
     return (
       <div className="RailPredictions">
-        {groups.length > 0 && (
+        {(railPredictions || fetching) && (
           <div className="predictions-container">
             <div className="station-name">{name}</div>
             <div
@@ -52,7 +52,6 @@ class RailPredictions extends React.Component {
                 this.props.setSelectedRailStations(null);
               }}
             />
-            {fetching && !railPredictions && <div>loading</div>}
             <div className="table-header">
               <div className="line-cell cell">Line</div>
               <div className="destination-cell cell">Destination</div>
@@ -60,57 +59,10 @@ class RailPredictions extends React.Component {
               <div className="car-cell cell">Cars</div>
             </div>
             <div className="table-body">
-              {groups.map((g, groupIndex) => {
-                return railPredictions[g].map(
-                  ({ Car, Destination, Line, Min }, index) => {
-                    const line = LINE_NAMES.find(
-                      l => LINE_PROPERTIES[l]['code'] === Line
-                    );
-                    if (!line) {
-                      return false;
-                    }
-                    return (
-                      <div
-                        //key={`${g}-${index}`}
-                        key={Math.random()}
-                        className={`table-row${
-                          index === 0 && groupIndex > 0 ? ' first-row' : ''
-                        }`}>
-                        <div className="line-cell cell">
-                          <div
-                            className="line-indicator"
-                            style={{
-                              background: LINE_PROPERTIES[line]['color'],
-                              color: LINE_PROPERTIES[line]['complementColor']
-                            }}>
-                            {LINE_PROPERTIES[line]['code']}
-                          </div>
-                        </div>
-                        <div className="destination-cell cell">
-                          {Destination}
-                        </div>
-                        <div className="minutes-cell cell">
-                          {Min === '' ? '---' : Min}
-                        </div>
-                        <div className="car-cell cell">{Car}</div>
-                      </div>
-                    );
-                  }
-                );
-              })}
-            </div>
-            {/*railPredictions && (
-              <table>
-                <thead>
-                  <tr>
-                    <th className='line-cell'>Line</th>
-                    <th className='destination-cell'>Destination</th>
-                    <th className='minutes-cell'>Minutes</th>
-                    <th className='car-cell'>Cars</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {groups.map(g => {
+              {fetching && !railPredictions && <div>loading</div>}
+              {(!fetching || railPredictions) && (
+                <div>
+                  {groups.map((g, groupIndex) => {
                     return railPredictions[g].map(
                       ({ Car, Destination, Line, Min }, index) => {
                         const line = LINE_NAMES.find(
@@ -120,10 +72,13 @@ class RailPredictions extends React.Component {
                           return false;
                         }
                         return (
-                          <tr
+                          <div
+                            //key={`${g}-${index}`}
                             key={Math.random()}
-                            className={index === 0 ? 'first-row' : ''}>
-                            <td className='line-cell'>
+                            className={`table-row${
+                              index === 0 && groupIndex > 0 ? ' first-row' : ''
+                            }`}>
+                            <div className="line-cell cell">
                               <div
                                 className="line-indicator"
                                 style={{
@@ -133,18 +88,22 @@ class RailPredictions extends React.Component {
                                 }}>
                                 {LINE_PROPERTIES[line]['code']}
                               </div>
-                            </td>
-                            <td className='destination-cell'>{Destination}</td>
-                            <td className='minutes-cell'>{Min === '' ? '---' : Min}</td>
-                            <td className='car-cell'>{Car}</td>
-                          </tr>
+                            </div>
+                            <div className="destination-cell cell">
+                              {Destination}
+                            </div>
+                            <div className="minutes-cell cell">
+                              {Min === '' ? '---' : Min}
+                            </div>
+                            <div className="car-cell cell">{Car}</div>
+                          </div>
                         );
                       }
                     );
                   })}
-                </tbody>
-              </table>
-            )*/}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>

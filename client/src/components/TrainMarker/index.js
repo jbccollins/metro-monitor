@@ -12,15 +12,15 @@ class TrainMarker extends React.Component {
           className: `TrainMarker ${color}`,
           iconSize: [12, 12],
           //html: `<div class='${direction}'/>`
-          html: `<svg width="100%" viewbox="0 0 30 42" ${
-            direction === 'backward' ? 'transform="rotate(180)"' : ''
-          }>
+          html: `<div style="${
+            direction === 'backward' ? 'transform: rotate(180deg)' : ''
+          }"><svg width="100%" viewbox="0 0 30 42">
                   <path fill="${color}" stroke="${borderColor}" stroke-width="2"
                         d="M15 3
                           Q16.5 6.8 25 18
                           A12.8 12.8 0 1 1 5 18
                           Q13.5 6.8 15 3z" />
-                </svg>`
+                </svg></div>`
         })}
         {...rest}>
         {children}

@@ -17,6 +17,17 @@
         border-radius: 50%;
         background: white;
         border: 3px solid black;
+        &::after {
+            content: '';
+            border-radius: 50%;
+            display: block;
+            width: 18px;
+            height: 18px;
+            opacity: 0.3;
+            margin-top: -6px;
+            margin-left: -6px;
+            background: transparent;
+        }
     }
     .selected-station-icon {
         background: transparent;

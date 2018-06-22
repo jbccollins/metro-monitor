@@ -186,7 +186,6 @@ class MetroMap extends React.Component {
   };
 
   handleStationClick = stationCode => {
-    console.log(stationCode);
     const { railStations, setSelectedRailStations } = this.props;
     const { Code, StationTogether1 } = railStations.find(
       ({ Code }) => Code === stationCode
@@ -205,15 +204,21 @@ class MetroMap extends React.Component {
       railLines,
       visibleRailLines,
       selectedDestinationRailStations,
-      showTiles
+      showTiles,
+      selectedRailStations
     } = this.props;
     const { leafletMapElt, zoom } = this.state;
+    let selectedRailStation = null;
+    if (selectedRailStations) {
+      selectedRailStation = railStations.find(
+        ({ Code }) => Code === selectedRailStations[0]
+      );
+    }
     return (
       <div className="MetroMap">
         <Map
           whenReady={this.handleMapLoad}
           center={[38.9072, -77.0369]}
-          onClick={e => console.log(e)}
           onZoomEnd={() => this.setState({ zoom: leafletMapElt.getZoom() })}
           zoom={zoom}>
           {showTiles && (
@@ -221,6 +226,15 @@ class MetroMap extends React.Component {
               className="MapboxTileLayer"
               crossOrigin
               url="https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiamJjY29sbGlucyIsImEiOiJjamd3dXgyengwNmZnMndsbG9nYnM0Ynh6In0.oZwMIjuVePaRgp0ibE0pZg"
+            />
+          )}
+          {selectedRailStation && (
+            <Marker
+              position={[selectedRailStation.Lat, selectedRailStation.Lon]}
+              icon={L.divIcon({
+                className: `selected-station-icon`,
+                iconSize: [25, 25]
+              })}
             />
           )}
           <CustomLayerGroup onReady={this.handleRailLinesReady}>
@@ -350,19 +364,14 @@ class MetroMap extends React.Component {
                     return false;
                   }
                   return (
-                    <CircleMarker
-                      onReady={this.handleRailStationsReady}
+                    <Marker
                       key={Code}
-                      radius={4}
-                      color={'black'}
-                      opacity={1}
-                      fillOpacity={1}
-                      fillColor="white"
-                      onClick={() => {
-                        console.log('onclick');
-                        this.handleStationClick(Code);
-                      }}
-                      center={[Lat, Lon]}
+                      position={[Lat, Lon]}
+                      onClick={() => this.handleStationClick(Code)}
+                      icon={L.divIcon({
+                        className: `station-icon`,
+                        iconSize: [12, 12]
+                      })}
                     />
                   );
                 }
@@ -452,7 +461,8 @@ const mapStateToProps = state => ({
   railLines: state.railLines.railLines,
   visibleRailLines: state.visibleRailLines,
   selectedDestinationRailStations: state.selectedDestinationRailStations,
-  showTiles: state.showTiles
+  showTiles: state.showTiles,
+  selectedRailStations: state.selectedRailStations
 });
 
 const mapDispatchToProps = dispatch =>

@@ -238,6 +238,7 @@ class MetroMap extends React.Component {
                   return priorities.map(({ range, lineCap }, index) => [
                     // non-transparent underlay. not visible.
                     <GeoJSON
+                      className="line-layer"
                       key={`${name}-${p}-${index}-fake`}
                       opacity={1}
                       data={{
@@ -256,6 +257,7 @@ class MetroMap extends React.Component {
                     />,
                     // real colored line
                     <GeoJSON
+                      className="line-layer"
                       key={`${name}-${p}-${index}-real`}
                       opacity={0.6}
                       data={{

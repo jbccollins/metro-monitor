@@ -47,6 +47,7 @@
     
     .expand-button {
         position: fixed;
+        cursor: pointer;
         top: 13px;
         right: 13px;
         height: 28px;
@@ -101,6 +102,7 @@
         padding-bottom: 5px;
         padding-top: 5px;
         border-bottom: 1px solid grey;
+        max-width: 500px;
         &:last-of-type {
             border-bottom: none;
         }

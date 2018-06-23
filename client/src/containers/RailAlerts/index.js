@@ -5,7 +5,6 @@ import moment from 'moment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import './style.scss';
-import ReactDOMServer from 'react-dom/server';
 const KNOWN_ALERT_TYPES = ['Alert', 'Delay'];
 
 const getAffectedLineCodes = linesAffected =>
@@ -14,7 +13,6 @@ const getAffectedLineCodes = linesAffected =>
 class RailAlert extends React.Component {
   render() {
     const {
-      IncidentID,
       Description,
       IncidentType,
       LinesAffected,

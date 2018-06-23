@@ -237,7 +237,7 @@ class MetroMap extends React.Component {
     }
     return (
       <div className="MetroMap">
-        {navigator.geolocation &&
+        {'geolocation' in navigator &&
           railStations && (
             <label title="Find the nearest station to me">
               <div

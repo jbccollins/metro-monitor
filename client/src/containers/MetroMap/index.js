@@ -107,6 +107,7 @@ class MetroMap extends React.Component {
     layersNeedOrdering: true,
     leafletMapElt: false,
     geolocating: false,
+    geolocationAllowed: false,
     zoom: 12
   };
 
@@ -148,6 +149,11 @@ class MetroMap extends React.Component {
     fetchRailStations();
     fetchTrains();
     setInterval(fetchTrains, 5000);
+    navigator.permissions.query({ name: 'geolocation' }).then(result => {
+      if (result.state === 'granted' || result.state === 'prompt') {
+        this.setState({ geolocationAllowed: true });
+      }
+    });
   }
 
   orderLayers(nextState) {
@@ -228,7 +234,7 @@ class MetroMap extends React.Component {
       showTiles,
       selectedRailStations
     } = this.props;
-    const { leafletMapElt, zoom, geolocating } = this.state;
+    const { leafletMapElt, zoom, geolocating, geolocationAllowed } = this.state;
     let selectedRailStation = null;
     if (selectedRailStations) {
       selectedRailStation = railStations.find(
@@ -238,6 +244,7 @@ class MetroMap extends React.Component {
     return (
       <div className="MetroMap">
         {'geolocation' in navigator &&
+          geolocationAllowed &&
           railStations && (
             <label title="Find the nearest station to me">
               <div

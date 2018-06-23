@@ -149,11 +149,13 @@ class MetroMap extends React.Component {
     fetchRailStations();
     fetchTrains();
     setInterval(fetchTrains, 5000);
-    navigator.permissions.query({ name: 'geolocation' }).then(result => {
-      if (result.state === 'granted' || result.state === 'prompt') {
-        this.setState({ geolocationAllowed: true });
-      }
-    });
+    if (navigator.permissions && navigator.permissions.query) {
+      navigator.permissions.query({ name: 'geolocation' }).then(result => {
+        if (result.state === 'granted' || result.state === 'prompt') {
+          this.setState({ geolocationAllowed: true });
+        }
+      });
+    }
   }
 
   orderLayers(nextState) {

@@ -1,13 +1,6 @@
 import React from 'react';
 import L from 'leaflet';
-import {
-  Map,
-  TileLayer,
-  Marker,
-  GeoJSON,
-  CircleMarker,
-  Popup
-} from 'react-leaflet';
+import { Map, TileLayer, Marker, GeoJSON, Popup } from 'react-leaflet';
 import StationLabelPopup from 'components/StationLabelPopup';
 import CustomLayerGroup from 'components/CustomLayerGroup';
 import {
@@ -27,7 +20,13 @@ import {
 import 'leaflet/dist/leaflet.css';
 import './style.scss';
 import TrainMarker from 'components/TrainMarker';
-import { nearestPointOnLine, lineString, point } from '@turf/turf';
+import {
+  nearestPointOnLine,
+  nearestPoint,
+  lineString,
+  point,
+  featureCollection
+} from '@turf/turf';
 
 // https://github.com/PaulLeCam/react-leaflet/issues/255#issuecomment-269750542
 // The webpack bundling step can't find these images
@@ -107,6 +106,7 @@ class MetroMap extends React.Component {
     trainsLayerGroup: null,
     layersNeedOrdering: true,
     leafletMapElt: false,
+    geolocating: false,
     zoom: 12
   };
 
@@ -185,6 +185,27 @@ class MetroMap extends React.Component {
     this.setState({ trainsLayerGroup });
   };
 
+  // Select nearest station
+  handleGeolocation = ({ coords }) => {
+    const { latitude, longitude } = coords;
+    const { railStations } = this.props;
+    const pointFeatureCollection = featureCollection(
+      railStations.map(({ Lat, Lon }) => point([Lon, Lat]))
+    );
+    const nearest = nearestPoint(
+      point([longitude, latitude]),
+      pointFeatureCollection
+    );
+    const nearestRailStation =
+      railStations[nearest['properties']['featureIndex']];
+    this.handleStationClick(nearestRailStation['Code']);
+    this.setState({ geolocating: false });
+    this.state.leafletMapElt.flyTo(
+      [nearestRailStation.Lat, nearestRailStation.Lon],
+      13
+    );
+  };
+
   handleStationClick = stationCode => {
     const { railStations, setSelectedRailStations } = this.props;
     const { Code, StationTogether1 } = railStations.find(
@@ -207,7 +228,7 @@ class MetroMap extends React.Component {
       showTiles,
       selectedRailStations
     } = this.props;
-    const { leafletMapElt, zoom } = this.state;
+    const { leafletMapElt, zoom, geolocating } = this.state;
     let selectedRailStation = null;
     if (selectedRailStations) {
       selectedRailStation = railStations.find(
@@ -216,6 +237,22 @@ class MetroMap extends React.Component {
     }
     return (
       <div className="MetroMap">
+        {navigator.geolocation &&
+          railStations && (
+            <label title="Find the nearest station to me">
+              <div
+                className={`geolocation-button${
+                  geolocating ? ' geolocating' : ''
+                }`}
+                onClick={() => {
+                  this.setState({ geolocating: true });
+                  navigator.geolocation.getCurrentPosition(
+                    this.handleGeolocation
+                  );
+                }}
+              />
+            </label>
+          )}
         <Map
           whenReady={this.handleMapLoad}
           center={[38.9072, -77.0369]}
@@ -233,7 +270,7 @@ class MetroMap extends React.Component {
               position={[selectedRailStation.Lat, selectedRailStation.Lon]}
               icon={L.divIcon({
                 className: `selected-station-icon`,
-                iconSize: [25, 25]
+                iconSize: [12, 12]
               })}
             />
           )}

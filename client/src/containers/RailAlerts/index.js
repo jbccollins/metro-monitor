@@ -138,6 +138,15 @@ class RailAlerts extends React.Component {
 
 const mapStateToProps = state => ({
   railAlerts: state.railAlerts.railAlerts
+    ? state.railAlerts.railAlerts.filter(({ LinesAffected }) => {
+        const lineCodesAffected = getAffectedLineCodes(LinesAffected);
+        const visibleLineCodes = state.visibleRailLines.map(
+          l => LINE_PROPERTIES[l]['code']
+        );
+        return lineCodesAffected.some(code => visibleLineCodes.includes(code));
+      })
+    : null,
+  visibleRailLines: state.visibleRailLines
 });
 
 const mapDispatchToProps = dispatch =>

@@ -30,7 +30,8 @@ class RailPredictions extends React.Component {
     const {
       railPredictionsState: { railPredictions, fetching },
       selectedRailStations,
-      railStations
+      railStations,
+      visibleRailLines
     } = this.props;
     let name = '';
     if (railStations && selectedRailStations) {
@@ -40,6 +41,10 @@ class RailPredictions extends React.Component {
     const groups = railPredictions
       ? Object.keys(railPredictions).sort(g => g)
       : [];
+
+    const selectedRailLineCodes = visibleRailLines.map(
+      l => LINE_PROPERTIES[l]['code']
+    );
     return (
       <div className="RailPredictions">
         {(railPredictions || fetching) && (
@@ -67,7 +72,7 @@ class RailPredictions extends React.Component {
                         const line = LINE_NAMES.find(
                           l => LINE_PROPERTIES[l]['code'] === Line
                         );
-                        if (!line) {
+                        if (!line || !selectedRailLineCodes.includes(Line)) {
                           return false;
                         }
                         return (
@@ -113,7 +118,8 @@ class RailPredictions extends React.Component {
 const mapStateToProps = state => ({
   railPredictionsState: state.railPredictions,
   railStations: state.railStations.railStations,
-  selectedRailStations: state.selectedRailStations
+  selectedRailStations: state.selectedRailStations,
+  visibleRailLines: state.visibleRailLines
 });
 
 const mapDispatchToProps = dispatch =>

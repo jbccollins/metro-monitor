@@ -7,7 +7,10 @@ import './style.scss';
 import 'react-toggle/style.css';
 import Toggle from 'react-toggle';
 import { setVisibleRailLines, setShowTiles } from 'actions/controls';
-import { setSelectedDestinationRailStations } from 'actions/metro';
+import {
+  setSelectedDestinationRailStations,
+  setSelectedRailStations
+} from 'actions/metro';
 import Select from 'react-select';
 
 class MenuWrap extends React.Component {
@@ -119,14 +122,38 @@ class SideMenu extends React.Component {
   };
 
   toggleRailLineVisibility = railLineName => {
-    const { visibleRailLines, setVisibleRailLines } = this.props;
+    const {
+      visibleRailLines,
+      setVisibleRailLines,
+      setSelectedRailStations,
+      railStations,
+      selectedRailStations
+    } = this.props;
     const index = visibleRailLines.indexOf(railLineName);
+    let newVisibleLines;
     if (index > -1) {
-      const newVisibleLines = [].concat(visibleRailLines);
+      newVisibleLines = [].concat(visibleRailLines);
       newVisibleLines.splice(index, 1);
-      setVisibleRailLines(newVisibleLines);
     } else {
-      setVisibleRailLines([].concat(visibleRailLines, railLineName));
+      newVisibleLines = [].concat(visibleRailLines, railLineName);
+    }
+    setVisibleRailLines(newVisibleLines);
+    if (selectedRailStations) {
+      const visibleRailLineCodes = newVisibleLines.map(
+        l => LINE_PROPERTIES[l]['code']
+      );
+      const visibleRailStations = railStations
+        .filter(({ LineCode1, LineCode2, LineCode3 }) => {
+          return [LineCode1, LineCode2, LineCode3].some(c =>
+            visibleRailLineCodes.includes(c)
+          );
+        })
+        .map(({ Code }) => Code);
+      // If a station is selected and then then every rail line associated with that station is toggled off
+      // clear the station
+      if (!selectedRailStations.some(s => visibleRailStations.includes(s))) {
+        setSelectedRailStations(null);
+      }
     }
   };
 
@@ -139,7 +166,6 @@ class SideMenu extends React.Component {
       ...selectedDestinationRailStations,
       [line]: selectedStations
     });
-    console.log(line, selectedStations);
   };
 
   render() {
@@ -222,7 +248,8 @@ const mapStateToProps = state => ({
   visibleRailLines: state.visibleRailLines,
   railStations: state.railStations.railStations,
   selectedDestinationRailStations: state.selectedDestinationRailStations,
-  showTiles: state.showTiles
+  showTiles: state.showTiles,
+  selectedRailStations: state.selectedRailStations
 });
 
 const mapDispatchToProps = dispatch =>
@@ -230,6 +257,7 @@ const mapDispatchToProps = dispatch =>
     {
       setVisibleRailLines,
       setSelectedDestinationRailStations,
+      setSelectedRailStations,
       setShowTiles
     },
     dispatch

@@ -232,6 +232,11 @@ const DUPLICATE_STATION_CODES = [
     'D03', // Blue/Orange/Silver L'Enfant Plaza
 ];
 
+const STATIONS_WITH_PERMANENT_LABELS = [
+    "N06", // left silver
+    "K08", // left orange
+];
+
 export {
     RED,
     ORANGE,
@@ -244,4 +249,5 @@ export {
     LINE_MERGES,
     LINE_DRAW_ORDER,
     DUPLICATE_STATION_CODES,
+    STATIONS_WITH_PERMANENT_LABELS,
 };

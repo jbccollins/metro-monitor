@@ -1,13 +1,13 @@
 import React from 'react';
 import L from 'leaflet';
 import { Map, TileLayer, Marker, GeoJSON, Popup } from 'react-leaflet';
-import StationLabelPopup from 'components/StationLabelPopup';
 import CustomLayerGroup from 'components/CustomLayerGroup';
 import {
   LINE_PROPERTIES,
   LINE_DRAW_ORDER,
   LINE_NAMES,
-  DUPLICATE_STATION_CODES
+  DUPLICATE_STATION_CODES,
+  STATIONS_WITH_PERMANENT_LABELS
 } from 'common/constants/lines';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -17,6 +17,7 @@ import {
   fetchRailLines,
   setSelectedRailStations
 } from 'actions/metro';
+import { setMapPosition } from 'actions/persistence';
 import 'leaflet/dist/leaflet.css';
 import './style.scss';
 import TrainMarker from 'components/TrainMarker';
@@ -107,8 +108,7 @@ class MetroMap extends React.Component {
     layersNeedOrdering: true,
     leafletMapElt: false,
     geolocating: false,
-    geolocationAllowed: false,
-    zoom: 12
+    geolocationAllowed: false
   };
 
   componentWillUpdate(nextProps, nextState) {
@@ -226,6 +226,15 @@ class MetroMap extends React.Component {
     setSelectedRailStations(lineCodes);
   };
 
+  handleMoveEnd = () => {
+    const center = this.state.leafletMapElt.getCenter();
+    const mapPosition = {
+      zoom: this.state.leafletMapElt.getZoom(),
+      center: [center.lat, center.lng]
+    };
+    this.props.setMapPosition(mapPosition);
+  };
+
   render() {
     const {
       trains,
@@ -234,11 +243,13 @@ class MetroMap extends React.Component {
       visibleRailLines,
       selectedDestinationRailStations,
       showTiles,
-      selectedRailStations
+      selectedRailStations,
+      zoom,
+      center
     } = this.props;
-    const { leafletMapElt, zoom, geolocating, geolocationAllowed } = this.state;
+    const { leafletMapElt, geolocating, geolocationAllowed } = this.state;
     let selectedRailStation = null;
-    if (selectedRailStations) {
+    if (selectedRailStations && railStations) {
       selectedRailStation = railStations.find(
         ({ Code }) => Code === selectedRailStations[0]
       );
@@ -264,14 +275,21 @@ class MetroMap extends React.Component {
           )}
         <Map
           whenReady={this.handleMapLoad}
-          center={[38.9072, -77.0369]}
-          onZoomEnd={() => this.setState({ zoom: leafletMapElt.getZoom() })}
+          center={center}
+          onMoveEnd={this.handleMoveEnd}
           zoom={zoom}>
-          {showTiles && (
+          {/* {showTiles && (
             <TileLayer
               className="MapboxTileLayer"
               crossOrigin
               url="https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiamJjY29sbGlucyIsImEiOiJjamd3dXgyengwNmZnMndsbG9nYnM0Ynh6In0.oZwMIjuVePaRgp0ibE0pZg"
+            />
+          )} */}
+          {showTiles && (
+            <TileLayer
+              className="MapboxTileLayer"
+              crossOrigin
+              url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png"
             />
           )}
           {selectedRailStation && (
@@ -338,65 +356,39 @@ class MetroMap extends React.Component {
                 });
               })}
           </CustomLayerGroup>
-          {/* <CustomLayerGroup onReady={this.handleRailStationsReady}>
-            {railStations &&
-              railStations.map(
-                ({ Code, Name, Lat, Lon, LineCode1, LineCode2, LineCode3 }, index) => {
-                  const lineNames = [LineCode1, LineCode2, LineCode3].map(c => {
-                    return LINE_NAMES.find(
-                      l => LINE_PROPERTIES[l]['code'] === c
-                    );
-                  });
-                  if (
-                    !lineNames.some(name => visibleRailLines.includes(name))
-                  ) {
-                    return false;
-                  }
-                  const showLabel = (index % labelSpacing[zoom]) === 0;
-                  return (
-                    [
-                      <CircleMarker
-                        onReady={this.handleRailStationsReady}
-                        key={Code}
-                        radius={4}
-                        color={'black'}
-                        opacity={1}
-                        fillOpacity={1}
-                        fillColor="white"
-                        onClick={() => {
-                          console.log('onclick')
-                          this.handleStationClick(Code);
-                        }}
-                        center={[Lat, Lon]}/>,
-                        <Marker
-                          style={{display: showLabel ? '' : 'none'}}
-                          key={`${Code}-label`}
-                          position={[Lat, Lon]}
-                          icon={L.divIcon({
-                            className: `label-icon`,
-                            iconSize: [12, 12],
-                            //html: `<div class='${direction}'/>`
-                            html: `
-                            <div style="
-                              color: white; 
-                              white-space: nowrap; 
-                              display: ${showLabel ? 'inline-block' : 'none'};
-                              transform-origin: bottom right; 
-                              transform: translate(-100%) rotate(-30deg)">
-                                ${Name}
-                            </div>`
-                          })}/>
-                      ]
-                  );
-                }
-              )
-            }
-          </CustomLayerGroup> */}
           <CustomLayerGroup onReady={this.handleRailStationsReady}>
             {railStations &&
               railStations.map(
-                ({ Code, Name, Lat, Lon, LineCode1, LineCode2, LineCode3 }) => {
-                  const lineNames = [LineCode1, LineCode2, LineCode3].map(c => {
+                (
+                  {
+                    Code,
+                    Name,
+                    Lat,
+                    Lon,
+                    LineCode1,
+                    LineCode2,
+                    LineCode3,
+                    StationTogether1
+                  },
+                  index
+                ) => {
+                  let lineCodes = [LineCode1, LineCode2, LineCode3];
+                  if (StationTogether1 !== '') {
+                    const {
+                      LineCode1: stLineCode1,
+                      LineCode2: stLineCode2,
+                      LineCode3: stLineCode3
+                    } = railStations.find(
+                      ({ Code }) => Code === StationTogether1
+                    );
+                    lineCodes = [].concat(lineCodes, [
+                      stLineCode1,
+                      stLineCode2,
+                      stLineCode3
+                    ]);
+                  }
+                  //{debugger}
+                  const lineNames = lineCodes.map(c => {
                     return LINE_NAMES.find(
                       l => LINE_PROPERTIES[l]['code'] === c
                     );
@@ -409,7 +401,9 @@ class MetroMap extends React.Component {
                   ) {
                     return false;
                   }
-                  return (
+                  const showLabel = false; //STATIONS_WITH_PERMANENT_LABELS.includes(Code);//(index % labelSpacing[zoom]) === 0;
+
+                  return [
                     <Marker
                       key={Code}
                       position={[Lat, Lon]}
@@ -418,8 +412,27 @@ class MetroMap extends React.Component {
                         className: `station-icon`,
                         iconSize: [12, 12]
                       })}
+                    />,
+                    <Marker
+                      style={{ display: showLabel ? '' : 'none' }}
+                      key={`${Code}-label`}
+                      position={[Lat, Lon]}
+                      icon={L.divIcon({
+                        className: `label-icon`,
+                        iconSize: [12, 12],
+                        //html: `<div class='${direction}'/>`
+                        html: `
+                          <div style="
+                            color: white; 
+                            white-space: nowrap; 
+                            display: ${showLabel ? 'inline-block' : 'none'};
+                            transform-origin: bottom right; 
+                            transform: translate(-100%) rotate(-30deg)">
+                              ${Name}
+                          </div>`
+                      })}
                     />
-                  );
+                  ];
                 }
               )}
           </CustomLayerGroup>
@@ -508,7 +521,9 @@ const mapStateToProps = state => ({
   visibleRailLines: state.visibleRailLines,
   selectedDestinationRailStations: state.selectedDestinationRailStations,
   showTiles: state.showTiles,
-  selectedRailStations: state.selectedRailStations
+  selectedRailStations: state.selectedRailStations,
+  zoom: state.zoom,
+  center: state.center
 });
 
 const mapDispatchToProps = dispatch =>
@@ -517,7 +532,8 @@ const mapDispatchToProps = dispatch =>
       fetchTrains,
       fetchRailStations,
       fetchRailLines,
-      setSelectedRailStations
+      setSelectedRailStations,
+      setMapPosition
     },
     dispatch
   );

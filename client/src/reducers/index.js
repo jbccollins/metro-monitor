@@ -10,6 +10,7 @@ import {
   selectedDestinationRailStations
 } from './metro';
 import { visibleRailLines, showTiles, displayMode } from './controls';
+import { center, zoom } from './persistence';
 export default combineReducers({
   trains,
   railStations,
@@ -21,5 +22,7 @@ export default combineReducers({
   selectedDestinationRailStations,
   showTiles,
   displayMode,
+  center,
+  zoom,
   router: routerReducer
 });

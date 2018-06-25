@@ -28,6 +28,7 @@ import {
   point,
   featureCollection
 } from '@turf/turf';
+import { DCGeoJSON } from 'utilities/controls';
 
 // https://github.com/PaulLeCam/react-leaflet/issues/255#issuecomment-269750542
 // The webpack bundling step can't find these images
@@ -274,22 +275,27 @@ class MetroMap extends React.Component {
             </label>
           )}
         <Map
+          minZoom={9}
           whenReady={this.handleMapLoad}
           center={center}
           onMoveEnd={this.handleMoveEnd}
           zoom={zoom}>
-          {/* {showTiles && (
-            <TileLayer
-              className="MapboxTileLayer"
-              crossOrigin
-              url="https://api.mapbox.com/styles/v1/mapbox/dark-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiamJjY29sbGlucyIsImEiOiJjamd3dXgyengwNmZnMndsbG9nYnM0Ynh6In0.oZwMIjuVePaRgp0ibE0pZg"
-            />
-          )} */}
           {showTiles && (
             <TileLayer
               className="MapboxTileLayer"
               crossOrigin
               url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png"
+            />
+          )}
+          {!showTiles && (
+            <GeoJSON
+              className="dc-outline"
+              style={{ cursor: 'default' }}
+              color="grey"
+              opacity={0.5}
+              fillOpacity={0}
+              weight={1}
+              data={DCGeoJSON}
             />
           )}
           {selectedRailStation && (

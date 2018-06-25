@@ -71,6 +71,7 @@ const LINE_PROPERTIES = {
         directions: invertedDirections,
         invertGeometry: true,
         complementColor: 'white',
+        commonDestinationStationCodes: ['A15', 'A11', 'B11', 'B08'],
     },
     [ORANGE]: {
         color: 'orange',
@@ -87,6 +88,7 @@ const LINE_PROPERTIES = {
         directions: directions,
         invertGeometry: false,
         complementColor: 'black',
+        commonDestinationStationCodes: ['K08', 'D13'],
     },
     [YELLOW]: {
         color: 'yellow',
@@ -128,6 +130,7 @@ const LINE_PROPERTIES = {
         directions: directions,
         invertGeometry: false,
         complementColor: 'black',
+        commonDestinationStationCodes: ['E01', 'E06', 'C15'],
     },
     [GREEN]: {
         color: 'green',
@@ -144,6 +147,7 @@ const LINE_PROPERTIES = {
         directions: invertedDirections,
         invertGeometry: true,
         complementColor: 'white',
+        commonDestinationStationCodes: ['F11', 'E10'],
     },
     [BLUE]: {
         color: 'blue',
@@ -178,6 +182,7 @@ const LINE_PROPERTIES = {
         directions: directions,
         invertGeometry: false,
         complementColor: 'white',
+        commonDestinationStationCodes: ['J03', 'G05'],
     },
     [SILVER]: {
         color: 'silver',
@@ -220,6 +225,7 @@ const LINE_PROPERTIES = {
         directions: directions,
         invertGeometry: false,
         complementColor: 'black',
+        commonDestinationStationCodes: ['N06', 'G05'],
     }
 };
 

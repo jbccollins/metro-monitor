@@ -16,6 +16,7 @@ import { setMapPosition } from 'actions/persistence';
 const STATION_CODES = 'stationCodes';
 const RAIL_LINES = 'railLines';
 const MAP_POSITION = 'mapPosition';
+const SHOW_TILES = 'showTiles';
 
 class App extends React.Component {
   constructor() {
@@ -23,7 +24,8 @@ class App extends React.Component {
     this.urlParsingMap = {
       [STATION_CODES]: this.parseStationCodes,
       [RAIL_LINES]: this.parseRailLines,
-      [MAP_POSITION]: this.parseMapPosition
+      [MAP_POSITION]: this.parseMapPosition,
+      [SHOW_TILES]: this.parseShowMapTiles
     };
   }
 
@@ -42,7 +44,13 @@ class App extends React.Component {
 
   buildURL = () => {
     let urlParamMap = {};
-    const { selectedRailStations, visibleRailLines, zoom, center } = this.props;
+    const {
+      selectedRailStations,
+      visibleRailLines,
+      zoom,
+      center,
+      showTiles
+    } = this.props;
     if (selectedRailStations) {
       urlParamMap[STATION_CODES] = selectedRailStations.join(',');
     }
@@ -52,6 +60,9 @@ class App extends React.Component {
     if (typeof zoom !== 'undefined' && center) {
       const c = center.join(',');
       urlParamMap[MAP_POSITION] = `${c},${zoom}`;
+    }
+    if (typeof showTiles !== 'undefined') {
+      urlParamMap[SHOW_TILES] = showTiles;
     }
     window.history.replaceState(
       null,
@@ -74,6 +85,10 @@ class App extends React.Component {
       center: [Number(lat), Number(lng)],
       zoom: Number(zoom)
     });
+  };
+
+  parseShowMapTiles = showTiles => {
+    this.props.setShowTiles(showTiles === 'true');
   };
 
   render() {

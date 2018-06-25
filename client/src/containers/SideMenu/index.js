@@ -74,15 +74,14 @@ var styles = {
   },
   bmMenu: {
     background: '#2b2b2b',
-    padding: '2.5em 1.5em 0',
+    padding: '30px 30px 12px 12px',
     fontSize: '1.15em'
   },
   bmMorphShape: {
     fill: '#373a47'
   },
   bmItemList: {
-    color: 'white',
-    padding: '0.8em'
+    color: 'white'
   },
   bmOverlay: {
     background: 'rgba(0, 0, 0, 0.3)'
@@ -168,6 +167,12 @@ class SideMenu extends React.Component {
     });
   };
 
+  formatGroupLabel = data => (
+    <div>
+      <span style={{ fontSize: '10px' }}>{data.label}</span>
+    </div>
+  );
+
   render() {
     const {
       visibleRailLines,
@@ -206,20 +211,51 @@ class SideMenu extends React.Component {
                         styles={selectStyles}
                         placeholder={`All destinations...`}
                         value={selectedDestinationRailStations[name]}
+                        closeOnSelect={false}
+                        closeMenuOnSelect={false}
+                        onSelectResetsInput={false}
+                        formatGroupLabel={this.formatGroupLabel}
                         onChange={s =>
                           this.handleDestinationStationChange(name, s)
                         }
-                        options={railStations
-                          .filter(({ LineCode1, LineCode2, LineCode3 }) =>
-                            [LineCode1, LineCode2, LineCode3].includes(
-                              LINE_PROPERTIES[name]['code']
-                            )
-                          )
-                          .sort((a, b) => a.Name.localeCompare(b.Name))
-                          .map(({ Code, Name }) => ({
-                            value: Code,
-                            label: Name
-                          }))}
+                        options={[
+                          {
+                            label: 'Common Destinations',
+                            options: railStations
+                              .filter(
+                                ({ LineCode1, LineCode2, LineCode3, Code }) =>
+                                  [LineCode1, LineCode2, LineCode3].includes(
+                                    LINE_PROPERTIES[name]['code']
+                                  ) &&
+                                  LINE_PROPERTIES[name][
+                                    'commonDestinationStationCodes'
+                                  ].includes(Code)
+                              )
+                              .sort((a, b) => a.Name.localeCompare(b.Name))
+                              .map(({ Code, Name }) => ({
+                                value: Code,
+                                label: Name
+                              }))
+                          },
+                          {
+                            label: 'Other Destinations',
+                            options: railStations
+                              .filter(
+                                ({ LineCode1, LineCode2, LineCode3, Code }) =>
+                                  [LineCode1, LineCode2, LineCode3].includes(
+                                    LINE_PROPERTIES[name]['code']
+                                  ) &&
+                                  !LINE_PROPERTIES[name][
+                                    'commonDestinationStationCodes'
+                                  ].includes(Code)
+                              )
+                              .sort((a, b) => a.Name.localeCompare(b.Name))
+                              .map(({ Code, Name }) => ({
+                                value: Code,
+                                label: Name
+                              }))
+                          }
+                        ]}
                       />
                     </div>
                   )}

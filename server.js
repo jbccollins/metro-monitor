@@ -1,5 +1,3 @@
-
-
 import fetch from 'isomorphic-fetch';
 import groupBy from 'lodash.groupby';
 import url from 'url';

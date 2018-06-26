@@ -4,6 +4,7 @@ import express from 'express';
 // proxy fails because the server has not started yet.
 const app = express();
 const port = process.env.PORT || 5001;
+import path from 'path';
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 import fetch from 'isomorphic-fetch';
@@ -121,6 +122,10 @@ app.get(API_RAIL_PREDICTIONS, (req, res) => {
 });
 
 app.use(express.static(__dirname + '/client/build'));
+
+app.get('/splash', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/build/splash.html'));
+});
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));

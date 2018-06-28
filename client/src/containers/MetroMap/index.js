@@ -282,6 +282,7 @@ class MetroMap extends React.Component {
           )}
         <Map
           minZoom={9}
+          maxZoom={18}
           whenReady={this.handleMapLoad}
           center={center}
           onMoveEnd={this.handleMoveEnd}

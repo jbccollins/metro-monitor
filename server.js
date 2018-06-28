@@ -115,7 +115,7 @@ app.get(API_RAIL_PREDICTIONS, (req, res) => {
     const matchingStations = railPredictions.filter(({LocationCode}) => {
       return LocationCode === code;
     })
-    const groupedStations = matchingStations.map(s => ({...s, UniqueGroup: index + '-' + s.Group}))
+    const groupedStations = matchingStations.map(s => ({...s, UniqueGroup: s.Group + '-' + index}))
     toReturn = toReturn.concat(groupedStations);
   })
   res.send(groupBy(toReturn, 'UniqueGroup'));

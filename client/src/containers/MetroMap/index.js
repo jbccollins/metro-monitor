@@ -7,7 +7,14 @@ import {
   LINE_DRAW_ORDER,
   LINE_NAMES,
   DUPLICATE_STATION_CODES,
-  STATIONS_WITH_PERMANENT_LABELS
+  STATIONS_WITH_PERMANENT_LABELS,
+  STATION_LABEL_STYLES,
+  RED,
+  ORANGE,
+  YELLOW,
+  GREEN,
+  BLUE,
+  SILVER
 } from 'common/constants/lines';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -15,7 +22,8 @@ import {
   fetchTrains,
   fetchRailStations,
   fetchRailLines,
-  setSelectedRailStations
+  setSelectedRailStations,
+  receiveRailPredictions
 } from 'actions/metro';
 import { setMapPosition } from 'actions/persistence';
 import 'leaflet/dist/leaflet.css';
@@ -29,7 +37,10 @@ import {
   featureCollection
 } from '@turf/turf';
 import { DCGeoJSON } from 'utilities/controls';
-import { getLineNamesForStation } from 'utilities/metro.js';
+import {
+  getLineNamesForStation,
+  getStationCodesList
+} from 'utilities/metro.js';
 
 // https://github.com/PaulLeCam/react-leaflet/issues/255#issuecomment-269750542
 // The webpack bundling step can't find these images
@@ -77,7 +88,27 @@ const scaleMultiples = [
   -0.00008,
   -0.00008
 ];
-const labelSpacing = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5];
+const labelSpacing = [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0, // First nine don't matter cuz min map zoom
+  10000,
+  10000,
+  100000,
+  10000,
+  10000,
+  10000,
+  1,
+  1,
+  1,
+  1
+];
 
 const offsetLatLngs = (latLngs, zoom) => {
   const first = latLngs[0];
@@ -102,6 +133,39 @@ const offsetLatLngs = (latLngs, zoom) => {
   return newLatLngs;
 };
 
+const DEFAULT_STATION_LABEL_STYLES = {
+  [LINE_PROPERTIES[RED]['code']]: {
+    origin: 'bottom right',
+    translate: '-104%, -3px',
+    rotate: '0deg'
+  },
+  [LINE_PROPERTIES[ORANGE]['code']]: {
+    origin: 'bottom right',
+    translate: '-100%',
+    rotate: '-30deg'
+  },
+  [LINE_PROPERTIES[YELLOW]['code']]: {
+    origin: 'bottom left',
+    translate: '10px',
+    rotate: '30deg'
+  },
+  [LINE_PROPERTIES[GREEN]['code']]: {
+    origin: 'bottom right',
+    translate: '18px, -3px',
+    rotate: '0deg'
+  },
+  [LINE_PROPERTIES[BLUE]['code']]: {
+    origin: 'bottom left',
+    translate: '10px',
+    rotate: '30deg'
+  },
+  [LINE_PROPERTIES[SILVER]['code']]: {
+    origin: 'bottom right',
+    translate: '-100%',
+    rotate: '-30deg'
+  }
+};
+
 class MetroMap extends React.Component {
   state = {
     railStationsLayerGroup: null,
@@ -110,7 +174,8 @@ class MetroMap extends React.Component {
     layersNeedOrdering: true,
     leafletMapElt: false,
     geolocating: false,
-    geolocationAllowed: false
+    geolocationAllowed: false,
+    hoveredStationCodes: []
   };
 
   componentWillUpdate(nextProps, nextState) {
@@ -222,15 +287,25 @@ class MetroMap extends React.Component {
   };
 
   handleStationClick = stationCode => {
-    const { railStations, setSelectedRailStations } = this.props;
-    const { Code, StationTogether1 } = railStations.find(
-      ({ Code }) => Code === stationCode
-    );
-    let lineCodes = [Code];
-    if (StationTogether1 !== '') {
-      lineCodes.push(StationTogether1);
-    }
-    setSelectedRailStations(lineCodes);
+    const {
+      railStations,
+      setSelectedRailStations,
+      receiveRailPredictions
+    } = this.props;
+    const stationCodes = getStationCodesList(stationCode, railStations);
+    receiveRailPredictions(null);
+    setSelectedRailStations(stationCodes);
+  };
+
+  handleStationMouseOver = stationCode => {
+    const { railStations } = this.props;
+    this.setState({
+      hoveredStationCodes: getStationCodesList(stationCode, railStations)
+    });
+  };
+
+  handleStationMouseOut = () => {
+    this.setState({ hoveredStationCodes: [] });
   };
 
   handleMoveEnd = () => {
@@ -254,7 +329,12 @@ class MetroMap extends React.Component {
       zoom,
       center
     } = this.props;
-    const { leafletMapElt, geolocating, geolocationAllowed } = this.state;
+    const {
+      leafletMapElt,
+      geolocating,
+      geolocationAllowed,
+      hoveredStationCodes
+    } = this.state;
     let selectedRailStation = null;
     if (selectedRailStations && railStations) {
       selectedRailStation = railStations.find(
@@ -294,19 +374,18 @@ class MetroMap extends React.Component {
               url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png"
             />
           )}
-          {!showTiles && (
-            <GeoJSON
-              className="dc-outline"
-              style={{ cursor: 'default' }}
-              color="grey"
-              opacity={0.5}
-              fillOpacity={0}
-              weight={1}
-              data={DCGeoJSON}
-            />
-          )}
+          <GeoJSON
+            className="dc-outline"
+            style={{ cursor: 'default' }}
+            color="grey"
+            opacity={0.5}
+            fillOpacity={0}
+            weight={1}
+            data={DCGeoJSON}
+          />
           {selectedRailStation && (
             <Marker
+              zIndexOffset={1000}
               position={[selectedRailStation.Lat, selectedRailStation.Lon]}
               icon={L.divIcon({
                 className: `selected-station-icon`,
@@ -372,7 +451,7 @@ class MetroMap extends React.Component {
           <CustomLayerGroup onReady={this.handleRailStationsReady}>
             {railStations &&
               railStations.map((station, index) => {
-                const { Code, Name, Lat, Lon } = station;
+                const { Code, Name, Lat, Lon, LineCode1 } = station;
                 const lineNames = getLineNamesForStation(station, railStations);
                 if (DUPLICATE_STATION_CODES.includes(Code)) {
                   return false;
@@ -380,13 +459,23 @@ class MetroMap extends React.Component {
                 if (!lineNames.some(name => visibleRailLines.includes(name))) {
                   return false;
                 }
-                const showLabel = false; //STATIONS_WITH_PERMANENT_LABELS.includes(Code);//(index % labelSpacing[zoom]) === 0;
-
+                const showLabel =
+                  STATIONS_WITH_PERMANENT_LABELS.includes(Code) ||
+                  index % labelSpacing[zoom] === 0 ||
+                  (selectedRailStations &&
+                    selectedRailStations.includes(Code)) ||
+                  hoveredStationCodes.includes(Code);
+                let labelStyle = STATION_LABEL_STYLES[Code];
+                if (!labelStyle) {
+                  labelStyle = DEFAULT_STATION_LABEL_STYLES[LineCode1];
+                }
                 return [
                   <Marker
                     key={Code}
                     position={[Lat, Lon]}
                     onClick={() => this.handleStationClick(Code)}
+                    onMouseOver={() => this.handleStationMouseOver(Code)}
+                    onMouseOut={this.handleStationMouseOut}
                     icon={L.divIcon({
                       className: `station-icon`,
                       iconSize: [12, 12]
@@ -399,14 +488,23 @@ class MetroMap extends React.Component {
                     icon={L.divIcon({
                       className: `label-icon`,
                       iconSize: [12, 12],
-                      //html: `<div class='${direction}'/>`
                       html: `
                           <div style="
-                            color: white; 
-                            white-space: nowrap; 
+                            color: white;
+                            opacity: ${
+                              (selectedRailStations &&
+                                selectedRailStations.includes(Code)) ||
+                              hoveredStationCodes.includes(Code)
+                                ? 1
+                                : 0.8
+                            };
+                            white-space: nowrap;
+
                             display: ${showLabel ? 'inline-block' : 'none'};
-                            transform-origin: bottom right; 
-                            transform: translate(-100%) rotate(-30deg)">
+                            transform-origin: ${labelStyle['origin']}; 
+                            transform: translate(${
+                              labelStyle['translate']
+                            }) rotate(${labelStyle['rotate']})">
                               ${Name}
                           </div>`
                     })}
@@ -467,6 +565,7 @@ class MetroMap extends React.Component {
                     direction={lineProperties['directions'][TRIP_DIRECTION]}
                     rotationAngle={properties['rotationAngle']}
                     opacity={1}
+                    zIndexOffset={0}
                     fillOpacity={1}
                     position={L.latLng([
                       nearestOnLine.geometry.coordinates[1],
@@ -511,7 +610,8 @@ const mapDispatchToProps = dispatch =>
       fetchRailStations,
       fetchRailLines,
       setSelectedRailStations,
-      setMapPosition
+      setMapPosition,
+      receiveRailPredictions
     },
     dispatch
   );

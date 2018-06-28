@@ -31,7 +31,8 @@ class RailPredictions extends React.Component {
       railPredictionsState: { railPredictions, fetching },
       selectedRailStations,
       railStations,
-      visibleRailLines
+      visibleRailLines,
+      selectedDestinationRailStations
     } = this.props;
     let name = '';
     if (railStations && selectedRailStations) {
@@ -39,7 +40,7 @@ class RailPredictions extends React.Component {
         .Name;
     }
     const groups = railPredictions
-      ? Object.keys(railPredictions).sort(g => g)
+      ? Object.keys(railPredictions).sort((a, b) => a.localeCompare(b))
       : [];
 
     const selectedRailLineCodes = visibleRailLines.map(
@@ -68,17 +69,26 @@ class RailPredictions extends React.Component {
                 <div>
                   {groups.map((g, groupIndex) => {
                     return railPredictions[g].map(
-                      ({ Car, Destination, Line, Min }, index) => {
+                      (
+                        { Car, Destination, DestinationCode, Line, Min },
+                        index
+                      ) => {
                         const line = LINE_NAMES.find(
                           l => LINE_PROPERTIES[l]['code'] === Line
                         );
-                        if (!line || !selectedRailLineCodes.includes(Line)) {
+                        if (
+                          !line ||
+                          !selectedRailLineCodes.includes(Line) ||
+                          (selectedDestinationRailStations[line].length > 0 &&
+                            !selectedDestinationRailStations[line].includes(
+                              DestinationCode
+                            ))
+                        ) {
                           return false;
                         }
                         return (
                           <div
-                            //key={`${g}-${index}`}
-                            key={Math.random()}
+                            key={`${g}-${index}`}
                             className={`table-row${
                               index === 0 && groupIndex > 0 ? ' first-row' : ''
                             }`}>
@@ -119,7 +129,8 @@ const mapStateToProps = state => ({
   railPredictionsState: state.railPredictions,
   railStations: state.railStations.railStations,
   selectedRailStations: state.selectedRailStations,
-  visibleRailLines: state.visibleRailLines
+  visibleRailLines: state.visibleRailLines,
+  selectedDestinationRailStations: state.selectedDestinationRailStations
 });
 
 const mapDispatchToProps = dispatch =>

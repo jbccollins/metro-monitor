@@ -1,3 +1,4 @@
+import { LINE_PROPERTIES, LINE_NAMES } from 'common/constants/lines';
 /*
 var LINE_MERGES = [
     {
@@ -62,4 +63,21 @@ const mergeLines = (lines, merges) => {
   );
 };
 
-export { mergeLines };
+const getLineNamesForStation = (station, railStations) => {
+  const { LineCode1, LineCode2, LineCode3, StationTogether1 } = station;
+  let lineCodes = [LineCode1, LineCode2, LineCode3];
+  if (StationTogether1 !== '') {
+    const {
+      LineCode1: stLineCode1,
+      LineCode2: stLineCode2,
+      LineCode3: stLineCode3
+    } = railStations.find(({ Code }) => Code === StationTogether1);
+    lineCodes = [].concat(lineCodes, [stLineCode1, stLineCode2, stLineCode3]);
+  }
+  const lineNames = lineCodes.map(c => {
+    return LINE_NAMES.find(l => LINE_PROPERTIES[l]['code'] === c);
+  });
+  return lineNames;
+};
+
+export { mergeLines, getLineNamesForStation };

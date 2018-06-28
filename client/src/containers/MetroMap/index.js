@@ -29,6 +29,7 @@ import {
   featureCollection
 } from '@turf/turf';
 import { DCGeoJSON } from 'utilities/controls';
+import { getLineNamesForStation } from 'utilities/metro.js';
 
 // https://github.com/PaulLeCam/react-leaflet/issues/255#issuecomment-269750542
 // The webpack bundling step can't find these images
@@ -197,16 +198,21 @@ class MetroMap extends React.Component {
   // Select nearest station
   handleGeolocation = ({ coords }) => {
     const { latitude, longitude } = coords;
-    const { railStations } = this.props;
+    const { railStations, visibleRailLines } = this.props;
+    const visibleStations = railStations.filter(station =>
+      getLineNamesForStation(station, railStations).some(name =>
+        visibleRailLines.includes(name)
+      )
+    );
     const pointFeatureCollection = featureCollection(
-      railStations.map(({ Lat, Lon }) => point([Lon, Lat]))
+      visibleStations.map(({ Lat, Lon }) => point([Lon, Lat]))
     );
     const nearest = nearestPoint(
       point([longitude, latitude]),
       pointFeatureCollection
     );
     const nearestRailStation =
-      railStations[nearest['properties']['featureIndex']];
+      visibleStations[nearest['properties']['featureIndex']];
     this.handleStationClick(nearestRailStation['Code']);
     this.setState({ geolocating: false });
     this.state.leafletMapElt.flyTo(
@@ -364,70 +370,36 @@ class MetroMap extends React.Component {
           </CustomLayerGroup>
           <CustomLayerGroup onReady={this.handleRailStationsReady}>
             {railStations &&
-              railStations.map(
-                (
-                  {
-                    Code,
-                    Name,
-                    Lat,
-                    Lon,
-                    LineCode1,
-                    LineCode2,
-                    LineCode3,
-                    StationTogether1
-                  },
-                  index
-                ) => {
-                  let lineCodes = [LineCode1, LineCode2, LineCode3];
-                  if (StationTogether1 !== '') {
-                    const {
-                      LineCode1: stLineCode1,
-                      LineCode2: stLineCode2,
-                      LineCode3: stLineCode3
-                    } = railStations.find(
-                      ({ Code }) => Code === StationTogether1
-                    );
-                    lineCodes = [].concat(lineCodes, [
-                      stLineCode1,
-                      stLineCode2,
-                      stLineCode3
-                    ]);
-                  }
-                  //{debugger}
-                  const lineNames = lineCodes.map(c => {
-                    return LINE_NAMES.find(
-                      l => LINE_PROPERTIES[l]['code'] === c
-                    );
-                  });
-                  if (DUPLICATE_STATION_CODES.includes(Code)) {
-                    return false;
-                  }
-                  if (
-                    !lineNames.some(name => visibleRailLines.includes(name))
-                  ) {
-                    return false;
-                  }
-                  const showLabel = false; //STATIONS_WITH_PERMANENT_LABELS.includes(Code);//(index % labelSpacing[zoom]) === 0;
+              railStations.map((station, index) => {
+                const { Code, Name, Lat, Lon } = station;
+                const lineNames = getLineNamesForStation(station, railStations);
+                if (DUPLICATE_STATION_CODES.includes(Code)) {
+                  return false;
+                }
+                if (!lineNames.some(name => visibleRailLines.includes(name))) {
+                  return false;
+                }
+                const showLabel = false; //STATIONS_WITH_PERMANENT_LABELS.includes(Code);//(index % labelSpacing[zoom]) === 0;
 
-                  return [
-                    <Marker
-                      key={Code}
-                      position={[Lat, Lon]}
-                      onClick={() => this.handleStationClick(Code)}
-                      icon={L.divIcon({
-                        className: `station-icon`,
-                        iconSize: [12, 12]
-                      })}
-                    />,
-                    <Marker
-                      style={{ display: showLabel ? '' : 'none' }}
-                      key={`${Code}-label`}
-                      position={[Lat, Lon]}
-                      icon={L.divIcon({
-                        className: `label-icon`,
-                        iconSize: [12, 12],
-                        //html: `<div class='${direction}'/>`
-                        html: `
+                return [
+                  <Marker
+                    key={Code}
+                    position={[Lat, Lon]}
+                    onClick={() => this.handleStationClick(Code)}
+                    icon={L.divIcon({
+                      className: `station-icon`,
+                      iconSize: [12, 12]
+                    })}
+                  />,
+                  <Marker
+                    style={{ display: showLabel ? '' : 'none' }}
+                    key={`${Code}-label`}
+                    position={[Lat, Lon]}
+                    icon={L.divIcon({
+                      className: `label-icon`,
+                      iconSize: [12, 12],
+                      //html: `<div class='${direction}'/>`
+                      html: `
                           <div style="
                             color: white; 
                             white-space: nowrap; 
@@ -436,11 +408,10 @@ class MetroMap extends React.Component {
                             transform: translate(-100%) rotate(-30deg)">
                               ${Name}
                           </div>`
-                      })}
-                    />
-                  ];
-                }
-              )}
+                    })}
+                  />
+                ];
+              })}
           </CustomLayerGroup>
           <CustomLayerGroup onReady={this.handleTrainsLayerReady}>
             {trains &&

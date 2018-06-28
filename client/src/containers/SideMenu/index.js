@@ -163,7 +163,7 @@ class SideMenu extends React.Component {
     } = this.props;
     setSelectedDestinationRailStations({
       ...selectedDestinationRailStations,
-      [line]: selectedStations
+      [line]: selectedStations.map(({ value }) => value)
     });
   };
 
@@ -210,7 +210,12 @@ class SideMenu extends React.Component {
                         isMulti
                         styles={selectStyles}
                         placeholder={`All destinations...`}
-                        value={selectedDestinationRailStations[name]}
+                        value={selectedDestinationRailStations[name].map(s => ({
+                          value: s,
+                          label: railStations.find(({ Code }) => Code === s)[
+                            'Name'
+                          ]
+                        }))}
                         closeOnSelect={false}
                         closeMenuOnSelect={false}
                         onSelectResetsInput={false}

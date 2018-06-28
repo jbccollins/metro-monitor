@@ -434,9 +434,9 @@ class MetroMap extends React.Component {
                 }
                 if (
                   selectedDestinationRailStations[lineName].length > 0 &&
-                  !selectedDestinationRailStations[lineName]
-                    .map(({ value }) => value)
-                    .includes(DESTSTATIONCODE)
+                  !selectedDestinationRailStations[lineName].includes(
+                    DESTSTATIONCODE
+                  )
                 ) {
                   return false;
                 }

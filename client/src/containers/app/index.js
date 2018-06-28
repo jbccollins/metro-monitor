@@ -6,10 +6,15 @@ import RailPredictions from 'containers/RailPredictions';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import queryString from 'query-string';
+import { LINE_PROPERTIES, LINE_NAMES } from 'common/constants/lines';
+import flatten from 'lodash.flatten';
 
 import url from 'url';
 
-import { setSelectedRailStations } from 'actions/metro';
+import {
+  setSelectedRailStations,
+  setSelectedDestinationRailStations
+} from 'actions/metro';
 import { setVisibleRailLines, setShowTiles } from 'actions/controls';
 import { setMapPosition } from 'actions/persistence';
 
@@ -17,6 +22,7 @@ const STATION_CODES = 'stationCodes';
 const RAIL_LINES = 'railLines';
 const MAP_POSITION = 'mapPosition';
 const SHOW_TILES = 'showTiles';
+const STATION_FILTERS = 'stationFilters';
 
 class App extends React.Component {
   constructor() {
@@ -25,7 +31,8 @@ class App extends React.Component {
       [STATION_CODES]: this.parseStationCodes,
       [RAIL_LINES]: this.parseRailLines,
       [MAP_POSITION]: this.parseMapPosition,
-      [SHOW_TILES]: this.parseShowMapTiles
+      [SHOW_TILES]: this.parseShowMapTiles,
+      [STATION_FILTERS]: this.parseStationFilters
     };
   }
 
@@ -49,7 +56,8 @@ class App extends React.Component {
       visibleRailLines,
       zoom,
       center,
-      showTiles
+      showTiles,
+      selectedDestinationRailStations
     } = this.props;
     if (selectedRailStations) {
       urlParamMap[STATION_CODES] = selectedRailStations.join(',');
@@ -63,6 +71,16 @@ class App extends React.Component {
     }
     if (typeof showTiles !== 'undefined') {
       urlParamMap[SHOW_TILES] = showTiles;
+    }
+    if (
+      Object.values(selectedDestinationRailStations).some(v => v.length > 0)
+    ) {
+      const stationFilters = LINE_NAMES.map(l => {
+        return selectedDestinationRailStations[l].map(
+          stationCode => `${LINE_PROPERTIES[l]['code']}-${stationCode}`
+        );
+      });
+      urlParamMap[STATION_FILTERS] = flatten(stationFilters).join(',');
     }
     window.history.replaceState(
       null,
@@ -89,6 +107,22 @@ class App extends React.Component {
 
   parseShowMapTiles = showTiles => {
     this.props.setShowTiles(showTiles === 'true');
+  };
+
+  parseStationFilters = stationFilters => {
+    const parsedStationFilters = {};
+    LINE_NAMES.forEach(name => {
+      parsedStationFilters[name] = [];
+    });
+    const lineCodesAndStations = stationFilters.split(',');
+    lineCodesAndStations.forEach(x => {
+      const [lineCode, stationCode] = x.split('-');
+      const lineName = LINE_NAMES.find(
+        l => LINE_PROPERTIES[l]['code'] === lineCode
+      );
+      parsedStationFilters[lineName].push(stationCode);
+    });
+    this.props.setSelectedDestinationRailStations(parsedStationFilters);
   };
 
   render() {
@@ -118,6 +152,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       setSelectedRailStations,
+      setSelectedDestinationRailStations,
       setVisibleRailLines,
       setShowTiles,
       setMapPosition

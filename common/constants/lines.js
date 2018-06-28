@@ -241,7 +241,82 @@ const DUPLICATE_STATION_CODES = [
 const STATIONS_WITH_PERMANENT_LABELS = [
     "N06", // left silver
     "K08", // left orange
+    "B11",
+    "A15",
+    "J03",
+    "G05",
+    "D13",
+    "C15",
+    "E10",
+    "F11",
+    "F03",
+    "A01",
+    "B01",
+    "B06",
 ];
+
+const RIGHT_SIDE = {
+    origin: "bottom right",
+    translate: "18px, -3px",
+    rotate: "0deg"  
+};
+
+const LEFT_SIDE = {
+    origin: "bottom right",
+    translate: "-104%, -3px",
+    rotate: "0deg"
+}
+
+const RIGHT_45 = {
+    origin: "top left",
+    translate: "15px, -8px",
+    rotate: "-30deg"
+};
+
+const LEFT_45 = {
+    origin: "top right",
+    translate: "-108%",
+    rotate: "-30deg"
+}
+
+const CENTER_OF_DC = {
+    origin: "bottom left",
+    translate: "10px",
+    rotate: "30deg"
+};
+
+const CENTER_OF_DC_ALT = {
+    origin: "bottom right",
+    translate: "-104%, -8px",
+    rotate: "30deg"
+};
+
+const STATION_LABEL_STYLES = {
+    "B11": RIGHT_SIDE,
+    "B10": RIGHT_SIDE,
+    "B09": RIGHT_SIDE,
+    "B08": RIGHT_SIDE,
+    "B07": RIGHT_SIDE,
+    "B06": RIGHT_45,
+    "B05": RIGHT_SIDE,
+    "B04": RIGHT_SIDE,
+    "B35": RIGHT_SIDE,
+    "B03": RIGHT_SIDE,
+    "B02": RIGHT_SIDE,
+    "D13": RIGHT_SIDE,
+    "G05": RIGHT_SIDE,
+    "C15": RIGHT_SIDE,
+    "F04": CENTER_OF_DC,
+    "A01": LEFT_45,
+    "B01": RIGHT_45,
+    "C02": CENTER_OF_DC_ALT,
+    "F02": CENTER_OF_DC,
+    "E03": RIGHT_45,
+
+    "K08": LEFT_SIDE,
+    "N06": LEFT_SIDE,
+    "J03": LEFT_SIDE,
+};
 
 export {
     RED,
@@ -256,4 +331,5 @@ export {
     LINE_DRAW_ORDER,
     DUPLICATE_STATION_CODES,
     STATIONS_WITH_PERMANENT_LABELS,
+    STATION_LABEL_STYLES
 };

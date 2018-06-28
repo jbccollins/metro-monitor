@@ -80,4 +80,15 @@ const getLineNamesForStation = (station, railStations) => {
   return lineNames;
 };
 
-export { mergeLines, getLineNamesForStation };
+const getStationCodesList = (stationCode, railStations) => {
+  const { Code, StationTogether1 } = railStations.find(
+    ({ Code }) => Code === stationCode
+  );
+  let stationCodes = [Code];
+  if (StationTogether1 !== '') {
+    stationCodes.push(StationTogether1);
+  }
+  return stationCodes;
+};
+
+export { mergeLines, getLineNamesForStation, getStationCodesList };

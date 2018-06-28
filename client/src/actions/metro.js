@@ -261,5 +261,6 @@ export {
   fetchRailAlerts,
   fetchRailPredictions,
   setSelectedRailStations,
-  setSelectedDestinationRailStations
+  setSelectedDestinationRailStations,
+  receiveRailPredictions
 };

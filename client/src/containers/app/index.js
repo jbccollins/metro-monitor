@@ -72,9 +72,10 @@ class App extends React.Component {
     if (typeof showTiles !== 'undefined') {
       urlParamMap[SHOW_TILES] = showTiles;
     }
-    if (
-      Object.values(selectedDestinationRailStations).some(v => v.length > 0)
-    ) {
+    const values = Object.keys(selectedDestinationRailStations).map(
+      k => selectedDestinationRailStations[k]
+    );
+    if (values.some(v => v.length > 0)) {
       const stationFilters = LINE_NAMES.map(l => {
         return selectedDestinationRailStations[l].map(
           stationCode => `${LINE_PROPERTIES[l]['code']}-${stationCode}`

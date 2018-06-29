@@ -76,7 +76,8 @@ const snapTrains = (railLines, nextTrains, currentTrains, potentiallyClearedTrai
     nextTrains.features.forEach(({geometry, attributes}) => {
         const { TRACKLINE } = attributes;
         const { x, y } = geometry;
-        const lineProperties = Object.values(LINE_PROPERTIES).find(({ trackLineID }) => trackLineID === TRACKLINE);
+        const values = LINE_NAMES.map(l => LINE_PROPERTIES[l]);
+        const lineProperties = values.find(({ trackLineID }) => trackLineID === TRACKLINE);
         const transformedGeometry = proj4.transform(LEAFLET_PROJ, WMATA_PROJ, [x, y]);
         const trainGeojson = {
             type: "Feature",

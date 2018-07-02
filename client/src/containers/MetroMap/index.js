@@ -469,7 +469,7 @@ class MetroMap extends React.Component {
                 if (!labelStyle) {
                   labelStyle = DEFAULT_STATION_LABEL_STYLES[LineCode1];
                 }
-                return [
+                const toReturn = [
                   <Marker
                     key={Code}
                     position={[Lat, Lon]}
@@ -480,15 +480,17 @@ class MetroMap extends React.Component {
                       className: `station-icon`,
                       iconSize: [12, 12]
                     })}
-                  />,
-                  <Marker
-                    style={{ display: showLabel ? '' : 'none' }}
-                    key={`${Code}-label`}
-                    position={[Lat, Lon]}
-                    icon={L.divIcon({
-                      className: `label-icon`,
-                      iconSize: [12, 12],
-                      html: `
+                  />
+                ];
+                if (showLabel) {
+                  toReturn.push(
+                    <Marker
+                      key={`${Code}-label`}
+                      position={[Lat, Lon]}
+                      icon={L.divIcon({
+                        className: `label-icon`,
+                        iconSize: [12, 12],
+                        html: `
                           <div style="
                             color: white;
                             opacity: ${
@@ -507,9 +509,11 @@ class MetroMap extends React.Component {
                             }) rotate(${labelStyle['rotate']})">
                               ${Name}
                           </div>`
-                    })}
-                  />
-                ];
+                      })}
+                    />
+                  );
+                }
+                return toReturn;
               })}
           </CustomLayerGroup>
           <CustomLayerGroup onReady={this.handleTrainsLayerReady}>

@@ -9396,6 +9396,7 @@ rc@^1.1.7, rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+<<<<<<< HEAD
 react-app-polyfill@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-app-polyfill/-/react-app-polyfill-1.0.0.tgz#735c725c1d4261b710cb200c498789c8b80e0f74"
@@ -9414,6 +9415,26 @@ react-dev-utils@^9.0.0:
   integrity sha512-HXvxOnABzIQH804ros5dBFryw4x0FU7Tl5KU2xg71jKx0EDsJYK0LuVVdj9qoLIgD1pmjzpjl7q7pjwXKIe37A==
   dependencies:
     "@babel/code-frame" "7.0.0"
+=======
+react-burger-menu@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/react-burger-menu/-/react-burger-menu-2.5.1.tgz#966496788f867863cd5998d08a22662ba0e27199"
+  dependencies:
+    browserify-optional "^1.0.0"
+    classnames "^2.1.1"
+    eve "~0.5.1"
+    prop-types "^15.6.1"
+    snapsvg-cjs "0.0.6"
+
+react-collapsible@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/react-collapsible/-/react-collapsible-2.2.0.tgz#257abef5b96a330d9249810761cac29a3d82f268"
+
+react-dev-utils@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-4.2.1.tgz#9f2763e7bafa1a1b9c52254d2a479deec280f111"
+  dependencies:
+>>>>>>> Don't render invisible labels
     address "1.0.3"
     browserslist "4.5.4"
     chalk "2.4.2"

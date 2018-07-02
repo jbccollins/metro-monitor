@@ -125,5 +125,8 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "proxy": "http://localhost:5001/"
+  "proxy": "http://localhost:5001/",
+  "peerDependencies": {
+    "prop-types": "^15.5.8"
+  }
 }

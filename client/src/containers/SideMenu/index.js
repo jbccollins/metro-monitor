@@ -199,99 +199,165 @@ class SideMenu extends React.Component {
                 </div>
               }>
               <div>
-                {LINE_NAMES.map(name => (
-                  <div
-                    className="toggle-wrapper"
-                    key={name}
-                    style={{ borderColor: LINE_PROPERTIES[name]['color'] }}>
-                    <label>
-                      <span className="toggle-label">
-                        {LINE_PROPERTIES[name]['trackLineID']}
-                      </span>
-                      <Toggle
-                        icons={false}
-                        className={`custom-toggle ${name}`}
-                        checked={visibleRailLines.includes(name)}
-                        onChange={() => this.toggleRailLineVisibility(name)}
-                      />
-                    </label>
-                    {railStations && (
-                      <div
-                        className={`select-container ${
-                          visibleRailLines.includes(name) ? 'visible' : 'hidden'
-                        }`}>
-                        <Select
-                          isMulti
-                          styles={selectStyles}
-                          placeholder={`All destinations...`}
-                          value={selectedDestinationRailStations[name].map(
-                            s => ({
-                              value: s,
-                              label: railStations.find(
-                                ({ Code }) => Code === s
-                              )['Name']
-                            })
-                          )}
-                          closeOnSelect={false}
-                          closeMenuOnSelect={false}
-                          onSelectResetsInput={false}
-                          formatGroupLabel={this.formatGroupLabel}
-                          onChange={s =>
-                            this.handleDestinationStationChange(name, s)
-                          }
-                          options={[
-                            {
-                              label: 'Common Destinations',
-                              options: railStations
-                                .filter(
-                                  ({ LineCode1, LineCode2, LineCode3, Code }) =>
-                                    [LineCode1, LineCode2, LineCode3].includes(
-                                      LINE_PROPERTIES[name]['code']
-                                    ) &&
-                                    LINE_PROPERTIES[name][
-                                      'commonDestinationStationCodes'
-                                    ].includes(Code)
-                                )
-                                .sort((a, b) => a.Name.localeCompare(b.Name))
-                                .map(({ Code, Name }) => ({
-                                  value: Code,
-                                  label: Name
-                                }))
-                            },
-                            {
-                              label: 'Other Destinations',
-                              options: railStations
-                                .filter(
-                                  ({ LineCode1, LineCode2, LineCode3, Code }) =>
-                                    [LineCode1, LineCode2, LineCode3].includes(
-                                      LINE_PROPERTIES[name]['code']
-                                    ) &&
-                                    !LINE_PROPERTIES[name][
-                                      'commonDestinationStationCodes'
-                                    ].includes(Code)
-                                )
-                                .sort((a, b) => a.Name.localeCompare(b.Name))
-                                .map(({ Code, Name }) => ({
-                                  value: Code,
-                                  label: Name
-                                }))
-                            }
-                          ]}
-                        />
-                      </div>
-                    )}
-                  </div>
-                ))}
-                <div className="toggle-wrapper">
-                  <label>
-                    <span className="toggle-label">Show Map Tiles</span>
-                    <Toggle
-                      icons={false}
-                      className={`custom-toggle show-tiles`}
-                      checked={showTiles}
-                      onChange={() => this.props.setShowTiles(!showTiles)}
+                <div className="filters-wrapper">
+                  <div className="section-title">
+                    <div className="section-icon filter" />
+                    <div className="section-title-label">Filters</div>
+                    <div
+                      className="description-icon"
+                      data-tip="Filter to see only the lines and destination stations that you care about. These filters affect
+                    what lines, trains and stations are drawn on the map. They also filter out any alerts and station
+                    arrival predictions that do not match your filters."
                     />
-                  </label>
+                  </div>
+                  <div className="section-body">
+                    {LINE_NAMES.map(name => (
+                      <div
+                        className={`toggle-wrapper line-toggle${
+                          visibleRailLines.includes(name) ? ' active' : ''
+                        }`}
+                        key={name}
+                        style={{ borderColor: LINE_PROPERTIES[name]['color'] }}>
+                        <label>
+                          <span className="toggle-label">
+                            {LINE_PROPERTIES[name]['trackLineID']}
+                          </span>
+                          <Toggle
+                            icons={false}
+                            className={`custom-toggle ${name}`}
+                            checked={visibleRailLines.includes(name)}
+                            onChange={() => this.toggleRailLineVisibility(name)}
+                          />
+                        </label>
+                        {railStations && (
+                          <div
+                            className={`select-container ${
+                              visibleRailLines.includes(name)
+                                ? 'visible'
+                                : 'hidden'
+                            }`}>
+                            <Select
+                              isMulti
+                              styles={selectStyles}
+                              placeholder={`All destinations...`}
+                              value={selectedDestinationRailStations[name].map(
+                                s => ({
+                                  value: s,
+                                  label: railStations.find(
+                                    ({ Code }) => Code === s
+                                  )['Name']
+                                })
+                              )}
+                              closeOnSelect={false}
+                              closeMenuOnSelect={false}
+                              onSelectResetsInput={false}
+                              formatGroupLabel={this.formatGroupLabel}
+                              onChange={s =>
+                                this.handleDestinationStationChange(name, s)
+                              }
+                              options={[
+                                {
+                                  label: 'Common Destinations',
+                                  options: railStations
+                                    .filter(
+                                      ({
+                                        LineCode1,
+                                        LineCode2,
+                                        LineCode3,
+                                        Code
+                                      }) =>
+                                        [
+                                          LineCode1,
+                                          LineCode2,
+                                          LineCode3
+                                        ].includes(
+                                          LINE_PROPERTIES[name]['code']
+                                        ) &&
+                                        LINE_PROPERTIES[name][
+                                          'commonDestinationStationCodes'
+                                        ].includes(Code)
+                                    )
+                                    .sort((a, b) =>
+                                      a.Name.localeCompare(b.Name)
+                                    )
+                                    .map(({ Code, Name }) => ({
+                                      value: Code,
+                                      label: Name
+                                    }))
+                                },
+                                {
+                                  label: 'Other Destinations',
+                                  options: railStations
+                                    .filter(
+                                      ({
+                                        LineCode1,
+                                        LineCode2,
+                                        LineCode3,
+                                        Code
+                                      }) =>
+                                        [
+                                          LineCode1,
+                                          LineCode2,
+                                          LineCode3
+                                        ].includes(
+                                          LINE_PROPERTIES[name]['code']
+                                        ) &&
+                                        !LINE_PROPERTIES[name][
+                                          'commonDestinationStationCodes'
+                                        ].includes(Code)
+                                    )
+                                    .sort((a, b) =>
+                                      a.Name.localeCompare(b.Name)
+                                    )
+                                    .map(({ Code, Name }) => ({
+                                      value: Code,
+                                      label: Name
+                                    }))
+                                }
+                              ]}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="section-title">
+                    <div className="section-icon display-options" />
+                    <div className="section-title-label">Display Options</div>
+                    <div
+                      className="description-icon"
+                      data-tip="Filter to see only the lines and destination stations that you care about. These filters affect
+                    what lines, trains and stations are drawn on the map. They also filter out any alerts and station
+                    arrival predictions that do not match your filters."
+                    />
+                  </div>
+                  <div className="section-body">
+                    <div className="toggle-wrapper">
+                      <label>
+                        <span className="toggle-label">Show Map Tiles</span>
+                        <Toggle
+                          icons={false}
+                          className={`custom-toggle neutral`}
+                          checked={showTiles}
+                          onChange={() => this.props.setShowTiles(!showTiles)}
+                        />
+                      </label>
+                    </div>
+                    <div className="toggle-wrapper">
+                      <label>
+                        <span className="toggle-label">Dark Mode (Soon!)</span>
+                        <Toggle
+                          icons={false}
+                          disabled
+                          className={`custom-toggle neutral`}
+                          checked={true}
+                          onChange={() => {
+                            /* noop */
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </Collapsible>

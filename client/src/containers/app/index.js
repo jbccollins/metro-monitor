@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import queryString from 'query-string';
 import { LINE_PROPERTIES, LINE_NAMES } from 'common/constants/lines';
 import flatten from 'lodash.flatten';
+import ReactTooltip from 'react-tooltip';
 
 import url from 'url';
 
@@ -17,6 +18,7 @@ import {
 } from 'actions/metro';
 import { setVisibleRailLines, setShowTiles } from 'actions/controls';
 import { setMapPosition } from 'actions/persistence';
+import './style.scss';
 
 const STATION_CODES = 'stationCodes';
 const RAIL_LINES = 'railLines';
@@ -95,7 +97,9 @@ class App extends React.Component {
   };
 
   parseRailLines = railLines => {
-    this.props.setVisibleRailLines(railLines.split(','));
+    if (railLines.length > 0) {
+      this.props.setVisibleRailLines(railLines.split(','));
+    }
   };
 
   parseMapPosition = mapPosition => {
@@ -130,6 +134,15 @@ class App extends React.Component {
     return (
       <div>
         <main>
+          <ReactTooltip
+            effect="solid"
+            offset={{ top: 10, left: -30 }}
+            place="bottom"
+            border
+            className="global-tooltip"
+            event="click"
+            globalEventOff="click"
+          />
           <SideMenu />
           <MetroMap />
           <RailAlerts />

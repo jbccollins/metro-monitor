@@ -1,6 +1,6 @@
 .SideMenu {
     .select-container {
-        transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+        //transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
         &.visible {
             max-height: 10000px;
         }
@@ -9,12 +9,49 @@
             max-height: 0;
         }
     }
+    .section-title {
+        margin-left: 10px;
+        margin-top: 10px;
+        font-size: 0.8em;
+        display: inline-block;
+        width: calc(100% - 20px);
+        border-bottom: 1px solid grey;
+    }
+    .section-title-label {
+        float: left;
+    }
+    .section-description {
+        font-size: 0.6em;
+    }
+    .section-body {
+        //border-left: 1px solid grey;
+        padding-left: 10px;
+        font-size: 0.8em;
+        font-weight: normal;
+        margin-right: 10px;
+    }
     .menu-trigger-wrapper {
         display: inline-block;
     }
     .menu-title {
         display: inline-block;
         float: left;
+    }
+    .section-icon {
+        width: 15px;
+        height: 15px;
+        float: left;
+        display: inline-block;
+        background-position: center; 
+        background-repeat: no-repeat;
+        margin: 3px 8px 0 0;
+        background-size: 15px 15px;
+        &.filter {
+            background-image: url('../../assets/filter.png');
+        }
+        &.display-options {
+            background-image: url('../../assets/palette.png');
+        }
     }
     .menu-icon {
         width: 20px;
@@ -35,6 +72,17 @@
             background-image: url('../../assets/information.png');
         }
     }
+    .description-icon {
+        width: 12px;
+        height: 12px;
+        float: left;
+        display: inline-block;
+        background-position: center; 
+        background-repeat: no-repeat;
+        margin: 5px 0px 0 10px;
+        background-size: 12px 12px;
+        background-image: url('../../assets/help-circle.png');
+    }
     .Collapsible {
         margin-bottom: 5px;
         &:last-of-type {
@@ -49,30 +97,41 @@
         display: block;
         padding: 6px;
         user-select: none;
+        transition: background 0.2s linear;
+        &:hover {
+            background: #191919;
+        }
         &.is-open {
             &:after {
-                transform: rotate(90deg);
-                -webkit-transform: rotate(90deg);
+                transform: rotate(180deg);
+                -webkit-transform: rotate(180deg);
             }
         }
         &:after {
-            content:'\25BA';
-            font-size: 12px;
+            background-image: url('../../assets/triangle.png');
+            content: '';
             float: right;
-            transform: rotate(180deg);
-            -webkit-transform: rotate(180deg);
+            width: 12px;
+            height: 12px;
+            background-position: center; 
+            background-repeat: no-repeat;
+            background-size: 12px 12px;
+            transform: rotate(270deg);
+            -webkit-transform: rotate(270deg);
             transition: transform 0.1s linear;
-            margin-top: 4px;
+            margin-top: 7px;
         }
     }
     .Collapsible__contentOuter {
         padding: 0 6px 0 6px;
         background: #212121;
     }
+    .line-toggle {
+        border-left: 2px solid;
+    }
     .toggle-wrapper {
         width: 100%;
         margin-bottom: 10px;
-        border-left: 2px solid;
         display: inline-block;
         position: relative;
         padding-left: 10px;
@@ -91,13 +150,26 @@
     .toggle-label {
         float: left;
         height: 24px;
+        font-size: 0.9em;
         margin-right: 5px;
+    }
+    .toggle-wrapper {
+        height: 24px;
+        line-height: 24px;
+        &.active {
+            height: auto;
+        }
     }
     .react-toggle--focus .react-toggle-thumb {
         box-shadow: none;
     }
 
     .custom-toggle.react-toggle--checked {
+        &.neutral {
+            .react-toggle-track {
+                background-color: lightgrey;
+            }  
+        }
         &.red {
             .react-toggle-track {
                 background-color: red;
@@ -126,11 +198,6 @@
         &.silver {
             .react-toggle-track {
                 background-color: silver;
-            }
-        }
-        &.show-tiles {
-            .react-toggle-track {
-                background-color: lightblue;
             }
         }
     }

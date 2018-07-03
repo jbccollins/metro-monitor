@@ -190,7 +190,7 @@ class SideMenu extends React.Component {
         <MenuWrap wait={20}>
           <Menu styles={styles}>
             <Collapsible
-              //open
+              open
               transitionTime={TRANSITION_TIME}
               trigger={
                 <div className="menu-trigger-wrapper">
@@ -362,7 +362,6 @@ class SideMenu extends React.Component {
               </div>
             </Collapsible>
             <Collapsible
-              open
               transitionTime={TRANSITION_TIME}
               trigger={
                 <div className="menu-trigger-wrapper">

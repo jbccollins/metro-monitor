@@ -308,6 +308,7 @@ const STATION_LABEL_STYLES = {
     "C15": RIGHT_SIDE,
     "F04": CENTER_OF_DC,
     "A01": LEFT_45,
+    "F03": RIGHT_45,
     "B01": RIGHT_45,
     "C02": CENTER_OF_DC_ALT,
     "F02": CENTER_OF_DC,

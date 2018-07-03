@@ -190,7 +190,7 @@ class SideMenu extends React.Component {
         <MenuWrap wait={20}>
           <Menu styles={styles}>
             <Collapsible
-              open
+              //open
               transitionTime={TRANSITION_TIME}
               trigger={
                 <div className="menu-trigger-wrapper">
@@ -362,6 +362,7 @@ class SideMenu extends React.Component {
               </div>
             </Collapsible>
             <Collapsible
+              open
               transitionTime={TRANSITION_TIME}
               trigger={
                 <div className="menu-trigger-wrapper">
@@ -369,7 +370,92 @@ class SideMenu extends React.Component {
                   <div className="menu-title">About</div>
                 </div>
               }>
-              <div>Some stuff idk</div>
+              <div className="section-title">
+                <div className="section-icon attribution" />
+                <div className="section-title-label">Attribution</div>
+              </div>
+              <div className="section-body description">
+                Built and maintained with{' '}
+                <span role="img" aria-label="heart">
+                  ❤️
+                </span>{' '}
+                by James Collins. You can contact me at{' '}
+                <b>metromonitor@gmail.com</b>
+              </div>
+              <div className="section-title">
+                <div className="section-icon faq" />
+                <div className="section-title-label">FAQ</div>
+              </div>
+              <div className="section-body description">
+                <ul className="faq-list">
+                  <li className="question">1. Why does this exist?</li>
+                  <li className="answer">
+                    Other Metro tools shove so much stuff in your face that it's
+                    difficult parse out the information you care about. This
+                    tool shows alerts, station arrival predictions and live
+                    train positions on one screen while also letting you filter
+                    out alerts, station arrival predictions and live train
+                    positions that you don't care about.
+                  </li>
+                  <li className="question">
+                    2. Where does the data come from?
+                  </li>
+                  <li className="answer">
+                    WMATA provides developers access to a limited set of Metro
+                    related data via their API which you can find{' '}
+                    <a
+                      href="https://developer.wmata.com/"
+                      target="_blank"
+                      rel="noopener noreferrer">
+                      here
+                    </a>. The live train positions come from an undocumented API
+                    that is used by WMATA's version of this site which you can
+                    take a look at{' '}
+                    <a
+                      href="https://gis.wmata.com/metrotrain/index.html"
+                      target="_blank"
+                      rel="noopener noreferrer">
+                      here
+                    </a>.
+                  </li>
+                  <li className="question">3. How accurate is the data?</li>
+                  <li className="answer">
+                    <span style={{ margin: '4px 0 4px 4px', display: 'block' }}>
+                      ¯\_(ツ)_/¯
+                    </span>
+                    But seriously. I don't have access to anything other that
+                    the very limited set of data WMATA lets developers get their
+                    hands on. I make no guarentees about the accuracy of any
+                    information on this site.
+                  </li>
+                  <li className="question">4. Is this project open-source?</li>
+                  <li className="answer">
+                    No. But that's not off the table. Maybe sometime in the
+                    future.
+                  </li>
+                </ul>
+              </div>
+              <div className="section-title">
+                <div className="section-icon bugs" />
+                <div className="section-title-label">Known Issues</div>
+              </div>
+              <div className="section-body description">
+                <ul className="bugs-list">
+                  <li>Trains sometimes do 360 degree burnouts on the map</li>
+                  <li>
+                    Trains sometimes fly in from the middle of the Atlantic
+                    Ocean (API Limitation)
+                  </li>
+                  <li>Trains sometimes switch directions (API Limitation)</li>
+                  <li>
+                    Trains sometimes disappear and re-appear (API Limitation)
+                  </li>
+                  <li>
+                    Prediction data for stations at the ends of lines is wonky
+                    (API Limitation)
+                  </li>
+                </ul>
+              </div>
             </Collapsible>
             <Collapsible
               transitionTime={TRANSITION_TIME}
@@ -379,7 +465,7 @@ class SideMenu extends React.Component {
                   <div className="menu-title">Other Resources</div>
                 </div>
               }>
-              <div>Some stuff idk</div>
+              <div className="section-body description">Coming soon...</div>
             </Collapsible>
           </Menu>
         </MenuWrap>

@@ -23,12 +23,37 @@
     .section-description {
         font-size: 0.6em;
     }
+    .bugs-list {
+        padding-left: 14px;
+        list-style: disc;
+        margin-top: 0px;
+    }
     .section-body {
-        //border-left: 1px solid grey;
         padding-left: 10px;
         font-size: 0.8em;
         font-weight: normal;
         margin-right: 10px;
+        &.description {
+            font-size: 0.6em;
+            font-weight: 100;
+        }
+        a {
+            color: lightblue;
+            &:visited {
+                color: lightblue;
+            }
+        }
+    }
+    .faq-list {
+        padding-left: 0px;
+        margin: 0;
+        .question {
+            font-size: 1.1em;
+            margin-bottom: 2px;
+        }
+        .answer {
+            margin-bottom: 15px;
+        }
     }
     .menu-trigger-wrapper {
         display: inline-block;
@@ -51,6 +76,15 @@
         }
         &.display-options {
             background-image: url('../../assets/palette.png');
+        }
+        &.attribution {
+            background-image: url('../../assets/account.png');
+        }
+        &.faq {
+            background-image: url('../../assets/help-circle.png');
+        }
+        &.bugs {
+            background-image: url('../../assets/bug.png');
         }
     }
     .menu-icon {

@@ -3,10 +3,19 @@ html {
   font-family: 'Lato', sans-serif, Helvetica, Arial;
   letter-spacing: 1px;
   font-weight: 400;
+  font-size: 100%;
 }
 
-html {
-  font-size: 100%;
+.__react_component_tooltip {
+  pointer-events: initial;
+}
+
+.__react_component_tooltip.place-bottom:after {
+  margin-left: -43px;
+}
+
+.__react_component_tooltip.place-bottom:before {
+  margin-left: -45px;
 }
 
 body {

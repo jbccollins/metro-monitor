@@ -257,7 +257,7 @@ class SideMenu extends React.Component {
                               }
                               options={[
                                 {
-                                  label: 'Common Destinations',
+                                  label: 'Destination Stations',
                                   options: railStations
                                     .filter(
                                       ({
@@ -286,7 +286,12 @@ class SideMenu extends React.Component {
                                     }))
                                 },
                                 {
-                                  label: 'Other Destinations',
+                                  label: (
+                                    <div>
+                                      Other Destinations <br /> (Only relevant
+                                      when there are station closures)
+                                    </div>
+                                  ),
                                   options: railStations
                                     .filter(
                                       ({
@@ -379,7 +384,7 @@ class SideMenu extends React.Component {
                   ❤️
                 </span>{' '}
                 by James Collins. You can contact me at{' '}
-                <b>metromonitor@gmail.com</b>
+                <b>james@dcmetromonitor.com</b>
               </div>
               <div className="section-title">
                 <div className="section-icon faq" />
@@ -400,7 +405,7 @@ class SideMenu extends React.Component {
                     2. Where does the data come from?
                   </li>
                   <li className="answer">
-                    WMATA provides developers access to a limited set of Metro
+                    WMATA gives developers access to a limited set of Metro
                     related data via their API which you can find{' '}
                     <a
                       href="https://developer.wmata.com/"
@@ -440,7 +445,6 @@ class SideMenu extends React.Component {
               </div>
               <div className="section-body description">
                 <ul className="bugs-list">
-                  <li>Trains sometimes do 360 degree burnouts on the map</li>
                   <li>
                     Trains sometimes fly in from the middle of the Atlantic
                     Ocean (API Limitation)

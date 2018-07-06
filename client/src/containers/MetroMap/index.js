@@ -1,7 +1,13 @@
 import React from 'react';
 import L from 'leaflet';
-import { Map, TileLayer, Marker, GeoJSON, Popup } from 'react-leaflet';
-import CustomLayerGroup from 'components/CustomLayerGroup';
+import {
+  Map,
+  TileLayer,
+  Marker,
+  GeoJSON,
+  Popup,
+  LayerGroup
+} from 'react-leaflet';
 import {
   LINE_PROPERTIES,
   LINE_DRAW_ORDER,
@@ -170,32 +176,12 @@ class MetroMap extends React.Component {
   state = {
     railStationsLayerGroup: null,
     railLinesLayerGroup: null,
-    trainsLayerGroup: null,
     layersNeedOrdering: true,
     leafletMapElt: false,
     geolocating: false,
     geolocationAllowed: false,
     hoveredStationCodes: []
   };
-
-  componentWillUpdate(nextProps, nextState) {
-    const {
-      railStationsLayerGroup,
-      railLinesLayerGroup,
-      trainsLayerGroup,
-      layersNeedOrdering,
-      leafletMapElt
-    } = nextState;
-    if (
-      layersNeedOrdering &&
-      leafletMapElt &&
-      railStationsLayerGroup &&
-      railLinesLayerGroup &&
-      trainsLayerGroup
-    ) {
-      this.orderLayers(nextState);
-    }
-  }
 
   componentDidUpdate(prevProps) {
     if (
@@ -225,25 +211,6 @@ class MetroMap extends React.Component {
     }
   }
 
-  orderLayers(nextState) {
-    const {
-      railStationsLayerGroup,
-      railLinesLayerGroup,
-      trainsLayerGroup
-    } = nextState;
-    this.setState({ layersNeedOrdering: false });
-    //Ugh I give up. Fucking layers won't respect my ordering without at timeout.
-    setTimeout(() => {
-      [railLinesLayerGroup, railStationsLayerGroup].forEach(layerGroup => {
-        layerGroup.getLayers().forEach(layer => {
-          if (layer.bringToFront) {
-            layer.bringToFront();
-          }
-        });
-      });
-    }, 2000);
-  }
-
   handleMapLoad = ({ target }) => {
     this.setState({ leafletMapElt: target });
   };
@@ -254,10 +221,6 @@ class MetroMap extends React.Component {
 
   handleRailLinesReady = railLinesLayerGroup => {
     this.setState({ railLinesLayerGroup });
-  };
-
-  handleTrainsLayerReady = trainsLayerGroup => {
-    this.setState({ trainsLayerGroup });
   };
 
   // Select nearest station
@@ -393,7 +356,7 @@ class MetroMap extends React.Component {
               })}
             />
           )}
-          <CustomLayerGroup onReady={this.handleRailLinesReady}>
+          <LayerGroup onReady={this.handleRailLinesReady}>
             {railLines &&
               [3, 2, 1].map(p => {
                 return LINE_DRAW_ORDER.filter(l =>
@@ -447,8 +410,8 @@ class MetroMap extends React.Component {
                   ]);
                 });
               })}
-          </CustomLayerGroup>
-          <CustomLayerGroup onReady={this.handleRailStationsReady}>
+          </LayerGroup>
+          <LayerGroup onReady={this.handleRailStationsReady}>
             {railStations &&
               railStations.map((station, index) => {
                 const { Code, Name, Lat, Lon, LineCode1 } = station;
@@ -515,8 +478,8 @@ class MetroMap extends React.Component {
                 }
                 return toReturn;
               })}
-          </CustomLayerGroup>
-          <CustomLayerGroup onReady={this.handleTrainsLayerReady}>
+          </LayerGroup>
+          <LayerGroup>
             {trains &&
               trains.map(t => {
                 const { geometry, properties } = t;
@@ -588,7 +551,7 @@ class MetroMap extends React.Component {
                   </TrainMarker>
                 );
               })}
-          </CustomLayerGroup>
+          </LayerGroup>
         </Map>
       </div>
     );

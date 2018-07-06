@@ -69,6 +69,19 @@ const snapStations = (railLines, stations) => {
   return snappedStations;
 }
 
+// This ensures at animating the CSS rotation transform will spin the train
+// over the shortest radius.
+const normalizeAngleDiff = (a1, a2) => {
+  let diff = a2 - a1;
+  while (diff < -180) {
+    diff += 360;
+  }
+  while (diff > 180) {
+    diff -=360;
+  }
+  return diff;
+};
+
 const snapTrains = (railLines, nextTrains, currentTrains, potentiallyClearedTrainITTMap) => {
     const normalizedTrains = [];
     const snappedTrains = [];
@@ -126,11 +139,11 @@ const snapTrains = (railLines, nextTrains, currentTrains, potentiallyClearedTrai
             .filter(({properties: {TRACKLINE}}) => TRACKLINE === LINE_PROPERTIES[name]['trackLineID'])
             .forEach(train => {
                 let [Lat, Lon] = train['geometry']['coordinates'];
+                const currentTrainInstance = currentTrains.find(({properties: {ITT}}) => ITT === train['properties']['ITT']);
                 // For some reason the API sometimes puts trains in the middle of the ocean :/
                 // When this happens don't move the train. Leave it at it's last position.
                 // If a train starts in the middle of the ocean then oh well.
                 if (Lat === 0 && Lon === 0 && currentTrainITTList.includes(train['properties']['ITT'])){
-                    const currentTrainInstance = currentTrains.find(({properties: {ITT}}) => ITT === train['properties']['ITT']);
                     [Lat, Lon] = currentTrainInstance['geometry']['coordinates'];
                 }
                 // Get the nearest point on the railLine
@@ -169,7 +182,8 @@ const snapTrains = (railLines, nextTrains, currentTrains, potentiallyClearedTrai
                     nearestOnLineCoords[1], 
                     nearestOnLineCoords[0]
                 ];
-                snappedTrain['properties']['rotationAngle'] = calcAngleDegrees(
+                
+                let nextRotation = calcAngleDegrees(
                     {
                         x: closestLineSegment.l.geometry.coordinates[0][1],
                         y: closestLineSegment.l.geometry.coordinates[0][0],
@@ -179,6 +193,11 @@ const snapTrains = (railLines, nextTrains, currentTrains, potentiallyClearedTrai
                         y: closestLineSegment.l.geometry.coordinates[1][0],
                     }
                 );
+                if (currentTrainInstance) {
+                    const currentRotation = currentTrainInstance['properties']['rotationAngle'];
+                    nextRotation = currentRotation - normalizeAngleDiff(nextRotation, currentRotation);
+                }
+                snappedTrain['properties']['rotationAngle'] = nextRotation;
                 snappedTrains.push(snappedTrain);
             });
     });

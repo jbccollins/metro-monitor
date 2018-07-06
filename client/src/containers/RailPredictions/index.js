@@ -11,7 +11,12 @@ class RailPredictions extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    const { selectedRailStations, fetchRailPredictions } = nextProps;
+    const {
+      selectedRailStations,
+      fetchRailPredictions,
+      railPredictions,
+      setSelectedRailStations
+    } = nextProps;
     if (!selectedRailStations) {
       clearInterval(this.state.stationRefreshInterval);
       this.setState({ stationRefreshInterval: null });
@@ -24,6 +29,21 @@ class RailPredictions extends React.Component {
           5000
         )
       });
+    }
+
+    // Catch the case where a rail prediction request was in flight
+    // when the predictions window was closed.
+    if (railPredictions) {
+      if (!selectedRailStations) {
+        setSelectedRailStations(null);
+      } else {
+        const stationDiff = railPredictions['groups'].filter(
+          i => !selectedRailStations.includes(i)
+        );
+        if (stationDiff.length > 0) {
+          setSelectedRailStations(null);
+        }
+      }
     }
   }
   render() {
@@ -40,7 +60,9 @@ class RailPredictions extends React.Component {
         .Name;
     }
     const groups = railPredictions
-      ? Object.keys(railPredictions).sort((a, b) => a.localeCompare(b))
+      ? Object.keys(railPredictions['groups']).sort((a, b) =>
+          a.localeCompare(b)
+        )
       : [];
 
     const selectedRailLineCodes = visibleRailLines.map(
@@ -64,11 +86,12 @@ class RailPredictions extends React.Component {
               <div className="car-cell cell">Cars</div>
             </div>
             <div className="table-body">
-              {fetching && !railPredictions && <div>loading</div>}
+              {fetching &&
+                !railPredictions && <div className="loading">Loading....</div>}
               {(!fetching || railPredictions) && (
                 <div>
                   {groups.map((g, groupIndex) => {
-                    return railPredictions[g].map(
+                    return railPredictions['groups'][g].map(
                       (
                         { Car, Destination, DestinationCode, Line, Min },
                         index

@@ -110,15 +110,16 @@ app.get(API_RAIL_ALERTS, (req, res) => {
 app.get(API_RAIL_PREDICTIONS, (req, res) => {
   const urlParts = url.parse(req.url, true);
   const stationCodes = urlParts['query']['stationCodes'].split(',');
-  let toReturn = [];
+  let predictions = [];
   stationCodes.forEach((code, index) => {
     const matchingStations = railPredictions.filter(({LocationCode}) => {
       return LocationCode === code;
     })
     const groupedStations = matchingStations.map(s => ({...s, UniqueGroup: s.Group + '-' + index}))
-    toReturn = toReturn.concat(groupedStations);
+    predictions = predictions.concat(groupedStations);
   })
-  res.send(groupBy(toReturn, 'UniqueGroup'));
+  const groups = groupBy(predictions, 'UniqueGroup');
+  res.send({groups, stationCodes});
 });
 
 app.use(express.static(__dirname + '/client/build'));

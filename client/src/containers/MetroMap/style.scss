@@ -23,6 +23,7 @@
         border-radius: 50%;
         background: white;
         border: 3px solid black;
+        z-index: 200 !important;
         &::after {
             content: '';
             border-radius: 50%;

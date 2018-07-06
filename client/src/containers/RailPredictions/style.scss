@@ -51,14 +51,26 @@
     }
     .destination-cell {
         width: 100px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow-x: hidden;
     }
 
     .minutes-cell {
         width: 60px;
+        padding-left: 5px;
     }
 
     .car-cell {
         width: 30px;
+        padding-left: 5px;
+    }
+
+    .loading {
+        text-align: center;
+        height: 40px;
+        width: 100%;
+        line-height: 40px;
     }
 
     .line-indicator {

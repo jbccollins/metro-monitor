@@ -107,14 +107,15 @@
         }
     }
     .description-icon {
-        width: 12px;
-        height: 12px;
+        width: 16px;
+        height: 16px;
         float: left;
         display: inline-block;
         background-position: center; 
         background-repeat: no-repeat;
-        margin: 5px 0px 0 10px;
-        background-size: 12px 12px;
+        margin: 2px 0px 0 8px;
+        background-size: 16px 16px;
+        cursor: pointer;
         background-image: url('../../assets/help-circle.png');
     }
     .Collapsible {

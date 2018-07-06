@@ -136,7 +136,7 @@ class App extends React.Component {
         <main>
           <ReactTooltip
             effect="solid"
-            offset={{ top: 10, left: -30 }}
+            offset={{ top: 0, left: -35 }}
             place="bottom"
             border
             className="global-tooltip"

@@ -205,9 +205,8 @@ class SideMenu extends React.Component {
                     <div className="section-title-label">Filters</div>
                     <div
                       className="description-icon"
-                      data-tip="Filter to see only the lines and destination stations that you care about. These filters affect
-                    what lines, trains and stations are drawn on the map. They also filter out any alerts and station
-                    arrival predictions that do not match your filters."
+                      data-tip="Filter out any trains going to destinations that you don't care about. These filters also
+                      affect alerts and arrival predictions."
                     />
                   </div>
                   <div className="section-body">
@@ -329,12 +328,6 @@ class SideMenu extends React.Component {
                   <div className="section-title">
                     <div className="section-icon display-options" />
                     <div className="section-title-label">Display Options</div>
-                    <div
-                      className="description-icon"
-                      data-tip="Filter to see only the lines and destination stations that you care about. These filters affect
-                    what lines, trains and stations are drawn on the map. They also filter out any alerts and station
-                    arrival predictions that do not match your filters."
-                    />
                   </div>
                   <div className="section-body">
                     <div className="toggle-wrapper">

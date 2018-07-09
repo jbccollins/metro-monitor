@@ -161,7 +161,7 @@ class MetroMap extends React.Component {
     layersNeedOrdering: true,
     leafletMapElt: false,
     geolocating: false,
-    geolocationAllowed: false,
+    geolocationAllowed: true,
     hoveredStationCodes: []
   };
 
@@ -184,6 +184,7 @@ class MetroMap extends React.Component {
     fetchRailStations();
     fetchTrains();
     setInterval(fetchTrains, 5000);
+    /*
     if (navigator.permissions && navigator.permissions.query) {
       navigator.permissions.query({ name: 'geolocation' }).then(result => {
         if (result.state === 'granted' || result.state === 'prompt') {
@@ -191,6 +192,7 @@ class MetroMap extends React.Component {
         }
       });
     }
+    */
   }
 
   handleMapLoad = ({ target }) => {
@@ -227,7 +229,13 @@ class MetroMap extends React.Component {
     this.setState({ geolocating: false });
     this.state.leafletMapElt.flyTo(
       [nearestRailStation.Lat, nearestRailStation.Lon],
-      13
+      15
+    );
+  };
+
+  handleGeolocationError = () => {
+    alert(
+      'Geolocation failed. Make sure your browser has permission to use your location.'
     );
   };
 
@@ -288,7 +296,7 @@ class MetroMap extends React.Component {
     }
     return (
       <div className="MetroMap">
-        {'geolocation' in navigator &&
+        {navigator.geolocation &&
           geolocationAllowed &&
           railStations && (
             <label title="Find the nearest station to me">
@@ -299,7 +307,8 @@ class MetroMap extends React.Component {
                 onClick={() => {
                   this.setState({ geolocating: true });
                   navigator.geolocation.getCurrentPosition(
-                    this.handleGeolocation
+                    this.handleGeolocation,
+                    this.handleGeolocationError
                   );
                 }}
               />

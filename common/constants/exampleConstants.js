@@ -1,0 +1,6 @@
+const EXAMPLE_CONSTANT = "EXAMPLE CONSTANT";
+
+
+export {
+    EXAMPLE_CONSTANT,
+};

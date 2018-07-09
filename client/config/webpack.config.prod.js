@@ -10,6 +10,7 @@ const InterpolateHtmlPlugin = require("react-dev-utils/InterpolateHtmlPlugin");
 const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
 const eslintFormatter = require("react-dev-utils/eslintFormatter");
 const paths = require("./paths");
+const DirectoryNamedWebpackPlugin = require("directory-named-webpack-plugin");
 const getClientEnvironment = require("./env");
 
 // Webpack uses `publicPath` to determine where the app is being served from.
@@ -99,7 +100,19 @@ module.exports = {
       utilities: path.resolve(__dirname, "../src/utilities/"),
       // Outside of src
       common: path.resolve(__dirname, "../../common/")
-    }
+    },
+    plugins: [
+      new DirectoryNamedWebpackPlugin({
+        honorIndex: true,
+
+        // define where the imported files will be resolving by DirectoryNamedWebpackPlugin.
+        // it can be string/regex or Array of string/regex.
+        include: [
+          path.resolve(__dirname, "../src/components/"),
+          path.resolve(__dirname, "../src/containers/")
+        ]
+      })
+    ]
   },
   module: {
     strictExportPresence: true,

@@ -249,10 +249,6 @@ const STATIONS_WITH_PERMANENT_LABELS = [
     "C15",
     "E10",
     "F11",
-    "F03",
-    "A01",
-    "B01",
-    "B06",
 ];
 
 const RIGHT_SIDE = {
@@ -307,7 +303,7 @@ const STATION_LABEL_STYLES = {
     "G05": RIGHT_SIDE,
     "C15": RIGHT_SIDE,
     "F04": CENTER_OF_DC,
-    "A01": LEFT_45,
+    "A01": RIGHT_45,
     "F03": RIGHT_45,
     "B01": RIGHT_45,
     "C02": CENTER_OF_DC_ALT,
@@ -325,10 +321,22 @@ const STATION_LABEL_STYLES = {
     "K06": LEFT_SIDE,
     "K01": LEFT_SIDE,
     "K02": LEFT_SIDE,
-    "C05": LEFT_SIDE,
+    "C05": RIGHT_SIDE,
     "K03": CENTER_OF_DC_ALT,
     "N01": LEFT_SIDE,
 };
+
+const TRANSFER_STATIONS = [
+    "A01",
+    "B01",
+    "F03",
+    "C05",
+    "K06",
+    "C07",
+    "D08",
+    "C13",
+    "B06",
+];
 
 export {
     RED,
@@ -343,5 +351,6 @@ export {
     LINE_DRAW_ORDER,
     DUPLICATE_STATION_CODES,
     STATIONS_WITH_PERMANENT_LABELS,
-    STATION_LABEL_STYLES
+    STATION_LABEL_STYLES,
+    TRANSFER_STATIONS
 };

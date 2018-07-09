@@ -15,6 +15,7 @@ import {
   DUPLICATE_STATION_CODES,
   STATIONS_WITH_PERMANENT_LABELS,
   STATION_LABEL_STYLES,
+  TRANSFER_STATIONS,
   RED,
   ORANGE,
   YELLOW,
@@ -94,27 +95,8 @@ const scaleMultiples = [
   -0.00008,
   -0.00008
 ];
-const labelSpacing = [
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0, // First nine don't matter cuz min map zoom
-  10000,
-  10000,
-  100000,
-  10000,
-  10000,
-  10000,
-  1,
-  1,
-  1,
-  1
-];
+
+const labelCutoff = 14;
 
 const offsetLatLngs = (latLngs, zoom) => {
   const first = latLngs[0];
@@ -424,7 +406,7 @@ class MetroMap extends React.Component {
                 }
                 const showLabel =
                   STATIONS_WITH_PERMANENT_LABELS.includes(Code) ||
-                  index % labelSpacing[zoom] === 0 ||
+                  zoom > labelCutoff ||
                   (selectedRailStations &&
                     selectedRailStations.includes(Code)) ||
                   hoveredStationCodes.includes(Code);
@@ -440,8 +422,12 @@ class MetroMap extends React.Component {
                     onMouseOver={() => this.handleStationMouseOver(Code)}
                     onMouseOut={this.handleStationMouseOut}
                     icon={L.divIcon({
-                      className: `station-icon`,
-                      iconSize: [12, 12]
+                      className: TRANSFER_STATIONS.includes(Code)
+                        ? 'transfer-station-icon'
+                        : 'station-icon',
+                      iconSize: TRANSFER_STATIONS.includes(Code)
+                        ? [16, 16]
+                        : [12, 12]
                     })}
                   />
                 ];

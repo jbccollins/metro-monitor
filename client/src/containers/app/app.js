@@ -3,16 +3,25 @@ import DemoComponent from "components/DemoComponent";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { setDisplayMode } from "actions/controls";
+import { DARK, LIGHT } from "common/constants/theme";
 
 import "./app.scss";
 
 class App extends React.Component {
+  handleDisplayModeChange = () => {
+    const { displayMode } = this.props;
+    this.props.setDisplayMode(displayMode === LIGHT ? DARK : LIGHT);
+  };
+
   render() {
     const { displayMode } = this.props;
     return (
-      <div>
+      <div className={displayMode}>
         <main>
-          <DemoComponent displayMode={displayMode} />
+          <DemoComponent
+            onClick={this.handleDisplayModeChange}
+            theme={displayMode}
+          />
         </main>
       </div>
     );

@@ -3,7 +3,11 @@ import "./DemoComponent.scss";
 
 class DemoComponent extends React.Component {
   render() {
-    return <div className="DemoComponent">Demo Component</div>;
+    return (
+      <div className="DemoComponent" onClick={this.props.onClick}>
+        Demo Component
+      </div>
+    );
   }
 }
 

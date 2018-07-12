@@ -264,7 +264,7 @@ class MetroMap extends React.Component {
   handleMoveEnd = () => {
     const center = this.state.leafletMapElt.getCenter();
     const mapPosition = {
-      zoom: this.state.leafletMapElt.getZoom(),
+      zoom: Math.round(this.state.leafletMapElt.getZoom()), // IOS Mobile pinching can make this fractional /shrug
       center: [center.lat, center.lng]
     };
     this.props.setMapPosition(mapPosition);

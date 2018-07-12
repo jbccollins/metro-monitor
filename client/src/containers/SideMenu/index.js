@@ -98,6 +98,7 @@ const selectStyles = {
     ...styles,
     color: 'black',
     minHeight: '20px',
+    backgroundColor: '#2b2b2b',
     //height: '20px',
     //maxHeight: '20px',
     fontSize: '12px'

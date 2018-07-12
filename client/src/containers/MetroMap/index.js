@@ -312,6 +312,7 @@ class MetroMap extends React.Component {
                   );
                 }}
               />
+              <div className="geolocation-button-shadow" />
             </label>
           )}
         <Map

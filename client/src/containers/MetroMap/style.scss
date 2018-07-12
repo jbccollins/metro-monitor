@@ -70,11 +70,10 @@
     .geolocation-button {
         position: fixed;
         cursor: pointer;
-        bottom: 12px;
-        right: 12px;
-        height: 30px;
-        width: 30px;
-        border: 1px solid grey;
+        bottom: 13px;
+        right: 13px;
+        height: 28px;
+        width: 28px;
         background: #2b2b2b;
         border-radius: 50%;
         z-index: 998;
@@ -96,6 +95,17 @@
                 animation: rotateY 1s infinite linear;
             }
         }
+    }
+
+    .geolocation-button-shadow {
+        z-index: 997;
+        position: fixed;
+        bottom: 12px;
+        right: 12px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: grey;
     }
 
     @-webkit-keyframes rotateY {

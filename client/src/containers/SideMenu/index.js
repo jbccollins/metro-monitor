@@ -389,7 +389,7 @@ class SideMenu extends React.Component {
                   <li className="question">1. Why does this exist?</li>
                   <li className="answer">
                     Other Metro tools shove so much stuff in your face that it's
-                    difficult parse out the information you care about. This
+                    difficult to parse out the information you care about. This
                     tool shows alerts, station arrival predictions and live
                     train positions on one screen while also letting you filter
                     out alerts, station arrival predictions and live train
@@ -423,7 +423,7 @@ class SideMenu extends React.Component {
                     </span>
                     But seriously. I don't have access to anything other that
                     the very limited set of data WMATA lets developers get their
-                    hands on. I make no guarentees about the accuracy of any
+                    hands on. I make no gaurentees about the accuracy of any
                     information on this site.
                   </li>
                   <li className="question">4. Is this project open-source?</li>

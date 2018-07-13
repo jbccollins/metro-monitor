@@ -14,7 +14,7 @@ class RailPredictions extends React.Component {
     const {
       selectedRailStations,
       fetchRailPredictions,
-      railPredictions,
+      railPredictionsState: { railPredictions, fetching },
       setSelectedRailStations
     } = nextProps;
     if (!selectedRailStations) {
@@ -37,7 +37,7 @@ class RailPredictions extends React.Component {
       if (!selectedRailStations) {
         setSelectedRailStations(null);
       } else {
-        const stationDiff = railPredictions['groups'].filter(
+        const stationDiff = railPredictions['stationCodes'].filter(
           i => !selectedRailStations.includes(i)
         );
         if (stationDiff.length > 0) {
@@ -87,7 +87,7 @@ class RailPredictions extends React.Component {
             </div>
             <div className="table-body">
               {fetching &&
-                !railPredictions && <div className="loading">Loading....</div>}
+                !railPredictions && <div className="loading">Loading...</div>}
               {(!fetching || railPredictions) && (
                 <div>
                   {groups.map((g, groupIndex) => {

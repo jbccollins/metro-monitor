@@ -89,7 +89,7 @@ var styles = {
     color: 'white'
   },
   bmOverlay: {
-    background: 'rgba(0, 0, 0, 0.3)'
+    background: 'rgba(0, 0, 0, 0.7)'
   }
 };
 

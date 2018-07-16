@@ -66,7 +66,7 @@ const handleRailPredictionsError = error => ({
 });
 
 const fetchRailPredictions = stationCodes => {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch(requestRailPredictions());
     return fetch(
       API_RAIL_PREDICTIONS + `?stationCodes=${stationCodes.join(',')}`,
@@ -79,7 +79,17 @@ const fetchRailPredictions = stationCodes => {
     )
       .then(res => res.json())
       .then(railPredictions => {
-        dispatch(receiveRailPredictions(railPredictions));
+        const { selectedRailStations } = getState();
+        // Catch the case where a rail prediction request was in flight
+        // when the predictions window was closed.
+        if (
+          railPredictions['stationCodes'] &&
+          selectedRailStations &&
+          railPredictions['stationCodes'].join(',') ===
+            selectedRailStations.join(',')
+        ) {
+          dispatch(receiveRailPredictions(railPredictions));
+        }
       })
       .catch(e => {
         dispatch(handleRailPredictionsError(e));

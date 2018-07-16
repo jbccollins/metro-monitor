@@ -30,21 +30,6 @@ class RailPredictions extends React.Component {
         )
       });
     }
-
-    // Catch the case where a rail prediction request was in flight
-    // when the predictions window was closed.
-    if (railPredictions) {
-      if (!selectedRailStations) {
-        setSelectedRailStations(null);
-      } else {
-        const stationDiff = railPredictions['stationCodes'].filter(
-          i => !selectedRailStations.includes(i)
-        );
-        if (stationDiff.length > 0) {
-          setSelectedRailStations(null);
-        }
-      }
-    }
   }
   render() {
     const {

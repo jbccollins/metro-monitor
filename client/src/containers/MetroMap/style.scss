@@ -16,9 +16,35 @@
             pointer-events: none;
         }
     }
-    .leaflet-control-container {
+
+    .leaflet-control-attribution {
         display: none;
     }
+    .leaflet-top.leaflet-left {
+        z-index: 999;
+    }
+    .leaflet-control-zoom {
+        position: fixed;
+        bottom: 12px;
+        right: 12px;
+        margin: 0px;
+        border: none;
+    
+        .leaflet-control-zoom-in, .leaflet-control-zoom-out {
+            border-radius: 50%;
+            border-bottom-left-radius: 50% !important;
+            border-bottom-right-radius: 50% !important;
+            border-top-left-radius: 50% !important;
+            border-top-right-radius: 50% !important;
+            border: 1px solid grey;
+            line-height: 25px;
+            background: #2b2b2b;
+            color: white;
+            font-weight: normal;
+            margin-top: 5px;
+        }
+    }
+
     .station-icon {
         border-radius: 50%;
         background: white;
@@ -70,7 +96,7 @@
     .geolocation-button {
         position: fixed;
         cursor: pointer;
-        bottom: 13px;
+        bottom: 83px;
         right: 13px;
         height: 28px;
         width: 28px;
@@ -100,7 +126,7 @@
     .geolocation-button-shadow {
         z-index: 997;
         position: fixed;
-        bottom: 12px;
+        bottom: 82px;
         right: 12px;
         width: 30px;
         height: 30px;

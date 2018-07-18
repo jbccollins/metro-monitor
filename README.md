@@ -1,22 +1,29 @@
-<p align="center"><a href="https://medium.com/@notrab/getting-started-with-create-react-app-redux-react-router-redux-thunk-d6a19259f71f"><img src="https://i.imgur.com/PATsTx2.png" title="View tutorial" alt="React, React Router, Redux and Redux Thunk" width="900"></a></p>
-
-[![Dependency Status](https://dependencyci.com/github/notrab/create-react-app-redux/badge)](https://dependencyci.com/github/notrab/create-react-app-redux)
-
-* Tutorial: [Getting started with create-react-app, Redux, React Router & Redux Thunk](https://medium.com/@notrab/getting-started-with-create-react-app-redux-react-router-redux-thunk-d6a19259f71f)
-* Example: [View on Heroku](https://cra-redux-router-thunk.herokuapp.com/) 🙌
-
 ## Installation
 
 ```bash
-git clone https://github.com/notrab/create-react-app-redux.git
-cd create-react-app-redux
-yarn
+yarn rebuild
 ```
 
-## Get started
+## Development
+
+First get a WMATA API Key from here: https://developer.wmata.com/
 
 ```bash
-yarn start
+API_KEY=<YOUR_WMATA_API_KEY> yarn dev
+```
+
+## Scripts
+| Script | Description |
+|---|---|
+| rebuild | Nuke the client and server node_modules then reinstall everything |
+| dev | Concurrently run the client and server in development mode |
+| start | Default heroku command to run a node app. Not useful when developing |
+| postinstall | Default heroku command to build the client. Not useful when developing |
+
+## Publishing
+
+```bash
+git push heroku master
 ```
 
 This boilerplate is built using [create-react-app](https://github.com/facebookincubator/create-react-app) so you will want to read the User Guide for more goodies.

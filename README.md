@@ -20,10 +20,18 @@ I use the same basic set of stuff in almost all my React projects. So here's my 
 yarn rebuild
 ```
 
-## Get started
+## Development
+
+First get a WMATA API Key from here: https://developer.wmata.com/
 
 ```bash
-yarn dev
+API_KEY=<YOUR_WMATA_API_KEY> yarn dev
+```
+
+## Publishing
+
+```bash
+git push -f heroku master
 ```
 
 ## Scripts

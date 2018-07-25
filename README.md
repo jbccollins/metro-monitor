@@ -1,6 +1,12 @@
 ## About
 
-I use the same basic set of stuff in almost all my React projects. So here's my bootstrapped thing for them.
+A live filterable map of the DC Metro system. Features train positions, station arrival predictions and WMATA alerts all in once place! 
+
+Check it out here: https://www.dcmetromonitor.com
+
+![image of metro monitor](https://i.imgur.com/dnT4Ug7.png)
+
+Bootstrapped from [my-personal-starter-react-setup](https://github.com/jbccollins/my-personal-starter-react-setup)
 
 ### Notable Dependencies/Features
 * [Redux](https://redux.js.org/) (Application state management)

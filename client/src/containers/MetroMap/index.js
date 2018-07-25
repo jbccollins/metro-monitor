@@ -154,6 +154,11 @@ const DEFAULT_STATION_LABEL_STYLES = {
   }
 };
 
+const MAX_BOUNDS = new L.latLngBounds(
+  L.latLng(39.181497524442165, -76.569482088089),
+  L.latLng(38.62685162871765, -77.51911282539369)
+);
+
 class MetroMap extends React.Component {
   state = {
     railStationsLayerGroup: null,
@@ -318,6 +323,8 @@ class MetroMap extends React.Component {
         <Map
           minZoom={9}
           maxZoom={18}
+          maxBounds={MAX_BOUNDS}
+          maxBoundsViscosity={1}
           whenReady={this.handleMapLoad}
           center={center}
           onMoveEnd={this.handleMoveEnd}

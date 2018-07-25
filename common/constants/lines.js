@@ -331,7 +331,7 @@ const TRANSFER_STATIONS = [
     "B01",
     "F03",
     "C05",
-    "K06",
+    "K05",
     "C07",
     "D08",
     "C13",

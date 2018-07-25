@@ -1,3 +1,10 @@
+## About
+A live filterable map of the DC Metro system. Features train positions, station arrival predictions and WMATA alerts all in once place! 
+
+Check it out here: https://www.dcmetromonitor.com
+
+![image of weather monitor](https://i.imgur.com/dnT4Ug7.png)
+
 ## Installation
 
 ```bash

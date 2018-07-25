@@ -423,7 +423,7 @@ class SideMenu extends React.Component {
                     </span>
                     But seriously. I don't have access to anything other that
                     the very limited set of data WMATA lets developers get their
-                    hands on. I make no gaurantees about the accuracy of any
+                    hands on. I make no guarantees about the accuracy of any
                     information on this site.
                   </li>
                   <li className="question">4. Is this project open-source?</li>

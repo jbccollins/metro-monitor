@@ -102,10 +102,20 @@ const requestRailAlerts = () => ({
   type: RAIL_ALERTS_REQUESTED
 });
 
-const receiveRailAlerts = railAlerts => ({
-  type: RAIL_ALERTS_RECEIVED,
-  payload: { railAlerts }
-});
+const receiveRailAlerts = railAlerts => {
+  let dismissedAlerts = localStorage.getItem('dismissedAlerts');
+  let alerts = railAlerts;
+  if (dismissedAlerts !== null) {
+    dismissedAlerts = JSON.parse(dismissedAlerts);
+    alerts = alerts.filter(
+      ({ IncidentID }) => !dismissedAlerts.includes(IncidentID)
+    );
+  }
+  return {
+    type: RAIL_ALERTS_RECEIVED,
+    payload: { railAlerts: alerts }
+  };
+};
 
 const handleRailAlertsError = error => ({
   type: RAIL_ALERTS_ERRORED,
@@ -123,6 +133,21 @@ const fetchRailAlerts = () => {
     })
       .then(res => res.json())
       .then(railAlerts => {
+        let dismissedAlerts = localStorage.getItem('dismissedAlerts');
+        if (dismissedAlerts !== null && railAlerts.length > 0) {
+          dismissedAlerts = JSON.parse(dismissedAlerts);
+          const currentAlertIDs = railAlerts.map(
+            ({ IncidentID }) => IncidentID
+          );
+          const validDismissedAlerts = dismissedAlerts.filter(IncidentID =>
+            currentAlertIDs.includes(IncidentID)
+          );
+          // Make sure we don't just keep adding to the 'dismissedAlerts' local storage.
+          window.localStorage.setItem(
+            'dismissedAlerts',
+            JSON.stringify(validDismissedAlerts)
+          );
+        }
         dispatch(receiveRailAlerts(railAlerts));
       })
       .catch(e => {

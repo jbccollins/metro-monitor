@@ -1,4 +1,4 @@
-import { fetchRailAlerts } from 'actions/metro';
+import { fetchRailAlerts, receiveRailAlerts } from 'actions/metro';
 import React from 'react';
 import { LINE_PROPERTIES, LINE_NAMES } from 'common/constants/lines';
 import moment from 'moment';
@@ -16,7 +16,9 @@ class RailAlert extends React.Component {
       Description,
       IncidentType,
       LinesAffected,
-      DateUpdated
+      DateUpdated,
+      IncidentID,
+      onAlertDismiss
     } = this.props;
     const affectedLines = getAffectedLineCodes(LinesAffected);
     const alert = {
@@ -45,6 +47,11 @@ class RailAlert extends React.Component {
               </div>
             ))}
           </div>
+          <div
+            title="Never show this alert again"
+            className="dismiss"
+            onClick={() => onAlertDismiss(IncidentID)}
+          />
           <div className="date">
             {'(' + moment(DateUpdated).fromNow() + ')'}
           </div>
@@ -66,6 +73,22 @@ class RailAlerts extends React.Component {
     fetchRailAlerts();
     setInterval(fetchRailAlerts, 12000);
   }
+
+  handleAlertDismiss = IncidentID => {
+    const { railAlerts, receiveRailAlerts } = this.props;
+    let dismissedAlerts = localStorage.getItem('dismissedAlerts');
+    if (dismissedAlerts !== null) {
+      dismissedAlerts = JSON.parse(dismissedAlerts);
+      dismissedAlerts.push(IncidentID);
+    } else {
+      dismissedAlerts = [IncidentID];
+    }
+    window.localStorage.setItem(
+      'dismissedAlerts',
+      JSON.stringify(dismissedAlerts)
+    );
+    receiveRailAlerts(railAlerts);
+  };
 
   componentWillReceiveProps(nextProps) {
     const { railAlerts } = nextProps;
@@ -118,7 +141,11 @@ class RailAlerts extends React.Component {
               {railAlerts &&
                 railAlerts.length > 0 &&
                 railAlerts.map((alert, index) => (
-                  <RailAlert {...alert} key={alert['IncidentID']} />
+                  <RailAlert
+                    onAlertDismiss={this.handleAlertDismiss}
+                    {...alert}
+                    key={alert['IncidentID']}
+                  />
                 ))}
               {(!railAlerts || railAlerts.length === 0) && (
                 <div className="no-alerts">No alerts right now :)</div>
@@ -152,7 +179,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      fetchRailAlerts
+      fetchRailAlerts,
+      receiveRailAlerts
     },
     dispatch
   );

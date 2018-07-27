@@ -11,12 +11,7 @@ class RailPredictions extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    const {
-      selectedRailStations,
-      fetchRailPredictions,
-      railPredictionsState: { railPredictions, fetching },
-      setSelectedRailStations
-    } = nextProps;
+    const { selectedRailStations, fetchRailPredictions } = nextProps;
     if (!selectedRailStations) {
       clearInterval(this.state.stationRefreshInterval);
       this.setState({ stationRefreshInterval: null });

@@ -2,7 +2,7 @@
   "name": "metro-monitor",
   "version": "1.0.0",
   "engines": {
-    "node": "10.0.0"
+    "node": "^10.0.0"
   },
   "scripts": {
     "client": "cd client && yarn start",

@@ -128,6 +128,10 @@ app.get('/splash', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/splash.html'));
 });
 
+app.get('/googleindex', (req, res) => {
+  res.sendFile(path.join(__dirname + '/client/build/google28ef7306b50928cb.html'));
+});
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'));
 });

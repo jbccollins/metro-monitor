@@ -432,8 +432,13 @@ class SideMenu extends React.Component {
                   </li>
                   <li className="question">4. Is this project open-source?</li>
                   <li className="answer">
-                    No. But that's not off the table. Maybe sometime in the
-                    future.
+                    Yes! It's on{' '}
+                    <a
+                      rel="noopener noreferrer"
+                      href="https://github.com/jbccollins/metro-monitor"
+                      target="_blank">
+                      Github
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -445,28 +450,15 @@ class SideMenu extends React.Component {
                 <ul className="bugs-list">
                   <li>
                     Trains sometimes fly in from the middle of the Atlantic
-                    Ocean (API Limitation)
+                    Ocean
                   </li>
-                  <li>Trains sometimes switch directions (API Limitation)</li>
-                  <li>
-                    Trains sometimes disappear and re-appear (API Limitation)
-                  </li>
+                  <li>Trains sometimes switch directions</li>
+                  <li>Trains sometimes disappear and re-appear</li>
                   <li>
                     Prediction data for stations at the ends of lines is wonky
-                    (API Limitation)
                   </li>
                 </ul>
               </div>
-            </Collapsible>
-            <Collapsible
-              transitionTime={TRANSITION_TIME}
-              trigger={
-                <div className="menu-trigger-wrapper">
-                  <div className="menu-icon resources" />
-                  <div className="menu-title">Other Resources</div>
-                </div>
-              }>
-              <div className="section-body description">Coming soon...</div>
             </Collapsible>
           </Menu>
         </MenuWrap>

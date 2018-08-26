@@ -2,7 +2,7 @@
   "name": "metro-monitor",
   "version": "1.0.0",
   "engines": {
-    "node": "10.0.0"
+    "node": "^10.0.0"
   },
   "scripts": {
     "client": "cd client && yarn start",
@@ -14,15 +14,16 @@
     "rebuild": "yarn clean && yarn && cd client && yarn"
   },
   "dependencies": {
+    "@turf/turf": "^5.1.6",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react-app": "^3.1.1",
     "babel-register": "^6.26.0",
     "concurrently": "^3.5.0",
-    "@turf/turf": "^5.1.6",
     "express": "^4.16.2",
     "isomorphic-fetch": "^2.2.1",
     "lodash.groupby": "^4.6.0",
     "proj4": "^2.4.4",
+    "urijs": "^1.19.1",
     "url": "^0.11.0"
   }
 }

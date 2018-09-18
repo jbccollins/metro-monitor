@@ -71,6 +71,8 @@ class RailPredictions extends React.Component {
               {(!fetching || railPredictions) && (
                 <div>
                   {groups.map((g, groupIndex) => {
+                    // TODO: Find a better way to fix https://github.com/jbccollins/metro-monitor/issues/51
+                    let indexOffset = 0;
                     return railPredictions['groups'][g].map(
                       (
                         { Car, Destination, DestinationCode, Line, Min },
@@ -87,13 +89,16 @@ class RailPredictions extends React.Component {
                               DestinationCode
                             ))
                         ) {
+                          indexOffset++;
                           return false;
                         }
                         return (
                           <div
                             key={`${g}-${index}`}
                             className={`table-row${
-                              index === 0 && groupIndex > 0 ? ' first-row' : ''
+                              index === indexOffset && groupIndex > 0
+                                ? ' first-row'
+                                : ''
                             }`}>
                             <div className="line-cell cell">
                               <div

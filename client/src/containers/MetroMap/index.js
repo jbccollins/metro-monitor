@@ -285,7 +285,8 @@ class MetroMap extends React.Component {
       showTiles,
       selectedRailStations,
       zoom,
-      center
+      center,
+      displayMode
     } = this.props;
     const { geolocating, geolocationAllowed, hoveredStationCodes } = this.state;
     let selectedRailStation = null;
@@ -328,7 +329,7 @@ class MetroMap extends React.Component {
             <TileLayer
               className="MapboxTileLayer"
               crossOrigin
-              url="https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png"
+              url={`https://{s}.basemaps.cartocdn.com/${displayMode}_nolabels/{z}/{x}/{y}.png`}
             />
           )}
           <GeoJSON
@@ -564,7 +565,8 @@ const mapStateToProps = state => ({
   showTiles: state.showTiles,
   selectedRailStations: state.selectedRailStations,
   zoom: state.zoom,
-  center: state.center
+  center: state.center,
+  displayMode: state.displayMode
 });
 
 const mapDispatchToProps = dispatch =>

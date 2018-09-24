@@ -126,7 +126,7 @@ app.get('/splash', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/splash.html'));
 });
 
-app.get('/googleindex', (req, res) => {
+app.get('/google28ef7306b50928cb.html', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/google28ef7306b50928cb.html'));
 });
 

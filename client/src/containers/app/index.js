@@ -9,6 +9,7 @@ import queryString from 'query-string';
 import { LINE_PROPERTIES, LINE_NAMES } from 'common/constants/lines';
 import flatten from 'lodash.flatten';
 import ReactTooltip from 'react-tooltip';
+import { DARK } from 'common/constants/controls';
 
 import url from 'url';
 
@@ -132,7 +133,10 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <div
+        className={`${
+          this.props.displayMode === DARK ? 'dark-mode' : 'light-mode'
+        }`}>
         <main>
           <ReactTooltip
             effect="solid"
@@ -159,7 +163,8 @@ const mapStateToProps = state => ({
   showTiles: state.showTiles,
   selectedRailStations: state.selectedRailStations,
   center: state.center,
-  zoom: state.zoom
+  zoom: state.zoom,
+  displayMode: state.displayMode
 });
 
 const mapDispatchToProps = dispatch =>

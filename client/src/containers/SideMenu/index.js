@@ -6,13 +6,18 @@ import { slide as Menu } from 'react-burger-menu';
 import './style.scss';
 import 'react-toggle/style.css';
 import Toggle from 'react-toggle';
-import { setVisibleRailLines, setShowTiles } from 'actions/controls';
+import {
+  setVisibleRailLines,
+  setShowTiles,
+  setDisplayMode
+} from 'actions/controls';
 import {
   setSelectedDestinationRailStations,
   setSelectedRailStations
 } from 'actions/metro';
 import Select from 'react-select';
 import Collapsible from 'react-collapsible';
+import { DARK, LIGHT } from 'common/constants/controls';
 
 const TRANSITION_TIME = 100;
 
@@ -188,7 +193,8 @@ class SideMenu extends React.Component {
       visibleRailLines,
       railStations,
       selectedDestinationRailStations,
-      showTiles
+      showTiles,
+      displayMode
     } = this.props;
     return (
       <div className="SideMenu">
@@ -348,15 +354,16 @@ class SideMenu extends React.Component {
                     </div>
                     <div className="toggle-wrapper">
                       <label>
-                        <span className="toggle-label">Dark Mode (Soon!)</span>
+                        <span className="toggle-label">Dark Mode</span>
                         <Toggle
                           icons={false}
-                          disabled
                           className={`custom-toggle neutral`}
-                          checked={true}
-                          onChange={() => {
-                            /* noop */
-                          }}
+                          checked={displayMode === DARK}
+                          onChange={() =>
+                            this.props.setDisplayMode(
+                              displayMode === DARK ? LIGHT : DARK
+                            )
+                          }
                         />
                       </label>
                     </div>
@@ -472,7 +479,8 @@ const mapStateToProps = state => ({
   railStations: state.railStations.railStations,
   selectedDestinationRailStations: state.selectedDestinationRailStations,
   showTiles: state.showTiles,
-  selectedRailStations: state.selectedRailStations
+  selectedRailStations: state.selectedRailStations,
+  displayMode: state.displayMode
 });
 
 const mapDispatchToProps = dispatch =>
@@ -481,7 +489,8 @@ const mapDispatchToProps = dispatch =>
       setVisibleRailLines,
       setSelectedDestinationRailStations,
       setSelectedRailStations,
-      setShowTiles
+      setShowTiles,
+      setDisplayMode
     },
     dispatch
   );

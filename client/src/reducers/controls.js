@@ -26,7 +26,7 @@ const showTiles = (state = true, action) => {
   }
 };
 
-const displayMode = (state = LIGHT, action) => {
+const displayMode = (state = DARK, action) => {
   switch (action.type) {
     case SET_DISPLAY_MODE:
       return action.payload.displayMode;

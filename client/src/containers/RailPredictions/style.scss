@@ -44,6 +44,9 @@
         border-top: 1px solid grey;
         height: 26px;
         padding-top: 5px;
+        &:first-of-type {
+            border-top: 0px;
+        }
     }
 
     .line-cell {

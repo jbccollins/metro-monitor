@@ -294,7 +294,7 @@ class SideMenu extends React.Component {
                                       value: Code,
                                       label: Name
                                     }))
-                                },
+                                } /*, // TODO; People find these super confusing... maybe better UI would help
                                 {
                                   label: (
                                     <div>
@@ -328,7 +328,7 @@ class SideMenu extends React.Component {
                                       value: Code,
                                       label: Name
                                     }))
-                                }
+                                }*/
                               ]}
                             />
                           </div>

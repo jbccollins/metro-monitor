@@ -1,7 +1,8 @@
 import { combineReducers } from "redux";
-import { routerReducer } from "react-router-redux";
+import { connectRouter } from "connected-react-router";
 import { displayMode } from "./controls";
-export default combineReducers({
-  displayMode,
-  router: routerReducer
-});
+export default history =>
+  combineReducers({
+    displayMode,
+    router: connectRouter(history)
+  });

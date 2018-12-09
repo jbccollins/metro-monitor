@@ -1,6 +1,6 @@
 // Transpile all code following this line with babel and use 'env' (aka ES6) preset.
-require('babel-register')({
-    presets: [ 'env', 'react-app' ]
+require('@babel/register')({
+    presets: [ '@babel/env', 'react-app' ]
 })
 
 // Import the rest of our application.

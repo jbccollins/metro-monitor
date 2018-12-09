@@ -14,12 +14,13 @@
     "rebuild": "yarn clean && yarn && cd client && yarn"
   },
   "dependencies": {
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react-app": "^3.1.1",
-    "babel-register": "^6.26.0",
-    "babel-runtime": "^6.23.0",
-    "concurrently": "^3.5.0",
-    "express": "^4.16.2",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/register": "^7.0.0",
+    "@babel/runtime": "^7.0.0",
+    "babel-preset-react-app": "^6.1.0",
+    "concurrently": "^4.1.0",
+    "express": "^4.16.4",
     "isomorphic-fetch": "^2.2.1"
   }
 }

@@ -1,4 +1,4 @@
-import { SET_DISPLAY_MODE } from "../actions/controls";
+import { SET_DISPLAY_MODE } from "actions/controls";
 import { DARK } from "common/constants/theme";
 
 const displayMode = (state = DARK, action) => {

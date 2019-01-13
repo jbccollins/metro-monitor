@@ -2,12 +2,13 @@
   "name": "my-personal-starter-react-setup",
   "version": "1.0.0",
   "engines": {
-    "node": "^8.0.0"
+    "node": ">=8.0.0"
   },
+  "main": "server.js",
   "scripts": {
     "client": "cd client && yarn start",
-    "server": "NODE_ENV=development nodemon starter.js",
-    "start": "NODE_ENV=production node starter.js",
+    "start": "NODE_ENV=production --exec babel-node server.js",
+    "server": "NODE_ENV=development nodemon --exec babel-node server.js",
     "postinstall": "cd client && yarn && yarn build",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "clean": "rm -rf node_modules rm -f package-lock.json && cd client && rm -rf node_modules && rm -f package-lock.json",
@@ -15,10 +16,10 @@
   },
   "dependencies": {
     "@babel/core": "^7.0.0",
+    "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.0.0",
     "@babel/register": "^7.0.0",
     "@babel/runtime": "^7.0.0",
-    "babel-preset-react-app": "^6.1.0",
     "concurrently": "^4.1.0",
     "express": "^4.16.4",
     "isomorphic-fetch": "^2.2.1"

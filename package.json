@@ -7,7 +7,7 @@
   "main": "server.js",
   "scripts": {
     "client": "cd client && yarn start",
-    "start": "NODE_ENV=production --exec babel-node server.js",
+    "start": "NODE_ENV=production babel-node server.js",
     "server": "NODE_ENV=development nodemon --exec babel-node server.js",
     "postinstall": "cd client && yarn && yarn build",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",

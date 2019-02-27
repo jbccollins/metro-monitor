@@ -17,7 +17,11 @@ import {
   setSelectedRailStations,
   setSelectedDestinationRailStations
 } from 'actions/metro';
-import { setVisibleRailLines, setShowTiles } from 'actions/controls';
+import {
+  setVisibleRailLines,
+  setShowTiles,
+  setShowcaseMode
+} from 'actions/controls';
 import { setMapPosition } from 'actions/persistence';
 import './style.scss';
 
@@ -26,8 +30,14 @@ const RAIL_LINES = 'railLines';
 const MAP_POSITION = 'mapPosition';
 const SHOW_TILES = 'showTiles';
 const STATION_FILTERS = 'stationFilters';
+const SHOWCASE_MODE = 'showcaseMode';
 
 class App extends React.Component {
+  state = {
+    showcaseModeTimeout: null,
+    showcasing: false
+  };
+
   constructor() {
     super();
     this.urlParsingMap = {
@@ -35,7 +45,8 @@ class App extends React.Component {
       [RAIL_LINES]: this.parseRailLines,
       [MAP_POSITION]: this.parseMapPosition,
       [SHOW_TILES]: this.parseShowMapTiles,
-      [STATION_FILTERS]: this.parseStationFilters
+      [STATION_FILTERS]: this.parseStationFilters,
+      [SHOWCASE_MODE]: this.parseShowcaseMode
     };
   }
 
@@ -60,7 +71,8 @@ class App extends React.Component {
       zoom,
       center,
       showTiles,
-      selectedDestinationRailStations
+      selectedDestinationRailStations,
+      showcaseMode
     } = this.props;
     if (selectedRailStations) {
       urlParamMap[STATION_CODES] = selectedRailStations.join(',');
@@ -74,6 +86,9 @@ class App extends React.Component {
     }
     if (typeof showTiles !== 'undefined') {
       urlParamMap[SHOW_TILES] = showTiles;
+    }
+    if (typeof showcaseMode !== 'undefined') {
+      urlParamMap[SHOWCASE_MODE] = showcaseMode;
     }
     const values = Object.keys(selectedDestinationRailStations).map(
       k => selectedDestinationRailStations[k]
@@ -115,6 +130,12 @@ class App extends React.Component {
     this.props.setShowTiles(showTiles === 'true');
   };
 
+  parseShowcaseMode = showcaseMode => {
+    const showcase = showcaseMode === 'true';
+    this.props.setShowcaseMode(showcase);
+    this.setState({ showcasing: showcase });
+  };
+
   parseStationFilters = stationFilters => {
     const parsedStationFilters = {};
     LINE_NAMES.forEach(name => {
@@ -131,12 +152,37 @@ class App extends React.Component {
     this.props.setSelectedDestinationRailStations(parsedStationFilters);
   };
 
+  handleMouseMove = () => {
+    const { showcaseMode } = this.props;
+    const { showcasing, showcaseModeTimeout } = this.state;
+    if (!showcaseMode) {
+      return;
+    }
+    clearTimeout(showcaseModeTimeout);
+    const nextState = {
+      showcaseModeTimeout: setTimeout(this.beginShowcasing, 2000)
+    };
+    if (showcasing) {
+      nextState['showcasing'] = false;
+    }
+    this.setState(nextState);
+  };
+
+  beginShowcasing = () => {
+    this.setState({ showcasing: true });
+  };
+
   render() {
+    const { displayMode, showcaseMode } = this.props;
+    const { showcasing } = this.state;
     return (
       <div
-        className={`${
-          this.props.displayMode === DARK ? 'dark-mode' : 'light-mode'
-        }`}>
+        onMouseMove={this.handleMouseMove}
+        className={`
+          ${displayMode === DARK ? 'dark-mode' : 'light-mode'}${
+          showcasing && showcaseMode ? ' showcasing' : ''
+        }
+        `.trim()}>
         <main>
           <ReactTooltip
             effect="solid"
@@ -164,7 +210,8 @@ const mapStateToProps = state => ({
   selectedRailStations: state.selectedRailStations,
   center: state.center,
   zoom: state.zoom,
-  displayMode: state.displayMode
+  displayMode: state.displayMode,
+  showcaseMode: state.showcaseMode
 });
 
 const mapDispatchToProps = dispatch =>
@@ -174,7 +221,8 @@ const mapDispatchToProps = dispatch =>
       setSelectedDestinationRailStations,
       setVisibleRailLines,
       setShowTiles,
-      setMapPosition
+      setMapPosition,
+      setShowcaseMode
     },
     dispatch
   );

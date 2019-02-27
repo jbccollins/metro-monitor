@@ -9,7 +9,8 @@ import Toggle from 'react-toggle';
 import {
   setVisibleRailLines,
   setShowTiles,
-  setDisplayMode
+  setDisplayMode,
+  setShowcaseMode
 } from 'actions/controls';
 import {
   setSelectedDestinationRailStations,
@@ -194,7 +195,8 @@ class SideMenu extends React.Component {
       railStations,
       selectedDestinationRailStations,
       showTiles,
-      displayMode
+      displayMode,
+      showcaseMode
     } = this.props;
     return (
       <div className="SideMenu">
@@ -367,6 +369,19 @@ class SideMenu extends React.Component {
                         />
                       </label>
                     </div>
+                    <div className="toggle-wrapper">
+                      <label>
+                        <span className="toggle-label">Showcase Mode</span>
+                        <Toggle
+                          icons={false}
+                          className={`custom-toggle neutral`}
+                          checked={showcaseMode}
+                          onChange={() =>
+                            this.props.setShowcaseMode(!showcaseMode)
+                          }
+                        />
+                      </label>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -480,7 +495,8 @@ const mapStateToProps = state => ({
   selectedDestinationRailStations: state.selectedDestinationRailStations,
   showTiles: state.showTiles,
   selectedRailStations: state.selectedRailStations,
-  displayMode: state.displayMode
+  displayMode: state.displayMode,
+  showcaseMode: state.showcaseMode
 });
 
 const mapDispatchToProps = dispatch =>
@@ -490,7 +506,8 @@ const mapDispatchToProps = dispatch =>
       setSelectedDestinationRailStations,
       setSelectedRailStations,
       setShowTiles,
-      setDisplayMode
+      setDisplayMode,
+      setShowcaseMode
     },
     dispatch
   );

@@ -1,7 +1,8 @@
 import {
   SET_VISIBLE_RAIL_LINES,
   SET_SHOW_TILES,
-  SET_DISPLAY_MODE
+  SET_DISPLAY_MODE,
+  SET_SHOWCASE_MODE
 } from '../actions/controls';
 import { LINE_NAMES } from 'common/constants/lines';
 import { DARK, LIGHT } from 'common/constants/controls';
@@ -35,4 +36,13 @@ const displayMode = (state = DARK, action) => {
   }
 };
 
-export { visibleRailLines, showTiles, displayMode };
+const showcaseMode = (state = false, action) => {
+  switch (action.type) {
+    case SET_SHOWCASE_MODE:
+      return action.payload.showcaseMode;
+    default:
+      return state;
+  }
+};
+
+export { visibleRailLines, showTiles, displayMode, showcaseMode };

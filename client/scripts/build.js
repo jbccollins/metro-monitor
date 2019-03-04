@@ -1,4 +1,10 @@
 "use strict";
+const chalk = require("chalk");
+
+if (process.env.NODE_ENV !== "production" && !process.env.FORCE_BUILD) {
+  console.log(chalk.yellow("Skipping production build.\n"));
+  process.exit(0);
+}
 
 // Do this as the first thing so that any code reading it knows the right env.
 process.env.BABEL_ENV = "production";
@@ -15,7 +21,6 @@ process.on("unhandledRejection", err => {
 require("../config/env");
 
 const path = require("path");
-const chalk = require("chalk");
 const fs = require("fs-extra");
 const webpack = require("webpack");
 const config = require("../config/webpack.config.prod");

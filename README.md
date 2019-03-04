@@ -4,12 +4,15 @@ I use the same basic set of stuff in almost all my React projects. So here's my 
 
 ### Notable Dependencies/Features
 * Redux (Application state management)
-* react-router (I don't usually use this but it's useful sometimes)
+* react-router (Single page app with url management)
 * DirectoryNamedWebpackPlugin (A personal pet peeve of mine is using index.js for every component)
 * babel-preset-react-app (Enable all those juicy ES6 features)
 * Concurrent Server and Client in the same project with no configuration bullshit
 * Hot reloading
+* Material UI (God it's so nice)
 * Configured to work by default with the free tier of heroku
+* `pg`, `leaflet` and `react-leaflet` in `package.json` by default
+* A basic component/container CLI generation. `yarn generate --type container|component --name CoolContainer`
 
 ## Installation
 

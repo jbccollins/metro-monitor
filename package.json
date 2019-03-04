@@ -1,6 +1,6 @@
 {
   "name": "my-personal-starter-react-setup",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "engines": {
     "node": ">=8.0.0"
   },
@@ -11,8 +11,11 @@
     "server": "NODE_ENV=development nodemon --exec babel-node server.js",
     "postinstall": "cd client && yarn && yarn build",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "clean": "rm -rf node_modules rm -f package-lock.json && cd client && rm -rf node_modules && rm -f package-lock.json",
-    "rebuild": "yarn clean && yarn && cd client && yarn"
+    "nuke-dependencies": "rm -rf node_modules rm -f yarn.lock && cd client && rm -rf node_modules && rm -f yarn.lock",
+    "reinstall-dependencies": "rm -rf node_modules && cd client && rm -rf node_modules",
+    "dangerously-rebuild": "yarn nuke-dependencies && yarn && cd client && yarn",
+    "rebuild": "yarn reinstall-dependencies && yarn && cd client && yarn",
+    "generate": "cd client && yarn generate"
   },
   "dependencies": {
     "@babel/core": "^7.0.0",
@@ -20,8 +23,11 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/register": "^7.0.0",
     "@babel/runtime": "^7.0.0",
+    "@heroku/update-node-build-script": "^1.0.2",
     "concurrently": "^4.1.0",
     "express": "^4.16.4",
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^2.2.1",
+    "pg": "^7.8.1",
+    "yargs": "^13.2.1"
   }
 }

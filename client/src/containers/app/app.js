@@ -10,7 +10,7 @@ import "./app.scss";
 
 const styles = {
   root: {
-    backgroundColor: "grey"
+    backgroundColor: "navy"
   }
 };
 

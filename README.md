@@ -42,6 +42,7 @@ yarn dev
 
 #### Helper scripts
 You should rarely, if ever, need to run these scripts directly.
+
 | Script | Description |
 |---|---|
 | client | Runs the client react app. You should never need to run this directly |
@@ -53,6 +54,7 @@ You should rarely, if ever, need to run these scripts directly.
 
 ## CLI
 The command line interface is a work in progress but for now there are two options:
+
 | Script | Description |
 |---|---|
 | `yarn generate --type container --name CoolContainer` | Generates a new Redux wrapped container in `client/src/containers` |

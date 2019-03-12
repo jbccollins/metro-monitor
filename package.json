@@ -12,13 +12,14 @@
     "postinstall": "cd client && yarn && yarn build",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "nuke-dependencies": "rm -rf node_modules rm -f yarn.lock && cd client && rm -rf node_modules && rm -f yarn.lock",
-    "reinstall-dependencies": "rm -rf node_modules && cd client && rm -rf node_modules",
+    "delete-dependencies": "rm -rf node_modules && cd client && rm -rf node_modules",
     "dangerously-rebuild": "yarn nuke-dependencies && yarn && cd client && yarn",
-    "rebuild": "yarn reinstall-dependencies && yarn && cd client && yarn",
+    "rebuild": "yarn delete-dependencies && yarn && cd client && yarn",
     "generate": "cd client && yarn generate",
     "force-build": "cd client && FORCE_BUILD=1 yarn build",
     "initdb": "babel-node setup/initdb.js",
-    "dumpdb": "babel-node setup/dumpdb.js"
+    "dumpdb": "babel-node setup/dumpdb.js",
+    "force-publish": "heroku pg:reset && heroku pg:push my-local-database-name DATABASE_URL --app my-heroku-app-name; git push heroku master"
   },
   "dependencies": {
     "@babel/core": "^7.0.0",

@@ -1,0 +1,18 @@
+.train-popup {
+    &.open {
+        transition: transform 1s;
+    }
+    .leaflet-popup-content-wrapper {
+        border-radius: 2px;
+        border: 1px solid grey;
+        background: #2b2b2b;
+        color: white;
+    }
+    .leaflet-popup-tip {
+        border: 1px solid grey;
+        background: #2b2b2b;
+    }
+    .leaflet-popup-close-button {
+        color: white;
+    }
+}

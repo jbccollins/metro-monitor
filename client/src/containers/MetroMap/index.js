@@ -1,13 +1,6 @@
 import React from 'react';
 import L from 'leaflet';
-import {
-  Map,
-  TileLayer,
-  Marker,
-  GeoJSON,
-  Popup,
-  LayerGroup
-} from 'react-leaflet';
+import { Map, TileLayer, Marker, GeoJSON, LayerGroup } from 'react-leaflet';
 import {
   LINE_PROPERTIES,
   LINE_DRAW_ORDER,
@@ -36,6 +29,7 @@ import { setMapPosition } from 'actions/persistence';
 import 'leaflet/dist/leaflet.css';
 import './style.scss';
 import TrainMarker from 'components/TrainMarker';
+import TrainPopup from 'components/TrainPopup';
 import {
   nearestPointOnLine,
   nearestPoint,
@@ -487,7 +481,9 @@ class MetroMap extends React.Component {
                   ITT,
                   DEST_STATION,
                   DESTSTATIONCODE,
-                  TRIP_DIRECTION
+                  TRIP_DIRECTION,
+                  CARNO,
+                  DESCRIPTION
                 } = properties;
                 const [Lat, Lon] = geometry['coordinates'];
                 const lineName = LINE_NAMES.find(
@@ -536,16 +532,27 @@ class MetroMap extends React.Component {
                       nearestOnLine.geometry.coordinates[1],
                       nearestOnLine.geometry.coordinates[0]
                     ])}>
-                    <Popup>
+                    <TrainPopup
+                      className={`train-popup train-popup-${TRACKLINE.toLowerCase()}`}>
                       <div>
-                        <div>Destination: {DEST_STATION}</div>
-                        <div>Direction: {TRIP_DIRECTION}</div>
-                        <div>{ITT}</div>
-                        <div>
-                          {Lat}, {Lon}
+                        <div
+                          className="line-indicator"
+                          style={{
+                            background: lineProperties['color'],
+                            color: lineProperties['complementColor']
+                          }}>
+                          {lineProperties['code']}
                         </div>
+                        <div>Car #{ITT}</div>
+                        <div>Line: {TRACKLINE}</div>
+                        <div>Destination: {DEST_STATION}</div>
+                        <div>Cars: {CARNO}</div>
+                        {DESCRIPTION &&
+                          DESCRIPTION !== '' && (
+                            <div>Description: {DESCRIPTION}</div>
+                          )}
                       </div>
-                    </Popup>
+                    </TrainPopup>
                   </TrainMarker>
                 );
               })}

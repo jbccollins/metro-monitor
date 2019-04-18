@@ -11,7 +11,6 @@ class TrainMarker extends React.Component {
         icon={L.divIcon({
           className: `TrainMarker ${color}`,
           iconSize: [12, 12],
-          //html: `<div class='${direction}'/>`
           html: `<div style="${
             direction === 'backward' ? 'transform: rotate(180deg)' : ''
           }"><svg width="100%" viewbox="0 0 30 42">

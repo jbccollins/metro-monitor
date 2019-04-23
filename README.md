@@ -11,9 +11,8 @@ I use the same basic set of stuff in almost all my React projects. So here's my 
 * Hot reloading
 * [Material UI](https://github.com/mui-org/material-ui) (God it's so nice)
 * Configured to work by default with the free tier of heroku
-* `pg`, `leaflet` and `react-leaflet` in `package.json` by default (I like maps)
 * A basic component/container CLI generation. (See the CLI section for more details)
-* Basic db structure dump/initialization scripts
+* Basic db structure dump/initialization scripts for postgres
 
 ## Installation
 

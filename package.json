@@ -27,7 +27,6 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/register": "^7.0.0",
     "@babel/runtime": "^7.0.0",
-    "@heroku/update-node-build-script": "^1.0.2",
     "chalk": "^2.4.2",
     "concurrently": "^4.1.0",
     "express": "^4.16.4",

@@ -2,7 +2,7 @@
   "name": "my-personal-starter-react-setup",
   "version": "0.0.0",
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=8.0.0 <12"
   },
   "main": "server.js",
   "scripts": {

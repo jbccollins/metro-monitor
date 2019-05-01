@@ -72,6 +72,16 @@ In the future I plan to add action/reducer generation as well
 
 As of now I have no production sites using postgres. When I inevitably need one I will make more scripts to manage that stuff in a safer manner.
 
+## Troubleshooting
+Heroku builds will sometimes fail because Heroku likes to cache your node_modules. You can force Heroku to reinstall your node_modules using
+
+```bash
+heroku config:set NODEMODULESCACHE=false
+git push heroku master
+heroku config:unset NODEMODULESCACHE
+```
+
+
 ## Acknowledgement
 
 This boilerplate for the client is built using an ejected [create-react-app](https://github.com/facebookincubator/create-react-app) so you will want to read the User Guide for more goodies.

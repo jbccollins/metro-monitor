@@ -2,7 +2,7 @@
   "name": "my-personal-starter-react-setup",
   "version": "0.0.0",
   "engines": {
-    "node": ">=8.0.0 <12"
+    "node": ">=8.0.0"
   },
   "main": "server.js",
   "scripts": {
@@ -30,6 +30,7 @@
     "chalk": "^2.4.2",
     "concurrently": "^4.1.0",
     "express": "^4.16.4",
+    "find-process": "^1.4.1",
     "isomorphic-fetch": "^2.2.1",
     "pg": "^7.8.1",
     "yargs": "^13.2.1"

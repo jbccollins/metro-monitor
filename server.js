@@ -2,6 +2,8 @@ import express from 'express';
 import path from 'path';
 import find from 'find-process';
 import chalk from 'chalk';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const DEFAULT_PORT = 5001;

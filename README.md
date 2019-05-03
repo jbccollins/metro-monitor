@@ -72,6 +72,15 @@ In the future I plan to add action/reducer generation as well
 
 As of now I have no production sites using postgres. When I inevitably need one I will make more scripts to manage that stuff in a safer manner.
 
+## Syncing Up a Clone
+
+```bash
+git remote add upstream https://github.com/jbccollins/my-personal-starter-react-setup.git
+git fetch upstream
+git checkout master
+git rebase upstream/master
+```
+
 ## Troubleshooting
 Heroku builds will sometimes fail because Heroku likes to cache your node_modules. You can force Heroku to reinstall your node_modules using
 

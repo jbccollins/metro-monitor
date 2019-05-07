@@ -38,6 +38,7 @@ yarn dev
 | initdb | Restore a database schema from the latest backup. See the database section below. |
 | dumpdb | Backup a database schema. See the database section below. |
 | <span style="color: red">force-publish</span> | Reset remote heroku database and publish to heroku master. See the database section below |
+| resolve | Resolve `yarn.lock` conflicts in both the server and client |
 
 #### Helper scripts
 You should rarely, if ever, need to run these scripts directly.

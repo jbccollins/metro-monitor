@@ -19,7 +19,8 @@
     "force-build": "cd client && FORCE_BUILD=1 yarn build",
     "initdb": "babel-node setup/initdb.js",
     "dumpdb": "babel-node setup/dumpdb.js",
-    "force-publish": "heroku pg:reset && heroku pg:push my-local-database-name DATABASE_URL --app my-heroku-app-name; git push heroku master"
+    "force-publish": "heroku pg:reset && heroku pg:push my-local-database-name DATABASE_URL --app my-heroku-app-name; git push heroku master",
+    "resolve": "yarn && cd client && yarn"
   },
   "dependencies": {
     "@babel/core": "^7.0.0",

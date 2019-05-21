@@ -1,6 +1,8 @@
 import find from 'find-process';
 import chalk from 'chalk';
-
+// Hot reloading after recovering from a broken build (most commonly triggered by saving a file that has invalid jsx in it) does not
+// kill the previous node app that crashed. Most of the code in here exists to gracefully kill the crashed app so that the
+// terminal isn't constantly spammed with meaningless errors.
 const runApp = (app, port) => {
   let portConflictResolutionAttempted = false;
   const start = () => {

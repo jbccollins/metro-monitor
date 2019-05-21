@@ -12,7 +12,7 @@ I use the same basic set of stuff in almost all my React projects. So here's my 
 * [Material UI](https://github.com/mui-org/material-ui) (God it's so nice)
 * Configured to work by default with the free tier of heroku
 * A basic component/container CLI generation. (See the CLI section for more details)
-* Basic db structure dump/initialization scripts for postgres
+* Basic db structure dump/initialization scripts for PostgreSQL
 
 ## Installation
 
@@ -36,7 +36,7 @@ yarn dev
 | generate | Invoke my custom CLI. See the CLI section below for details |
 | force-build | Trigger a build of the client. Useful for testing webpack changes |
 | initdb | Restore a database schema from the latest backup. See the database section below. |
-| dumpdb | Backup a database schema. See the database section below. |
+| dumpdb | Dump a database schema to a backup file. See the database section below. |
 | <span style="color: red">force-publish</span> | Reset remote heroku database and publish to heroku master. See the database section below |
 | resolve | Resolve `yarn.lock` conflicts in both the server and client |
 
@@ -63,15 +63,15 @@ The command line interface is a work in progress but for now there are two optio
 In the future I plan to add action/reducer generation as well
 
 ## Database
-[PostgreSQL](https://www.postgresql.org/) is what I usually use for my database stuff. I've written a few scripts to mitigate the annoying stuff that you need to do to make heroku and postgres work together.
+[PostgreSQL](https://www.postgresql.org/) is what I usually use for my database stuff. I've written a few scripts to mitigate the annoying stuff that you need to do to make heroku and PostgreSQL work together.
 
 | Script | Description | Usage |
 |---|---|---|
 | dumpdb | Dumps the schema (NOT THE DATA) of a database to a `.sql` file | `yarn dumpdb --dbname my-db` |
 | initdb | Reads the latest dumped schema `.sql` file and initializes a database. | `yarn initdb --dbname my-db` |
-| <span style="color: red">force-publish</span> | Reset remote heroku database and publish to heroku master. <br>Your remote postgres db will be wiped and set to whatever your development db contains. <br> <span style="color: red">NEVER DO THIS TO A PRODUCTION SITE!</span> | `yarn force-publish` |
+| <span style="color: red">force-publish</span> | Reset remote heroku database and publish to heroku master. <br>Your remote PostgreSQL db will be wiped and set to whatever your development db contains. <br> <span style="color: red">NEVER DO THIS TO A PRODUCTION SITE!</span> | `yarn force-publish` |
 
-As of now I have no production sites using postgres. When I inevitably need one I will make more scripts to manage that stuff in a safer manner.
+As of now I have no production sites using PostgreSQL. When I inevitably need one I will make more scripts to manage that stuff in a safer manner.
 
 ## Syncing Up a Clone
 

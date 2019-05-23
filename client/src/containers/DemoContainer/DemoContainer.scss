@@ -1,0 +1,10 @@
+.DemoContainer {
+    width: 100vw;
+    height: 100vh;
+    &.dark {
+        background: darkblue;
+    }
+    &.light {
+        background: lightblue;
+    }
+}

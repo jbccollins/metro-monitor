@@ -36,5 +36,8 @@
     "isomorphic-fetch": "^2.2.1",
     "pg": "^7.8.1",
     "yargs": "^13.2.1"
+  },
+  "devDependencies": {
+    "husky": "^2.3.0"
   }
 }

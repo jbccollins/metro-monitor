@@ -4,7 +4,6 @@ const DATA_REQUESTED = "controls/DATA_REQUESTED";
 const DATA_RECEIVED = "controls/DATA_RECEIVED";
 const DATA_ERRORED = "controls/DATA_ERRORED";
 
-
 // Simple reducer example
 const setDisplayMode = displayMode => {
   return dispatch => {

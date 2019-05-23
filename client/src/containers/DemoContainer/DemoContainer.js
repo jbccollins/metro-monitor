@@ -4,6 +4,7 @@ import DemoComponent from "components/DemoComponent";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { setDisplayMode, fetchData } from "actions/controls";
+import { setData } from "utilities/api";
 import { DARK, LIGHT } from "common/constants/theme";
 import "./DemoContainer.scss";
 
@@ -18,13 +19,19 @@ class DemoContainer extends React.Component {
     setDisplayMode(displayMode === LIGHT ? DARK : LIGHT);
   };
 
+  handleSetData = async data => {
+    await setData(data);
+    this.props.fetchData();
+  }
+
   render() {
     const { displayMode, data } = this.props;
     return (
       <div className={`DemoContainer ${displayMode}`}>
         <DemoComponent
           data={data}
-          onClick={this.handleDisplayModeChange}
+          onDisplayModeClick={this.handleDisplayModeChange}
+          onSetDataClick={this.handleSetData}
           theme={displayMode}
         />
       </div>

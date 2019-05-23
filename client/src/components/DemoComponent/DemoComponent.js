@@ -1,9 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
-import TextField from '@material-ui/core/TextField';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+import TextField from "@material-ui/core/TextField";
+import Divider from "@material-ui/core/Divider";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import "./DemoComponent.scss";
 
@@ -13,7 +14,18 @@ const styles = theme => ({
   },
   textField: {
     margin: theme.spacing.unit,
-    width: '400px',
+    width: "400px",
+  },
+  divider: {
+    marginTop: theme.spacing.unit * 4,
+    marginBottom: theme.spacing.unit * 4,
+  },
+  data: {
+    marginTop: theme.spacing.unit * 3,
+    padding: theme.spacing.unit,
+    borderRadius: "4px",
+    background: "lightgrey",
+    minHeight: "20px",
   },
   paper: {
     ...theme.mixins.gutters(),
@@ -30,37 +42,37 @@ class DemoComponent extends React.Component {
     this.setState({tempData: e.target.value})
   }
   render() {
-    const { classes, data, onClick } = this.props;
+    const { classes, data, onDisplayModeClick, onSetDataClick } = this.props;
     const { tempData } = this.state;
-    console.log(data);
     return (
       <div className="DemoComponent">
         <div className="input-container">
           <Paper className={classes.paper} elevation={1}>
-            <Typography variant="h5" component="h3">
+            <Typography variant="h4" component="h3">
               Simple Reducer Example:
             </Typography>
             <Button
               className={classes.button}
               variant="contained"
-              onClick={onClick}
+              onClick={onDisplayModeClick}
               color="secondary"
             >
               Change Background Color
             </Button>
           </Paper>
           <Paper className={classes.paper} elevation={1}>
-            <Typography variant="h5" component="h3">
+            <Typography variant="h4" component="h3">
               Complex Reducer Example:
             </Typography>
-            <Typography component="p">
+            <Typography variant="h6" component="h3">
               Current Data From Server:
             </Typography>
             {data && !data.fetching && !data.error &&
-              <Typography>
+              <Typography className={classes.data}>
                 {data.data}
               </Typography>
             }
+            <Divider className={classes.divider} />
             <TextField
               label="Set New Data"
               value={tempData}
@@ -74,8 +86,9 @@ class DemoComponent extends React.Component {
             <div>
               <Button
                 className={classes.button}
+                disabled={tempData === data.data || tempData === ""}
                 variant="contained"
-                onClick={this.props.onClick}
+                onClick={() => onSetDataClick(tempData)}
                 color="secondary"
               >
                 Set Data
@@ -89,7 +102,8 @@ class DemoComponent extends React.Component {
 }
 
 DemoComponent.propTypes = {
-  onClick: PropTypes.func.isRequired,
+  onDisplayModeClick: PropTypes.func.isRequired,
+  onSetDataClick: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
 };
 

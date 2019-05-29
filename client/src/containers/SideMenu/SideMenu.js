@@ -3,7 +3,7 @@ import { LINE_PROPERTIES, LINE_NAMES } from 'common/constants/lines';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { slide as Menu } from 'react-burger-menu';
-import './style.scss';
+import './SideMenu.scss';
 import 'react-toggle/style.css';
 import Toggle from 'react-toggle';
 import {

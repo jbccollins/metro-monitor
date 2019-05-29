@@ -52,7 +52,9 @@ class RailPredictions extends React.Component {
       <div className="RailPredictions">
         {(railPredictions || fetching) && (
           <div className="predictions-container">
-            <div className="station-name">{name}</div>
+            <label title={name}>
+              <div className="station-name">{name}</div>
+            </label>
             <div
               className="close-button"
               onClick={() => {

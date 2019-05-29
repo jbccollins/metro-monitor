@@ -4,7 +4,7 @@ import { LINE_PROPERTIES, LINE_NAMES } from 'common/constants/lines';
 import moment from 'moment';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import './style.scss';
+import './RailAlerts.scss';
 const KNOWN_ALERT_TYPES = ['Alert', 'Delay'];
 
 const getAffectedLineCodes = linesAffected =>

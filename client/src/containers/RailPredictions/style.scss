@@ -18,6 +18,9 @@
     .station-name {
         display: inline-block;
         max-width: calc(100% - 26px);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 
     .table-header {
@@ -26,7 +29,7 @@
         display: flex;
     }
     .table-body {
-        max-height: calc(100vh - 128px);
+        max-height: calc(100vh - 152px);
         overflow-y: auto;
     }
     .table-row {

@@ -34,7 +34,7 @@ import {
 } from 'actions/metro';
 import { setMapPosition } from 'actions/persistence';
 import 'leaflet/dist/leaflet.css';
-import './style.scss';
+import './MetroMap.scss';
 import TrainMarker from 'components/TrainMarker';
 import {
   nearestPointOnLine,

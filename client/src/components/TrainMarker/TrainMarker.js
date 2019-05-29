@@ -1,7 +1,7 @@
 import React from 'react';
 import L from 'leaflet';
 import AnimatedMarker from 'components/AnimatedMarker';
-import './style.scss';
+import './TrainMarker.scss';
 
 class TrainMarker extends React.Component {
   render() {

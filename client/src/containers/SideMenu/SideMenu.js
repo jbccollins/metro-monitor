@@ -404,7 +404,7 @@ class SideMenu extends React.Component {
                   ❤️
                 </span>{' '}
                 by James Collins. You can contact me at{' '}
-                <b>jbccollins@gmail.com</b>
+                <b>james@dcmetromonitor.com</b>
               </div>
               <div className="section-title">
                 <div className="section-icon faq" />

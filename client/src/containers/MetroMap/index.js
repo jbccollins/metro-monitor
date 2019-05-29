@@ -154,6 +154,8 @@ const DEFAULT_STATION_LABEL_STYLES = {
   }
 };
 
+const ICON_SIZE = [12, 12];
+
 // const MAX_BOUNDS = new L.latLngBounds(
 //   L.latLng(39.181497524442165, -76.569482088089),
 //   L.latLng(38.62685162871765, -77.51911282539369)
@@ -267,12 +269,14 @@ class MetroMap extends React.Component {
   };
 
   handleMoveEnd = () => {
-    const center = this.state.leafletMapElt.getCenter();
-    const mapPosition = {
-      zoom: Math.round(this.state.leafletMapElt.getZoom()), // IOS Mobile pinching can make this fractional /shrug
-      center: [center.lat, center.lng]
-    };
-    this.props.setMapPosition(mapPosition);
+    if (this.state.leafletMapElt) {
+      const center = this.state.leafletMapElt.getCenter();
+      const mapPosition = {
+        zoom: Math.round(this.state.leafletMapElt.getZoom()), // IOS Mobile pinching can make this fractional /shrug
+        center: [center.lat, center.lng]
+      };
+      this.props.setMapPosition(mapPosition);
+    }
   };
 
   render() {
@@ -347,7 +351,7 @@ class MetroMap extends React.Component {
               position={[selectedRailStation.Lat, selectedRailStation.Lon]}
               icon={L.divIcon({
                 className: `selected-station-icon`,
-                iconSize: [12, 12]
+                iconSize: ICON_SIZE
               })}
             />
           )}
@@ -440,7 +444,7 @@ class MetroMap extends React.Component {
                         : 'station-icon',
                       iconSize: TRANSFER_STATIONS.includes(Code)
                         ? [16, 16]
-                        : [12, 12]
+                        : ICON_SIZE
                     })}
                   />
                 ];
@@ -451,7 +455,7 @@ class MetroMap extends React.Component {
                       position={[Lat, Lon]}
                       icon={L.divIcon({
                         className: `label-icon`,
-                        iconSize: [12, 12],
+                        iconSize: ICON_SIZE,
                         html: `
                           <div style="
                             color: white;

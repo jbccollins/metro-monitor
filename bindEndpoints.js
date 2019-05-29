@@ -4,10 +4,10 @@
   remove the import/usage of bindEndpoints from server.js :)
 */
 import bodyParser from 'body-parser';
-import {
-  API_GET_DATA,
-  API_SET_DATA,
-} from './common/constants/urls';
+// import {
+//   API_GET_DATA,
+//   API_SET_DATA,
+// } from './common/constants/urls';
 
 const useBodyParser = app => {
   app.use(bodyParser.urlencoded({
@@ -23,15 +23,15 @@ let APP_DATA = "A string of data";
 const bindEndpoints = app => {
   useBodyParser(app);
 
-  app.post(API_SET_DATA, (req, res) => {
-    const { Data } = req.body;
-    APP_DATA = Data;
-    res.send({status: "success"});
-  });
+  // app.post(API_SET_DATA, (req, res) => {
+  //   const { Data } = req.body;
+  //   APP_DATA = Data;
+  //   res.send({status: "success"});
+  // });
 
-  app.get(API_GET_DATA, (req, res) => {
-    res.send({data: APP_DATA});
-  });
+  // app.get(API_GET_DATA, (req, res) => {
+  //   res.send({data: APP_DATA});
+  // });
 };
 
 export default bindEndpoints;

@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
+import { connectRouter } from "connected-react-router";
 import {
   trains,
   railStations,
@@ -16,19 +16,21 @@ import {
   showcaseMode
 } from './controls';
 import { center, zoom } from './persistence';
-export default combineReducers({
-  trains,
-  railStations,
-  railLines,
-  railAlerts,
-  railPredictions,
-  visibleRailLines,
-  selectedRailStations,
-  selectedDestinationRailStations,
-  showTiles,
-  displayMode,
-  showcaseMode,
-  center,
-  zoom,
-  router: routerReducer
-});
+
+export default history =>
+  combineReducers({
+    trains,
+    railStations,
+    railLines,
+    railAlerts,
+    railPredictions,
+    visibleRailLines,
+    selectedRailStations,
+    selectedDestinationRailStations,
+    showTiles,
+    displayMode,
+    showcaseMode,
+    center,
+    zoom,
+    router: connectRouter(history)
+  });

@@ -31,7 +31,6 @@ const setDisplayMode = displayMode => {
 };
 
 const setShowcaseMode = showcaseMode => {
-  console.log('etting', showcaseMode);
   return dispatch => {
     dispatch({
       type: SET_SHOWCASE_MODE,

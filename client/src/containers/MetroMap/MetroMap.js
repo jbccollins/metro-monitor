@@ -21,7 +21,9 @@ import {
   YELLOW,
   GREEN,
   BLUE,
-  SILVER
+  SILVER,
+  LEFT_SIDE,
+  LEFT_45,
 } from 'common/constants/lines';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -122,11 +124,7 @@ const offsetLatLngs = (latLngs, zoom) => {
 };
 
 const DEFAULT_STATION_LABEL_STYLES = {
-  [LINE_PROPERTIES[RED]['code']]: {
-    origin: 'bottom right',
-    translate: '-104%, -3px',
-    rotate: '0deg'
-  },
+  [LINE_PROPERTIES[RED]['code']]: LEFT_SIDE,
   [LINE_PROPERTIES[ORANGE]['code']]: {
     origin: 'bottom right',
     translate: '-100%',
@@ -139,19 +137,15 @@ const DEFAULT_STATION_LABEL_STYLES = {
   },
   [LINE_PROPERTIES[GREEN]['code']]: {
     origin: 'bottom right',
-    translate: '18px, -3px',
+    translate: '15px, -5px',
     rotate: '0deg'
   },
   [LINE_PROPERTIES[BLUE]['code']]: {
     origin: 'bottom left',
-    translate: '10px',
+    translate: '15px',
     rotate: '30deg'
   },
-  [LINE_PROPERTIES[SILVER]['code']]: {
-    origin: 'bottom right',
-    translate: '-100%',
-    rotate: '-30deg'
-  }
+  [LINE_PROPERTIES[SILVER]['code']]: LEFT_45
 };
 
 const ICON_SIZE = [8, 8];

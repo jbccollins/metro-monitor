@@ -253,39 +253,32 @@ const STATIONS_WITH_PERMANENT_LABELS = [
 
 const RIGHT_SIDE = {
     origin: "bottom right",
-    translate: "18px, -3px",
+    translate: "15px, -5px",
     rotate: "0deg"  
 };
 
+const RIGHT_SIDE_TRANSFER = {
+    ...RIGHT_SIDE,
+    translate: "20px, -5px",
+}
+
 const LEFT_SIDE = {
     origin: "bottom right",
-    translate: "-104%, -3px",
+    translate: "calc(-100% - 10px), -5px",
     rotate: "0deg"
 }
 
 const RIGHT_45 = {
     origin: "top left",
-    translate: "15px, -8px",
+    translate: "15px, -10px",
     rotate: "-30deg"
 };
 
 const LEFT_45 = {
     origin: "top right",
-    translate: "-108%",
+    translate: "calc(-100% - 10px)",
     rotate: "-30deg"
 }
-
-const CENTER_OF_DC = {
-    origin: "bottom left",
-    translate: "10px",
-    rotate: "30deg"
-};
-
-const CENTER_OF_DC_ALT = {
-    origin: "bottom right",
-    translate: "-104%, -8px",
-    rotate: "30deg"
-};
 
 const STATION_LABEL_STYLES = {
     "B11": RIGHT_SIDE,
@@ -302,29 +295,33 @@ const STATION_LABEL_STYLES = {
     "D13": RIGHT_SIDE,
     "G05": RIGHT_SIDE,
     "C15": RIGHT_SIDE,
-    "F04": CENTER_OF_DC,
+    "F04": RIGHT_45,
     "A01": RIGHT_45,
     "F03": RIGHT_45,
     "B01": RIGHT_45,
-    "C02": CENTER_OF_DC_ALT,
+    "C02": RIGHT_45,
     "F02": RIGHT_SIDE,
     "E03": RIGHT_45,
     "D06": RIGHT_45,
-
     "K08": LEFT_SIDE,
     "N06": LEFT_SIDE,
     "J03": LEFT_SIDE,
-
     "D09": RIGHT_SIDE,
-    "D10": CENTER_OF_DC,
-    "D11": CENTER_OF_DC,
-    "D12": CENTER_OF_DC,
+    "D10": RIGHT_SIDE,
+    "D11": RIGHT_SIDE,
+    "D12": RIGHT_SIDE,
     "K06": LEFT_SIDE,
     "K01": LEFT_SIDE,
     "K02": LEFT_SIDE,
-    "C05": RIGHT_SIDE,
-    "K03": CENTER_OF_DC_ALT,
+    // Rosslyn
+    "C05": RIGHT_SIDE_TRANSFER,
+    "K03": RIGHT_SIDE,
     "N01": LEFT_SIDE,
+    "C08": RIGHT_SIDE,
+    "C09": RIGHT_SIDE,
+    "C12": RIGHT_SIDE,
+    "C13": RIGHT_SIDE_TRANSFER,
+    "C14": RIGHT_SIDE,
 };
 
 const TRANSFER_STATIONS = [
@@ -353,5 +350,7 @@ export {
     DUPLICATE_STATION_CODES,
     STATIONS_WITH_PERMANENT_LABELS,
     STATION_LABEL_STYLES,
-    TRANSFER_STATIONS
+    TRANSFER_STATIONS,
+    LEFT_SIDE,
+    LEFT_45,
 };

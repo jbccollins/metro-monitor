@@ -68,14 +68,16 @@
         background: white;
         border: 3px solid black;
         z-index: 200 !important;
+        margin-top: -7px !important;
+        margin-left: -7px !important;
         &::after {
             content: '';
             border-radius: 50%;
             display: block;
             width: 18px;
             height: 18px;
-            margin-top: -6px;
-            margin-left: -6px;
+            margin-top: -4px;
+            margin-left: -4px;
             background: transparent;
         }
     }
@@ -85,6 +87,8 @@
         background: white;
         border: 6px solid black;
         z-index: 201 !important;
+        margin-top: -10px !important;
+        margin-left: -10px !important;
         -webkit-box-shadow: 0px 0px 0px 3px black; /* Safari, Chrome */
 
         

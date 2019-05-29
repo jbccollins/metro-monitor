@@ -11,7 +11,8 @@
         color: white;
         padding: 5px;
         //overflow-y: auto;
-        max-height: 50vh;
+        // Leave room for the burger menu
+        max-height: calc(100vh - 78px);
         max-width: calc(100vw - 66px);
     }
     .station-name {
@@ -25,7 +26,7 @@
         display: flex;
     }
     .table-body {
-        max-height: calc(50vh - 80px);
+        max-height: calc(100vh - 128px);
         overflow-y: auto;
     }
     .table-row {
@@ -98,5 +99,16 @@
         background-size: 18px 18px;
         float: right;
         cursor: pointer;
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    .RailPredictions {
+        .predictions-container {
+            max-height: 50vh;
+        }
+        .table-body {
+            max-height: calc(50vh - 80px);
+        }
     }
 }

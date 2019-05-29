@@ -154,7 +154,7 @@ const DEFAULT_STATION_LABEL_STYLES = {
   }
 };
 
-const ICON_SIZE = [12, 12];
+const ICON_SIZE = [8, 8];
 
 // const MAX_BOUNDS = new L.latLngBounds(
 //   L.latLng(39.181497524442165, -76.569482088089),
@@ -442,9 +442,10 @@ class MetroMap extends React.Component {
                       className: TRANSFER_STATIONS.includes(Code)
                         ? 'transfer-station-icon'
                         : 'station-icon',
-                      iconSize: TRANSFER_STATIONS.includes(Code)
-                        ? [16, 16]
-                        : ICON_SIZE
+                      iconSize: ICON_SIZE
+                      // iconSize: TRANSFER_STATIONS.includes(Code)
+                      //   ? [12, 12]
+                      //   : ICON_SIZE
                     })}
                   />
                 ];

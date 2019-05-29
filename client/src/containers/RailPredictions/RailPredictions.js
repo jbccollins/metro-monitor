@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import './style.scss';
+import './RailPredictions.scss';
 import { fetchRailPredictions, setSelectedRailStations } from 'actions/metro';
 import { LINE_PROPERTIES, LINE_NAMES } from 'common/constants/lines';
 

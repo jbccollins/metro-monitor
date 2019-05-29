@@ -10,6 +10,7 @@
         z-index: 999;
         color: white;
         padding: 5px;
+        padding-right: 0px;
         //overflow-y: auto;
         // Leave room for the burger menu
         max-height: calc(100vh - 78px);
@@ -25,18 +26,21 @@
 
     .table-header {
         border-bottom: 1px solid grey;
-        margin-bottom: 5px;
+        margin-left: -5px;
+        padding-left: 5px;
         display: flex;
     }
     .table-body {
         max-height: calc(100vh - 152px);
         overflow-y: auto;
+        padding-top: 5px;
     }
     .table-row {
         display: flex;
         height: 20px;
         margin-bottom: 5px;
         line-height: 20px;
+        margin-right: 5px;
     }
     .cell {
         display: inline-block;
@@ -101,6 +105,7 @@
         background-image: url('../../assets/close.png');
         background-size: 18px 18px;
         float: right;
+        margin-right: 5px;
         cursor: pointer;
     }
 }

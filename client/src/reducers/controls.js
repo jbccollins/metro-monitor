@@ -3,9 +3,9 @@ import {
   SET_SHOW_TILES,
   SET_DISPLAY_MODE,
   SET_SHOWCASE_MODE
-} from '../actions/controls';
+} from 'actions/controls';
 import { LINE_NAMES } from 'common/constants/lines';
-import { DARK, LIGHT } from 'common/constants/controls';
+import { DARK/*, LIGHT*/ } from 'common/constants/controls';
 
 const initialVisibleRailLines = [].concat(LINE_NAMES);
 

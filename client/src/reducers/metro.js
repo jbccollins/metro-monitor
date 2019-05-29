@@ -17,7 +17,7 @@ import {
   RAIL_PREDICTIONS_ERRORED,
   SET_SELECTED_RAIL_STATIONS,
   SET_SELECTED_DESTINATION_RAIL_STATIONS
-} from '../actions/metro';
+} from 'actions/metro';
 
 const initialTrainState = {
   trains: null,

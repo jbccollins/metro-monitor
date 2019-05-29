@@ -23,7 +23,7 @@ import {
   setShowcaseMode
 } from 'actions/controls';
 import { setMapPosition } from 'actions/persistence';
-import './style.scss';
+import './index.scss';
 
 const STATION_CODES = 'stationCodes';
 const RAIL_LINES = 'railLines';

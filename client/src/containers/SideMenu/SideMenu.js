@@ -179,7 +179,7 @@ class SideMenu extends React.Component {
     } = this.props;
     setSelectedDestinationRailStations({
       ...selectedDestinationRailStations,
-      [line]: selectedStations.map(({ value }) => value)
+      [line]: selectedStations ? selectedStations.map(({ value }) => value) : []
     });
   };
 
@@ -404,7 +404,7 @@ class SideMenu extends React.Component {
                   ❤️
                 </span>{' '}
                 by James Collins. You can contact me at{' '}
-                <b>james@dcmetromonitor.com</b>
+                <b>jbccollins@gmail.com</b>
               </div>
               <div className="section-title">
                 <div className="section-icon faq" />
@@ -470,10 +470,6 @@ class SideMenu extends React.Component {
               </div>
               <div className="section-body description">
                 <ul className="bugs-list">
-                  <li>
-                    Trains sometimes fly in from the middle of the Atlantic
-                    Ocean
-                  </li>
                   <li>Trains sometimes switch directions</li>
                   <li>Trains sometimes disappear and re-appear</li>
                   <li>

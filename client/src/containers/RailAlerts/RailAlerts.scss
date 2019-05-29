@@ -170,28 +170,6 @@
     .delay {
         background-image: url('../../assets/clock-outline.png');
     }
-
-  /* width */
-  ::-webkit-scrollbar {
-    width: 8px;
-    
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: #212121;
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    //border-radius: 5px;
-    background-color: grey;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background-color: #555;
-  }
 }
 
 @media only screen and (max-width: 900px) {

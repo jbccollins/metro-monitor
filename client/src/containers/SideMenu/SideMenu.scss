@@ -47,6 +47,7 @@
     .faq-list {
         padding-left: 0px;
         margin: 0;
+        list-style: none;
         .question {
             margin-bottom: 2px;
             font-weight: bold;
@@ -125,14 +126,15 @@
         }
     }
     .Collapsible__trigger {
-        width: 100%;
-        height: 39px;
+        width: calc(100% - 12px);
+        height: 26px;
         cursor: pointer;
         background: #212121;
         display: block;
         padding: 6px;
         user-select: none;
         transition: background 0.2s linear;
+        outline: none;
         &:hover {
             background: #191919;
         }

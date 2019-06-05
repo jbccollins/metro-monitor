@@ -1,36 +1,38 @@
 import { combineReducers } from 'redux';
 import { connectRouter } from "connected-react-router";
 import {
-  trains,
-  railStations,
-  railLines,
+  outages,
   railAlerts,
+  railLines,
   railPredictions,
+  railStations,
+  selectedDestinationRailStations,
   selectedRailStations,
-  selectedDestinationRailStations
+  trains,
 } from './metro';
 import {
-  visibleRailLines,
-  showTiles,
   displayMode,
-  showcaseMode
+  showTiles,
+  showcaseMode,
+  visibleRailLines,
 } from './controls';
 import { center, zoom } from './persistence';
 
 export default history =>
   combineReducers({
-    trains,
-    railStations,
-    railLines,
-    railAlerts,
-    railPredictions,
-    visibleRailLines,
-    selectedRailStations,
-    selectedDestinationRailStations,
-    showTiles,
-    displayMode,
-    showcaseMode,
     center,
+    displayMode,
+    outages,
+    railAlerts,
+    railLines,
+    railPredictions,
+    railStations,
+    router: connectRouter(history),
+    selectedDestinationRailStations,
+    selectedRailStations,
+    showTiles,
+    showcaseMode,
+    trains,
+    visibleRailLines,
     zoom,
-    router: connectRouter(history)
   });

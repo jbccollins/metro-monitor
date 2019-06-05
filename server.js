@@ -2,18 +2,17 @@ import fetch from 'isomorphic-fetch';
 import groupBy from 'lodash.groupby';
 import url from 'url';
 import {
-  API_RAIL_STATIONS,
-  API_RAIL_LINES,
-  API_TRAIN_POSITIONS,
-  TRAIN_POSITIONS,
-  RAIL_ALERTS,
   API_RAIL_ALERTS,
-  RAIL_PREDICTIONS,
+  API_RAIL_LINES,
   API_RAIL_PREDICTIONS,
+  API_RAIL_STATIONS,
+  API_TRAIN_POSITIONS,
+  API_OUTAGES,
+  OUTAGES,
+  RAIL_ALERTS,
+  RAIL_PREDICTIONS,
+  TRAIN_POSITIONS,
 } from './common/constants/urls';
-import {
-  LINE_MERGES,
-} from './common/constants/lines';
 import { 
   snapStations,
   snapTrains,
@@ -43,6 +42,7 @@ runApp(app, port);
 
 // The API is some trash so sometimes it doesn't return every train.
 const potentiallyClearedTrainITTMap = {};
+// TODO: Can I store the pre-snapped stations in a json file instead?
 const snappedStations = snapStations(railLines, railStations);
 let trains = [];
 let railPredictions = [];
@@ -51,6 +51,18 @@ let railAlerts = [
   // {"IncidentID":"502D77F1-099B-4245-A5C4-25B7A3AA7D24","Description":"Orange Line: Thru Sunday's closing, buses replace trains btwn Vienna & West Falls Church due to scheduled maintenance.","StartLocationFullName":null,"EndLocationFullName":null,"PassengerDelay":0,"DelaySeverity":null,"IncidentType":"Alert","EmergencyText":null,"LinesAffected":"OR;","DateUpdated":"2018-09-17T06:56:24"},
   // {"IncidentID":"8F2E1A3D-8528-4C06-AA20-1594617187D1","Description":"Literally everything except the red line is on fire.","StartLocationFullName":null,"EndLocationFullName":null,"PassengerDelay":0.0,"DelaySeverity":null,"IncidentType":"Alert","EmergencyText":null,"LinesAffected":"OR;YL;GR;BL;SV;","DateUpdated":"2018-09-16T22:25:10"}, 
 ];
+let outages = [];
+
+const fetchOutages = async () => {
+  let res = await fetch(OUTAGES + process.env.API_KEY, {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json'
+    }
+  });
+  res = await res.json();
+  outages = res["ElevatorIncidents"];
+};
 
 const fetchTrains = async () => {
   let nextTrains = await fetch(TRAIN_POSITIONS, {
@@ -89,9 +101,15 @@ const fetchRailPredictions = async () => {
 fetchTrains();
 fetchRailAlerts();
 fetchRailPredictions();
+fetchOutages();
 setInterval(fetchTrains, 4000);
 setInterval(fetchRailAlerts, 10000);
+setInterval(fetchOutages, 10000);
 setInterval(fetchRailPredictions, 4000);
+
+app.get(API_OUTAGES, (req, res) => {
+  res.send(outages);
+});
 
 app.get(API_RAIL_STATIONS, (req, res) => {
   res.send(snappedStations);

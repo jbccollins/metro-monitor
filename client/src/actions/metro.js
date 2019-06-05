@@ -4,12 +4,16 @@ import {
   API_RAIL_LINES,
   API_TRAIN_POSITIONS,
   API_RAIL_ALERTS,
-  API_RAIL_PREDICTIONS
+  API_RAIL_PREDICTIONS,
+  API_OUTAGES,
 } from 'common/constants/urls';
 
 const TRAINS_REQUESTED = 'metro/TRAINS_REQUESTED';
 const TRAINS_RECEIVED = 'metro/TRAINS_RECEIVED';
 const TRAINS_ERRORED = 'metro/TRAINS_ERRORED';
+const OUTAGES_REQUESTED = 'metro/OUTAGES_REQUESTED';
+const OUTAGES_RECEIVED = 'metro/OUTAGES_RECEIVED';
+const OUTAGES_ERRORED = 'metro/OUTAGES_ERRORED';
 const RAIL_STATIONS_REQUESTED = 'metro/RAIL_STATIONS_REQUESTED';
 const RAIL_STATIONS_RECEIVED = 'metro/RAIL_STATIONS_RECEIVED';
 const RAIL_STATIONS_ERRORED = 'metro/RAIL_STATIONS_ERRORED';
@@ -48,6 +52,43 @@ const setSelectedDestinationRailStations = selectedDestinationRailStations => {
       type: SET_SELECTED_DESTINATION_RAIL_STATIONS,
       payload: { selectedDestinationRailStations }
     });
+  };
+};
+
+const requestOutages = () => ({
+  type: OUTAGES_REQUESTED
+});
+
+const receiveOutages = outages => ({
+  type: OUTAGES_RECEIVED,
+  payload: { outages }
+});
+
+const handleOutagesError = error => ({
+  type: OUTAGES_ERRORED,
+  payload: { error }
+});
+
+const fetchOutages = () => {
+  return (dispatch, getState) => {
+    dispatch(requestOutages());
+    return fetch(
+      API_OUTAGES,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json'
+        }
+      }
+    )
+      .then(res => res.json())
+      .then(outages => {
+        dispatch(receiveOutages(outages));
+      })
+      .catch(e => {
+        dispatch(handleOutagesError(e));
+        console.warn(e);
+      });
   };
 };
 
@@ -261,41 +302,48 @@ const fetchTrains = () => {
 };
 
 export {
-  TRAINS_REQUESTED,
-  TRAINS_RECEIVED,
-  TRAINS_ERRORED,
-  RAIL_STATIONS_REQUESTED,
-  RAIL_STATIONS_RECEIVED,
-  RAIL_STATIONS_ERRORED,
-  RAIL_LINES_REQUESTED,
-  RAIL_LINES_RECEIVED,
-  RAIL_LINES_ERRORED,
-  RAIL_ALERTS_REQUESTED,
-  RAIL_ALERTS_RECEIVED,
+  OUTAGES_ERRORED,
+  OUTAGES_RECEIVED,
+  OUTAGES_REQUESTED,
   RAIL_ALERTS_ERRORED,
-  RAIL_PREDICTIONS_REQUESTED,
-  RAIL_PREDICTIONS_RECEIVED,
+  RAIL_ALERTS_RECEIVED,
+  RAIL_ALERTS_REQUESTED,
+  RAIL_LINES_ERRORED,
+  RAIL_LINES_RECEIVED,
+  RAIL_LINES_REQUESTED,
   RAIL_PREDICTIONS_ERRORED,
-  SET_SELECTED_RAIL_STATIONS,
+  RAIL_PREDICTIONS_RECEIVED,
+  RAIL_PREDICTIONS_REQUESTED,
+  RAIL_STATIONS_ERRORED,
+  RAIL_STATIONS_RECEIVED,
+  RAIL_STATIONS_REQUESTED,
   SET_SELECTED_DESTINATION_RAIL_STATIONS,
-  requestRailStations,
-  receiveRailStations,
-  handleRailStationsError,
-  requestTrains,
-  receiveTrains,
-  handleTrainsError,
-  requestRailLines,
-  receiveRailLines,
-  handleRailLinesError,
-  requestRailAlerts,
-  receiveRailAlerts,
-  handleRailAlertsError,
-  fetchTrains,
-  fetchRailStations,
-  fetchRailLines,
+  SET_SELECTED_RAIL_STATIONS,
+  TRAINS_ERRORED,
+  TRAINS_RECEIVED,
+  TRAINS_REQUESTED,
+  fetchOutages,
   fetchRailAlerts,
+  fetchRailLines,
   fetchRailPredictions,
-  setSelectedRailStations,
+  fetchRailStations,
+  fetchTrains,
+  handleOutagesError,
+  handleRailAlertsError,
+  handleRailLinesError,
+  handleRailStationsError,
+  handleTrainsError,
+  receiveOutages,
+  receiveRailAlerts,
+  receiveRailLines,
+  receiveRailPredictions,
+  receiveRailStations,
+  receiveTrains,
+  requestOutages,
+  requestRailAlerts,
+  requestRailLines,
+  requestRailStations,
+  requestTrains,
   setSelectedDestinationRailStations,
-  receiveRailPredictions
+  setSelectedRailStations,
 };

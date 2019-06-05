@@ -29,6 +29,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   fetchTrains,
+  fetchOutages,
   fetchRailStations,
   fetchRailLines,
   setSelectedRailStations,
@@ -180,11 +181,13 @@ class MetroMap extends React.Component {
   }
 
   componentWillMount() {
-    const { fetchTrains, fetchRailStations, fetchRailLines } = this.props;
+    const { fetchTrains, fetchRailStations, fetchRailLines, fetchOutages } = this.props;
     fetchRailLines();
     fetchRailStations();
     fetchTrains();
+    fetchOutages();
     setInterval(fetchTrains, 5000);
+    setInterval(fetchOutages, 5000);
     /*
     if (navigator.permissions && navigator.permissions.query) {
       navigator.permissions.query({ name: 'geolocation' }).then(result => {
@@ -572,6 +575,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       fetchTrains,
+      fetchOutages,
       fetchRailStations,
       fetchRailLines,
       setSelectedRailStations,

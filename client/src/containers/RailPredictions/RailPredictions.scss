@@ -1,14 +1,17 @@
+@import '~styles/common';
 .RailPredictions {
     .predictions-container {
         position: fixed;
         bottom: 12px;
         left: 12px;
         width: 288px;
-        background: #2b2b2b;
-        border: 1px solid grey;
+        @include themed() {
+            background: t($bg);
+            border: 1px solid t($border);
+            color: t($text);
+        }
         border-radius: 2px;
         z-index: 999;
-        color: white;
         padding: 5px;
         padding-right: 0px;
         //overflow-y: auto;
@@ -107,6 +110,9 @@
         float: right;
         margin-right: 5px;
         cursor: pointer;
+        @include themed() {
+            filter: t($icon);
+        }
     }
 }
 

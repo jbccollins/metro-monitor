@@ -1,11 +1,13 @@
+@import '~styles/common';
 .MetroMap {
-    color: red;
     height: 100vh;
     width: 100vw;
     .leaflet-container {
         height: 100%;
         width: 100%;
-        background: #141414;
+        @include themed() {
+            background: t($bg);
+        }
         .dc-outline {
             pointer-events: none;
         }
@@ -14,6 +16,9 @@
         }
         .label-icon {
             pointer-events: none;
+            @include themed() {
+                color: t($text);
+            }
         }
     }
 

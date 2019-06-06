@@ -1,0 +1,47 @@
+// https://medium.com/@katiemctigue/how-to-create-a-dark-mode-in-sass-609f131a3995
+//shortcuts
+$bg: 'bg';
+$text: 'text';
+$link: 'link';
+$hover: 'hover';
+$border: 'border';
+$icon: 'icon';
+
+//themes
+$themes: (
+  light: (
+    bg: $bg--light,
+    text: $text--light,
+    link: $link--light,
+    hover: $hover--light,
+    border: $border--light,
+    icon: $icon--light,
+  ),
+  dark: (
+    bg: $bg--dark,
+    text: $text--dark,
+    link: $link--dark,
+    hover: $hover--dark,
+    border: $border--dark,
+    icon: $icon--dark,
+
+  ),
+);
+
+@mixin themed() {
+  @each $theme, $map in $themes {
+    .#{$theme}-mode & {
+      $theme-map: () !global;
+      @each $key, $submap in $map {
+        $value: map-get(map-get($themes, $theme), '#{$key}');
+        $theme-map: map-merge($theme-map, ($key: $value)) !global;
+      }
+      @content;
+      $theme-map: null !global;
+    }
+  }
+}
+
+@function t($key) {
+  @return map-get($theme-map, $key);
+}

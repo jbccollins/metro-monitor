@@ -456,7 +456,6 @@ class MetroMap extends React.Component {
                         iconSize: ICON_SIZE,
                         html: `
                           <div style="
-                            color: white;
                             opacity: ${
                               (selectedRailStations &&
                                 selectedRailStations.includes(Code)) ||

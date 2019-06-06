@@ -47,6 +47,7 @@ import {
   featureCollection
 } from '@turf/turf';
 import { DCGeoJSON } from 'utilities/controls';
+import { DARK } from 'common/constants/controls';
 import {
   getLineNamesForStation,
   getStationCodesList
@@ -181,7 +182,12 @@ class MetroMap extends React.Component {
   }
 
   componentWillMount() {
-    const { fetchTrains, fetchRailStations, fetchRailLines, /*fetchOutages*/ } = this.props;
+    const {
+      fetchTrains,
+      fetchRailStations,
+      fetchRailLines,
+      //fetchOutages,
+    } = this.props;
     fetchRailLines();
     fetchRailStations();
     fetchTrains();
@@ -373,13 +379,13 @@ class MetroMap extends React.Component {
                       }}
                       lineCap={lineCap}
                       weight={p * 4}
-                      color={'#2b2b2b'}
+                      color={displayMode === DARK ? '#2b2b2b' : 'white'}
                     />,
                     // real colored line
                     <GeoJSON
                       className="line-layer"
                       key={`${name}-${p}-${index}-real`}
-                      opacity={0.6}
+                      opacity={displayMode === DARK ? 0.6 : 1}
                       data={{
                         type: 'Feature',
                         geometry: {

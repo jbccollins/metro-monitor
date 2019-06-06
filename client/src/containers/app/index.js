@@ -9,7 +9,7 @@ import queryString from 'query-string';
 import { LINE_PROPERTIES, LINE_NAMES } from 'common/constants/lines';
 import flatten from 'lodash.flatten';
 import ReactTooltip from 'react-tooltip';
-import { DARK } from 'common/constants/controls';
+import { DARK, LIGHT } from 'common/constants/controls';
 
 import url from 'url';
 
@@ -20,6 +20,7 @@ import {
 import {
   setVisibleRailLines,
   setShowTiles,
+  setDisplayMode,
   setShowcaseMode
 } from 'actions/controls';
 import { setMapPosition } from 'actions/persistence';
@@ -31,6 +32,7 @@ const MAP_POSITION = 'mapPosition';
 const SHOW_TILES = 'showTiles';
 const STATION_FILTERS = 'stationFilters';
 const SHOWCASE_MODE = 'showcaseMode';
+const DISPLAY_MODE = 'displayMode';
 
 class App extends React.Component {
   state = {
@@ -46,7 +48,8 @@ class App extends React.Component {
       [MAP_POSITION]: this.parseMapPosition,
       [SHOW_TILES]: this.parseShowMapTiles,
       [STATION_FILTERS]: this.parseStationFilters,
-      [SHOWCASE_MODE]: this.parseShowcaseMode
+      [SHOWCASE_MODE]: this.parseShowcaseMode,
+      [DISPLAY_MODE]: this.parseDisplayMode,
     };
   }
 
@@ -72,7 +75,8 @@ class App extends React.Component {
       center,
       showTiles,
       selectedDestinationRailStations,
-      showcaseMode
+      showcaseMode,
+      displayMode,
     } = this.props;
     if (selectedRailStations) {
       urlParamMap[STATION_CODES] = selectedRailStations.join(',');
@@ -89,6 +93,9 @@ class App extends React.Component {
     }
     if (typeof showcaseMode !== 'undefined') {
       urlParamMap[SHOWCASE_MODE] = showcaseMode;
+    }
+    if (typeof displayMode !== 'undefined') {
+      urlParamMap[DISPLAY_MODE] = displayMode;
     }
     const values = Object.keys(selectedDestinationRailStations).map(
       k => selectedDestinationRailStations[k]
@@ -134,6 +141,10 @@ class App extends React.Component {
     const showcase = showcaseMode === 'true';
     this.props.setShowcaseMode(showcase);
     this.setState({ showcasing: showcase });
+  };
+
+  parseDisplayMode = displayMode => {
+    this.props.setDisplayMode(displayMode === DARK ? DARK : LIGHT);
   };
 
   parseStationFilters = stationFilters => {
@@ -222,7 +233,8 @@ const mapDispatchToProps = dispatch =>
       setVisibleRailLines,
       setShowTiles,
       setMapPosition,
-      setShowcaseMode
+      setShowcaseMode,
+      setDisplayMode,
     },
     dispatch
   );

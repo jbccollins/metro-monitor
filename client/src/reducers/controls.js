@@ -5,7 +5,7 @@ import {
   SET_SHOWCASE_MODE
 } from 'actions/controls';
 import { LINE_NAMES } from 'common/constants/lines';
-import { LIGHT } from 'common/constants/controls';
+import { DARK } from 'common/constants/controls';
 
 const initialVisibleRailLines = [].concat(LINE_NAMES);
 
@@ -27,7 +27,7 @@ const showTiles = (state = true, action) => {
   }
 };
 
-const displayMode = (state = LIGHT, action) => {
+const displayMode = (state = DARK, action) => {
   switch (action.type) {
     case SET_DISPLAY_MODE:
       return action.payload.displayMode;

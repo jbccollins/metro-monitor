@@ -1,3 +1,4 @@
+@import '~styles/common';
 html {
   /*font-family: 'Raleway', Arial, sans-serif;*/
   font-family: 'Lato', sans-serif, Helvetica, Arial;
@@ -8,6 +9,11 @@ html {
 
 .__react_component_tooltip {
   pointer-events: initial;
+  @include themed() {
+    background: t($bg);
+    border: 1px solid t($border) !important;
+    color: t($text);
+  }
 }
 
 .__react_component_tooltip.place-bottom:after {
@@ -40,16 +46,21 @@ button:disabled {
   
   /* Track */
   ::-webkit-scrollbar-track {
-  background: #212121;
+    @include themed() {
+      background: t($bg-overlay);
+    }
   }
   
   /* Handle */
   ::-webkit-scrollbar-thumb {
-  //border-radius: 5px;
-  background-color: grey;
+    @include themed() {
+      background: t($bg-overlay-hover);
+    }
   }
   
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
+    @include themed() {
+      background: t($bg-overlay-hover);
+    }
   }

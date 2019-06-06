@@ -1,13 +1,17 @@
 //--colors
-$bg--light: #F5F4F3;
+$bg--light: white;
 $bg--dark: #2b2b2b;
+$bg-overlay--light: #E8E8E8;
+$bg-overlay--dark: #212121;
+$bg-overlay-hover--dark: #191919;
+$bg-overlay-hover--light: lightgray;
 $text--light: black;
 $text--dark: white;
-$border--light: black;
+$border--light: gray;
 $border--dark: gray;
 $hover--light: red;
 $hover--dark: red;
-$link--dark: red;
-$link--light: red;
+$link--dark: lightblue;
+$link--light: #1a8cff;
 $icon--light: invert(100%);
 $icon--dark: invert(0%);

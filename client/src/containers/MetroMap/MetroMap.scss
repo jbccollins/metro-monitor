@@ -6,7 +6,7 @@
         height: 100%;
         width: 100%;
         @include themed() {
-            background: t($bg);
+            background: t($bg-overlay);
         }
         .dc-outline {
             pointer-events: none;
@@ -43,7 +43,9 @@
             border-top-right-radius: 50% !important;
             border: 1px solid grey;
             line-height: 25px;
-            background: #2b2b2b;
+            @include themed() {
+                background: t($bg);
+            }
             color: transparent;
             font-weight: normal;
             margin-top: 5px;
@@ -59,6 +61,9 @@
                 background-position: center; 
                 background-repeat: no-repeat;
                 background-size: 18px 18px;
+                @include themed() {
+                    filter: t($icon);
+                }
             }
         }
         .leaflet-control-zoom-in::before {
@@ -128,7 +133,9 @@
         right: 13px;
         height: 30px;
         width: 30px;
-        background: #2b2b2b;
+        @include themed() {
+            background: t($bg);
+        }
         border-radius: 50%;
         z-index: 998;
         user-select: none;
@@ -142,6 +149,9 @@
             background-image: url('../../assets/crosshairs.png');
             background-size: 18px 18px;
             content: '';
+            @include themed() {
+                filter: t($icon);
+            }
         }
         &.geolocating {
             &:after {

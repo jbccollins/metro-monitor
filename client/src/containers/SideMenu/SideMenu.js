@@ -69,22 +69,13 @@ var styles = {
     height: '28px',
     left: '12px',
     top: '12px',
-    background: '#2b2b2b'
   },
   bmBurgerBars: {
-    background: 'white'
   },
   bmCrossButton: {
     display: 'none',
-    height: '24px',
-    width: '24px',
-    marginRight: '15px'
-  },
-  bmCross: {
-    background: '#bdc3c7'
   },
   bmMenu: {
-    background: '#2b2b2b',
     padding: '12px 12px 12px 12px',
     fontSize: '1.15em'
   },
@@ -92,49 +83,47 @@ var styles = {
     fill: '#373a47'
   },
   bmItemList: {
-    color: 'white'
   },
   bmOverlay: {
     background: 'rgba(0, 0, 0, 0.7)'
   }
 };
 
-const selectStyles = {
-  control: styles => ({
-    ...styles,
-    color: 'white',
-    minHeight: '20px',
-    backgroundColor: '#2b2b2b',
-    //height: '20px',
-    //maxHeight: '20px',
-    fontSize: '12px'
-    //marginBottom: '10px'
-  }),
-  input: styles => ({
-    ...styles,
-    color: 'white'
-  }),
-  option: styles => ({
-    ...styles,
-    color: 'black',
-    minHeight: '20px',
-    //maxHeight: '20px',
-    fontSize: '12px',
-    lineHeight: '12px',
-    paddingTop: '4px',
-    paddingBottom: '4px',
-    wordWrap: 'nowrap',
-    textOverflow: 'ellipsis'
-  }),
-  multiValue: styles => ({ ...styles, color: 'black', maxWidth: '100px' }),
-  multiValueLabel: styles => ({ ...styles, color: 'black' }),
-  multiValueRemove: styles => ({ ...styles, color: 'black' })
-};
-
 class SideMenu extends React.Component {
   state = {
     checked: true
   };
+
+  getSelectStyles = () => {
+    const { displayMode } = this.props;
+    return({
+      control: styles => ({
+        ...styles,
+        color: 'white',
+        minHeight: '20px',
+        backgroundColor: displayMode === DARK ? '#2b2b2b' : 'white',
+        fontSize: '12px'
+      }),
+      input: styles => ({
+        ...styles,
+        color:  displayMode === DARK ? 'white' : 'black'
+      }),
+      option: styles => ({
+        ...styles,
+        color: 'black',
+        minHeight: '20px',
+        fontSize: '12px',
+        lineHeight: '12px',
+        paddingTop: '4px',
+        paddingBottom: '4px',
+        wordWrap: 'nowrap',
+        textOverflow: 'ellipsis'
+      }),
+      multiValue: styles => ({ ...styles, color: 'black', maxWidth: '100px' }),
+      multiValueLabel: styles => ({ ...styles, color: 'black' }),
+      multiValueRemove: styles => ({ ...styles, color: 'black' })
+    });
+  }
 
   toggleRailLineVisibility = railLineName => {
     const {
@@ -250,7 +239,7 @@ class SideMenu extends React.Component {
                             }`}>
                             <Select
                               isMulti
-                              styles={selectStyles}
+                              styles={this.getSelectStyles()}
                               placeholder={`All destinations...`}
                               value={selectedDestinationRailStations[name].map(
                                 s => ({

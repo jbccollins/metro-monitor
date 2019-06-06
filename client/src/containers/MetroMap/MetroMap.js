@@ -181,22 +181,13 @@ class MetroMap extends React.Component {
   }
 
   componentWillMount() {
-    const { fetchTrains, fetchRailStations, fetchRailLines, fetchOutages } = this.props;
+    const { fetchTrains, fetchRailStations, fetchRailLines, /*fetchOutages*/ } = this.props;
     fetchRailLines();
     fetchRailStations();
     fetchTrains();
-    fetchOutages();
+    //fetchOutages();
     setInterval(fetchTrains, 5000);
-    setInterval(fetchOutages, 5000);
-    /*
-    if (navigator.permissions && navigator.permissions.query) {
-      navigator.permissions.query({ name: 'geolocation' }).then(result => {
-        if (result.state === 'granted' || result.state === 'prompt') {
-          this.setState({ geolocationAllowed: true });
-        }
-      });
-    }
-    */
+    //setInterval(fetchOutages, 5000);
   }
 
   handleMapLoad = ({ target }) => {

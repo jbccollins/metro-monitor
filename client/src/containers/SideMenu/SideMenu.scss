@@ -1,4 +1,29 @@
+@import '~styles/common';
 .SideMenu {
+    .bm-menu-wrap {
+        width: 80vw !important;
+        max-width: 350px !important;
+    }
+    .bm-burger-button {
+        @include themed() {
+            background: t($bg);
+        }
+    }
+    .bm-burger-bars {
+        @include themed() {
+            background: t($text);
+        }
+    }
+    .bm-menu {
+        @include themed() {
+            background: t($bg);
+        }        
+    }
+    .bm-item-list {
+        @include themed() {
+            color: t($text);
+        }        
+    }
     .select-container {
         //transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
         &.visible {
@@ -14,8 +39,10 @@
         margin-top: 10px;
         font-size: 0.8em;
         display: inline-block;
-        width: calc(100% - 20px);
-        border-bottom: 1px solid grey;
+        width: calc(100% - 8px);
+        @include themed() {
+            border-bottom: 1px solid t($border);
+        }   
     }
     .section-title-label {
         float: left;
@@ -38,9 +65,13 @@
             font-weight: 100;
         }
         a {
-            color: lightblue;
+            @include themed() {
+                color: t($link);
+            }   
             &:visited {
-                color: lightblue;
+                @include themed() {
+                    color: t($link);
+                }   
             }
         }
     }
@@ -72,6 +103,9 @@
         background-repeat: no-repeat;
         margin: 3px 8px 0 0;
         background-size: 15px 15px;
+        @include themed() {
+            filter: t($icon);
+        }
         &.filter {
             background-image: url('../../assets/filter.png');
         }
@@ -106,6 +140,9 @@
         &.about {
             background-image: url('../../assets/information.png');
         }
+        @include themed() {
+            filter: t($icon);
+        }
     }
     .description-icon {
         width: 16px;
@@ -118,6 +155,9 @@
         background-size: 16px 16px;
         cursor: pointer;
         background-image: url('../../assets/help-circle.png');
+        @include themed() {
+            filter: t($icon);
+        }
     }
     .Collapsible {
         margin-bottom: 5px;
@@ -129,14 +169,18 @@
         width: calc(100% - 12px);
         height: 26px;
         cursor: pointer;
-        background: #212121;
+        @include themed() {
+            background: t($bg-overlay);
+        } 
         display: block;
         padding: 6px;
         user-select: none;
         transition: background 0.2s linear;
         outline: none;
         &:hover {
-            background: #191919;
+            @include themed() {
+                background: t($bg-overlay-hover);
+            } 
         }
         &.is-open {
             &:after {
@@ -157,11 +201,16 @@
             -webkit-transform: rotate(270deg);
             transition: transform 0.1s linear;
             margin-top: 7px;
+            @include themed() {
+                filter: t($icon);
+            }
         }
     }
     .Collapsible__contentOuter {
-        padding: 0 6px 0 6px;
-        background: #212121;
+        padding: 0 10px 0 6px;
+        @include themed() {
+            background: t($bg-overlay);
+        } 
     }
     .line-toggle {
         border-left: 2px solid;
@@ -179,8 +228,14 @@
     }
     .react-toggle {
         .react-toggle-thumb {
-            border-color: #2b2b2b;
+            @include themed() {
+                border: 1px solid t($border);
+            }
         }
+        @include themed() {
+            border: 2px solid t($border);
+        }
+        border-radius: 26px;
         float: right;
         display: block;
     }
@@ -204,7 +259,9 @@
     .custom-toggle.react-toggle--checked {
         &.neutral {
             .react-toggle-track {
-                background-color: lightgrey;
+                @include themed() {
+                    background: t($link);
+                }
             }  
         }
         &.red {

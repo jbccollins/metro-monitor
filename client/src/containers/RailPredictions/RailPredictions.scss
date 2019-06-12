@@ -14,6 +14,7 @@
         z-index: 999;
         padding: 5px;
         padding-right: 0px;
+        padding-bottom: 0px;
         //overflow-y: auto;
         // Leave room for the burger menu
         max-height: calc(100vh - 78px);
@@ -26,7 +27,12 @@
         text-overflow: ellipsis;
         overflow: hidden;
     }
-
+    .section-header {
+        font-size: 12px;
+    }
+    .outages-list {
+        font-size: 12px;
+    }
     .table-header {
         border-bottom: 1px solid grey;
         margin-left: -5px;
@@ -36,11 +42,11 @@
     .table-body {
         max-height: calc(100vh - 152px);
         overflow-y: auto;
-        padding-top: 5px;
+        //padding-top: 5px;
     }
     .table-row {
         display: flex;
-        height: 20px;
+        height: 22px;
         margin-bottom: 5px;
         line-height: 20px;
         margin-right: 5px;
@@ -53,7 +59,7 @@
 
     .first-row {
         border-top: 1px solid grey;
-        height: 26px;
+        //height: 26px;
         padding-top: 5px;
         &:first-of-type {
             border-top: 0px;

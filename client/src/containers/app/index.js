@@ -37,7 +37,8 @@ const DISPLAY_MODE = 'displayMode';
 class App extends React.Component {
   state = {
     showcaseModeTimeout: null,
-    showcasing: false
+    showcasing: false,
+    activeOutages: [],
   };
 
   constructor() {
@@ -64,6 +65,23 @@ class App extends React.Component {
 
   componentDidUpdate() {
     this.buildURL();
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { selectedRailStations, outages } = nextProps;
+    let activeOutages = [];
+
+    if (selectedRailStations && outages) {
+      activeOutages = outages.filter(({StationCode}) => {
+        return selectedRailStations.includes(StationCode);
+      })
+    }
+
+    console.log(activeOutages);
+
+    return({
+      activeOutages
+    });
   }
 
   buildURL = () => {
@@ -185,7 +203,7 @@ class App extends React.Component {
 
   render() {
     const { displayMode, showcaseMode } = this.props;
-    const { showcasing } = this.state;
+    const { showcasing, activeOutages } = this.state;
     return (
       <div
         onMouseMove={this.handleMouseMove}
@@ -207,7 +225,7 @@ class App extends React.Component {
           <SideMenu />
           <MetroMap />
           <RailAlerts />
-          <RailPredictions />
+          <RailPredictions activeOutages={activeOutages}/>
         </main>
       </div>
     );
@@ -222,7 +240,8 @@ const mapStateToProps = state => ({
   center: state.center,
   zoom: state.zoom,
   displayMode: state.displayMode,
-  showcaseMode: state.showcaseMode
+  showcaseMode: state.showcaseMode,
+  outages: state.outages.outages,
 });
 
 const mapDispatchToProps = dispatch =>

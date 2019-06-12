@@ -118,6 +118,23 @@
         }
     }
 
+    .has-outage {
+        &::before {
+            content: '';
+            border-radius: 50%;
+            display: block;
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            margin-top: 0px;
+            margin-left: 0px;
+            @include themed() {
+                background-color: t($outage);
+            }
+            animation: outage-indicator 3s infinite;
+        }
+    }
+
     .selected-station-icon {
         background: transparent;
         border-radius: 50%;
@@ -190,10 +207,10 @@
             -webkit-box-shadow: 0 0 0 0 rgba(255,255,255, 0);
         }
       }
-      @keyframes pulse {
+    @keyframes pulse {
         0% {
-          -moz-box-shadow: 0 0 0 0 rgba(255,255,255, 0.4);
-          box-shadow: 0 0 0 0 rgba(255,255,255, 0.4);
+            -moz-box-shadow: 0 0 0 0 rgba(255,255,255, 0.4);
+            box-shadow: 0 0 0 0 rgba(255,255,255, 0.4);
         }
         70% {
             -moz-box-shadow: 0 0 0 35px rgba(255,255,255, 0);
@@ -203,5 +220,19 @@
             -moz-box-shadow: 0 0 0 0 rgba(255,255,255, 0);
             box-shadow: 0 0 0 0 rgba(255,255,255, 0);
         }
-      }
+    }
+    @keyframes outage-indicator {
+        0% {
+            opacity: 0;
+        }
+        30% {
+            opacity: 1;
+        }
+        70% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
 }

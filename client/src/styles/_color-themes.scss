@@ -8,6 +8,7 @@ $link: 'link';
 $hover: 'hover';
 $border: 'border';
 $icon: 'icon';
+$outage: 'outage';
 
 //themes
 $themes: (
@@ -20,6 +21,7 @@ $themes: (
     hover: $hover--light,
     border: $border--light,
     icon: $icon--light,
+    outage: $outage--light,
   ),
   dark: (
     bg: $bg--dark,
@@ -30,7 +32,7 @@ $themes: (
     hover: $hover--dark,
     border: $border--dark,
     icon: $icon--dark,
-
+    outage: $outage--dark,
   ),
 );
 

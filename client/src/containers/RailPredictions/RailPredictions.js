@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from "prop-types";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import './RailPredictions.scss';
@@ -32,7 +33,8 @@ class RailPredictions extends React.Component {
       selectedRailStations,
       railStations,
       visibleRailLines,
-      selectedDestinationRailStations
+      selectedDestinationRailStations,
+      activeOutages,
     } = this.props;
     let name = '';
     if (railStations && selectedRailStations) {
@@ -61,6 +63,28 @@ class RailPredictions extends React.Component {
                 this.props.setSelectedRailStations(null);
               }}
             />
+            {activeOutages && activeOutages.length > 0 && false &&
+              <div>
+                <div className="section-header">Outages:</div>
+                <div className="outages-list">
+                  {activeOutages.map(({LocationDescription, SymptomDescription, UnitType, DateOutOfServ, DateUpdated, EstimatedReturnToService, UnitName}) => {
+                    return (
+                      <div className="outages-list-item" key={UnitName}>
+                        <div className="item-type">
+                          <span className="item-label">Type:</span>{UnitType}
+                        </div>
+                        <div className="item-description">
+                          <span className="item-label">Description:</span>{SymptomDescription}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            }
+            {activeOutages && activeOutages.length > 0 && false &&
+              <div className="section-header">Next Trains:</div>
+            }
             <div className="table-header">
               <div className="line-cell cell">Line</div>
               <div className="destination-cell cell">Destination</div>
@@ -132,6 +156,10 @@ class RailPredictions extends React.Component {
     );
   }
 }
+
+RailPredictions.propTypes = {
+  activeOutages: PropTypes.array.isRequired,
+};
 
 const mapStateToProps = state => ({
   railPredictionsState: state.railPredictions,

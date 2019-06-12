@@ -165,7 +165,8 @@ class MetroMap extends React.Component {
     leafletMapElt: false,
     geolocating: false,
     geolocationAllowed: true,
-    hoveredStationCodes: []
+    hoveredStationCodes: [],
+    stationCodesWithOutages: [],
   };
 
   componentDidUpdate(prevProps) {
@@ -181,19 +182,28 @@ class MetroMap extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const {
       fetchTrains,
       fetchRailStations,
       fetchRailLines,
-      //fetchOutages,
+      fetchOutages,
     } = this.props;
     fetchRailLines();
     fetchRailStations();
     fetchTrains();
-    //fetchOutages();
+    fetchOutages();
     setInterval(fetchTrains, 5000);
-    //setInterval(fetchOutages, 5000);
+    setInterval(fetchOutages, 5000);
+  }
+
+  static getDerivedStateFromProps(nextProps) {
+    const { outages } = nextProps;
+    let stationCodesWithOutages = [];
+    if (outages) {
+      stationCodesWithOutages = outages.map(({StationCode}) => StationCode);
+    }
+    return ({ stationCodesWithOutages });
   }
 
   handleMapLoad = ({ target }) => {
@@ -286,7 +296,7 @@ class MetroMap extends React.Component {
       center,
       displayMode
     } = this.props;
-    const { geolocating, geolocationAllowed, hoveredStationCodes } = this.state;
+    const { geolocating, geolocationAllowed, hoveredStationCodes, stationCodesWithOutages } = this.state;
     let selectedRailStation = null;
     if (selectedRailStations && railStations) {
       selectedRailStation = railStations.find(
@@ -409,11 +419,15 @@ class MetroMap extends React.Component {
               railStations.map((station, index) => {
                 const { Code, Name, Lat, Lon, LineCode1 } = station;
                 const lineNames = getLineNamesForStation(station, railStations);
+                let hasOutage = false;
                 if (DUPLICATE_STATION_CODES.includes(Code)) {
                   return false;
                 }
                 if (!lineNames.some(name => visibleRailLines.includes(name))) {
                   return false;
+                }
+                if (stationCodesWithOutages.includes(Code)) {
+                  hasOutage = true;
                 }
                 const showLabel =
                   STATIONS_WITH_PERMANENT_LABELS.includes(Code) ||
@@ -433,9 +447,9 @@ class MetroMap extends React.Component {
                     onMouseOver={() => this.handleStationMouseOver(Code)}
                     onMouseOut={this.handleStationMouseOut}
                     icon={L.divIcon({
-                      className: TRANSFER_STATIONS.includes(Code)
+                      className: `${hasOutage ? 'has-outage ' : ''}${TRANSFER_STATIONS.includes(Code)
                         ? 'transfer-station-icon'
-                        : 'station-icon',
+                        : 'station-icon'}`,
                       iconSize: ICON_SIZE
                       // iconSize: TRANSFER_STATIONS.includes(Code)
                       //   ? [12, 12]
@@ -564,7 +578,8 @@ const mapStateToProps = state => ({
   selectedRailStations: state.selectedRailStations,
   zoom: state.zoom,
   center: state.center,
-  displayMode: state.displayMode
+  displayMode: state.displayMode,
+  outages: state.outages.outages
 });
 
 const mapDispatchToProps = dispatch =>

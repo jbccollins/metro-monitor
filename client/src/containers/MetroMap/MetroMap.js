@@ -29,7 +29,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   fetchTrains,
-  fetchOutages,
+  //fetchOutages,
   fetchRailStations,
   fetchRailLines,
   setSelectedRailStations,
@@ -187,14 +187,14 @@ class MetroMap extends React.Component {
       fetchTrains,
       fetchRailStations,
       fetchRailLines,
-      fetchOutages,
+      //fetchOutages,
     } = this.props;
     fetchRailLines();
     fetchRailStations();
     fetchTrains();
-    fetchOutages();
+    //fetchOutages();
     setInterval(fetchTrains, 5000);
-    setInterval(fetchOutages, 5000);
+    //setInterval(fetchOutages, 5000);
   }
 
   static getDerivedStateFromProps(nextProps) {
@@ -586,7 +586,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       fetchTrains,
-      fetchOutages,
+      //fetchOutages,
       fetchRailStations,
       fetchRailLines,
       setSelectedRailStations,

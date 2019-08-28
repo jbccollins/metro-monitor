@@ -393,11 +393,6 @@ class MetroMap extends React.Component {
                     />,
                     // real colored line
                     <GeoJSON
-                      onEachFeature={(feature, layer) => {
-                        layer.on('click', () => {
-                          console.log(layer);
-                        })
-                      }}
                       className="line-layer"
                       key={`${name}-${p}-${index}-real`}
                       opacity={displayMode === DARK ? 0.6 : 1}

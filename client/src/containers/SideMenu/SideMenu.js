@@ -267,13 +267,15 @@ class SideMenu extends React.Component {
                                         LineCode3,
                                         Code
                                       }) =>
-                                        [
-                                          LineCode1,
-                                          LineCode2,
-                                          LineCode3
-                                        ].includes(
-                                          LINE_PROPERTIES[name]['code']
-                                        ) &&
+                                        // TODO: This condition is probably unnecessary but it won't work for the Yellow line
+                                        // until WMATA adds the yellow line as a LineCode to Greenbelt
+                                        // [
+                                        //   LineCode1,
+                                        //   LineCode2,
+                                        //   LineCode3
+                                        // ].includes(
+                                        //   LINE_PROPERTIES[name]['code']
+                                        // ) &&
                                         LINE_PROPERTIES[name][
                                           'commonDestinationStationCodes'
                                         ].includes(Code)

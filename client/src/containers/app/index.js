@@ -77,7 +77,7 @@ class App extends React.Component {
       })
     }
 
-    console.log(activeOutages);
+    //console.log(activeOutages);
 
     return({
       activeOutages

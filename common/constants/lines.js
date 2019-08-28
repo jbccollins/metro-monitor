@@ -117,7 +117,8 @@ const LINE_PROPERTIES = {
                 lineCap: 'round'
             },
             { // green > yellow
-                range: [972, 1363],
+                // Fort Totten would be 1363
+                range: [972, 1873],
                 priority: lines => {
                     if (lines.includes(GREEN)) {
                         return 1;
@@ -130,7 +131,7 @@ const LINE_PROPERTIES = {
         directions: directions,
         invertGeometry: false,
         complementColor: 'black',
-        commonDestinationStationCodes: ['E01', 'E06', 'C15'],
+        commonDestinationStationCodes: ['E10', 'C15'],
     },
     [GREEN]: {
         color: 'green',

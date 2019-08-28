@@ -11,9 +11,9 @@
         .dc-outline {
             pointer-events: none;
         }
-        path.line-layer {
-            pointer-events: none;
-        }
+        // path.line-layer {
+        //     pointer-events: none;
+        // }
         .label-icon {
             pointer-events: none;
             @include themed() {

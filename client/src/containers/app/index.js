@@ -10,6 +10,7 @@ import { LINE_PROPERTIES, LINE_NAMES } from 'common/constants/lines';
 import flatten from 'lodash.flatten';
 import ReactTooltip from 'react-tooltip';
 import { DARK, LIGHT } from 'common/constants/controls';
+import 'semantic-ui-css/semantic.min.css'
 
 import url from 'url';
 

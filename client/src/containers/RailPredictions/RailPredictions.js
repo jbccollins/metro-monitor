@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import './RailPredictions.scss';
 import { fetchRailPredictions, setSelectedRailStations } from 'actions/metro';
 import { LINE_PROPERTIES, LINE_NAMES } from 'common/constants/lines';
+import StationSearch from 'containers/StationSearch';
 
 class RailPredictions extends React.Component {
   state = {
@@ -52,6 +53,9 @@ class RailPredictions extends React.Component {
     );
     return (
       <div className="RailPredictions">
+        {!(railPredictions || fetching) &&
+          <StationSearch railStations={railStations}/>
+        }
         {(railPredictions || fetching) && (
           <div className="predictions-container">
             <label title={name}>

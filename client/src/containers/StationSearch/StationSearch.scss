@@ -34,22 +34,9 @@
         cursor: pointer;
         bottom: 12px;
         left: 12px;
-        //height: 100px;
-        //width: 100px;
         z-index: 998;
         user-select: none;
-        //border: 1px solid grey;
-        // @include themed() {
-        //     background: t($bg);
-        // }
         max-width: calc(100vw - 66px);
         width: 288px;
-        // This stuff is to fix the semantic-ui dropdown css which was overriding everything :/ 
-        // *,
-        // *:before,
-        // *:after {
-        //     -webkit-box-sizing: inherit;
-        //     box-sizing: inherit;
-        // }
     }
 }

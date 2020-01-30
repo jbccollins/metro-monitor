@@ -35,7 +35,7 @@ import {
   setSelectedRailStations,
   receiveRailPredictions
 } from 'actions/metro';
-import { setMapPosition } from 'actions/persistence';
+import { setMapPosition, setLeafletMapElt } from 'actions/persistence';
 import 'leaflet/dist/leaflet.css';
 import './MetroMap.scss';
 import TrainMarker from 'components/TrainMarker';
@@ -162,7 +162,7 @@ class MetroMap extends React.Component {
     railStationsLayerGroup: null,
     railLinesLayerGroup: null,
     layersNeedOrdering: true,
-    leafletMapElt: false,
+    //leafletMapElt: false,
     geolocating: false,
     geolocationAllowed: true,
     hoveredStationCodes: [],
@@ -207,7 +207,7 @@ class MetroMap extends React.Component {
   }
 
   handleMapLoad = ({ target }) => {
-    this.setState({ leafletMapElt: target });
+    this.props.setLeafletMapElt(target);
   };
 
   handleRailStationsReady = railStationsLayerGroup => {
@@ -238,7 +238,7 @@ class MetroMap extends React.Component {
       visibleStations[nearest['properties']['featureIndex']];
     this.handleStationClick(nearestRailStation['Code']);
     this.setState({ geolocating: false });
-    this.state.leafletMapElt.flyTo(
+    this.props.leafletMapElt.flyTo(
       [nearestRailStation.Lat, nearestRailStation.Lon],
       15
     );
@@ -257,6 +257,7 @@ class MetroMap extends React.Component {
       receiveRailPredictions
     } = this.props;
     const stationCodes = getStationCodesList(stationCode, railStations);
+    //TODO: Is this null check necessary? Shouldn't the fetchRailPredictions safegaurds make this not so
     receiveRailPredictions(null);
     setSelectedRailStations(stationCodes);
   };
@@ -273,10 +274,10 @@ class MetroMap extends React.Component {
   };
 
   handleMoveEnd = () => {
-    if (this.state.leafletMapElt) {
-      const center = this.state.leafletMapElt.getCenter();
+    if (this.props.leafletMapElt) {
+      const center = this.props.leafletMapElt.getCenter();
       const mapPosition = {
-        zoom: Math.round(this.state.leafletMapElt.getZoom()), // IOS Mobile pinching can make this fractional /shrug
+        zoom: Math.round(this.props.leafletMapElt.getZoom()), // IOS Mobile pinching can make this fractional /shrug
         center: [center.lat, center.lng]
       };
       this.props.setMapPosition(mapPosition);
@@ -580,7 +581,8 @@ const mapStateToProps = state => ({
   zoom: state.zoom,
   center: state.center,
   displayMode: state.displayMode,
-  outages: state.outages.outages
+  outages: state.outages.outages,
+  leafletMapElt: state.leafletMapElt
 });
 
 const mapDispatchToProps = dispatch =>
@@ -592,6 +594,7 @@ const mapDispatchToProps = dispatch =>
       fetchRailLines,
       setSelectedRailStations,
       setMapPosition,
+      setLeafletMapElt,
       receiveRailPredictions
     },
     dispatch

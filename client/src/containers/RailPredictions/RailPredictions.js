@@ -28,6 +28,7 @@ class RailPredictions extends React.Component {
       });
     }
   }
+
   render() {
     const {
       railPredictionsState: { railPredictions, fetching },
@@ -54,7 +55,7 @@ class RailPredictions extends React.Component {
     return (
       <div className="RailPredictions">
         {!(railPredictions || fetching) &&
-          <StationSearch railStations={railStations}/>
+          <StationSearch />
         }
         {(railPredictions || fetching) && (
           <div className="predictions-container">

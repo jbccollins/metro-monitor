@@ -3,43 +3,89 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { useState } from 'react';
 import './StationSearch.scss';
-import { Dropdown } from 'semantic-ui-react'
+import Select from 'react-select';
 import {
   DUPLICATE_STATION_CODES,
 } from 'common/constants/lines';
+import {
+  getStationCodesList
+} from 'utilities/metro.js';
+import { DARK } from 'common/constants/controls';
+import {
+  setSelectedRailStations,
+  receiveRailPredictions,
+} from 'actions/metro';
 
-const countryOptions = [
-  { key: 'af', value: 'af', flag: 'af', text: 'Afghanistan' },
-  { key: 'ax', value: 'ax', flag: 'ax', text: 'Aland Islands' },
-  { key: 'al', value: 'al', flag: 'al', text: 'Albania' },
-  { key: 'dz', value: 'dz', flag: 'dz', text: 'Algeria' },
-  { key: 'as', value: 'as', flag: 'as', text: 'American Samoa' },
-  { key: 'ad', value: 'ad', flag: 'ad', text: 'Andorra' },
-  { key: 'ao', value: 'ao', flag: 'ao', text: 'Angola' },
-  { key: 'ai', value: 'ai', flag: 'ai', text: 'Anguilla' },
-  { key: 'ag', value: 'ag', flag: 'ag', text: 'Antigua' },
-  { key: 'ar', value: 'ar', flag: 'ar', text: 'Argentina' },
-  { key: 'am', value: 'am', flag: 'am', text: 'Armenia' },
-  { key: 'aw', value: 'aw', flag: 'aw', text: 'Aruba' },
-  { key: 'au', value: 'au', flag: 'au', text: 'Australia' },
-  { key: 'at', value: 'at', flag: 'at', text: 'Austria' },
-  { key: 'az', value: 'az', flag: 'az', text: 'Azerbaijan' },
-  { key: 'bs', value: 'bs', flag: 'bs', text: 'Bahamas' },
-  { key: 'bh', value: 'bh', flag: 'bh', text: 'Bahrain' },
-  { key: 'bd', value: 'bd', flag: 'bd', text: 'Bangladesh' },
-  { key: 'bb', value: 'bb', flag: 'bb', text: 'Barbados' },
-  { key: 'by', value: 'by', flag: 'by', text: 'Belarus' },
-  { key: 'be', value: 'be', flag: 'be', text: 'Belgium' },
-  { key: 'bz', value: 'bz', flag: 'bz', text: 'Belize' },
-  { key: 'bj', value: 'bj', flag: 'bj', text: 'Benin' },
-]
+import { setMapPosition } from 'actions/persistence';
+
+import PropTypes from 'prop-types';
+
+const propTypes = {
+  railStations: PropTypes.array,
+};
 
 const StationSearch = props => {
   const { railStations } = props;
   const [isOpen, setIsOpen] = useState(false);
 
+  const getSelectStyles = () => {
+    const { displayMode } = props;
+    return({
+      control: styles => ({
+        ...styles,
+        color: 'white',
+        minHeight: '20px',
+        backgroundColor: displayMode === DARK ? '#2b2b2b' : 'white',
+        fontSize: '12px'
+      }),
+      input: styles => ({
+        ...styles,
+        color:  displayMode === DARK ? 'white' : 'black'
+      }),
+      option: styles => ({
+        ...styles,
+        color: 'black',
+        minHeight: '20px',
+        fontSize: '12px',
+        lineHeight: '12px',
+        paddingTop: '4px',
+        paddingBottom: '4px',
+        wordWrap: 'nowrap',
+        textOverflow: 'ellipsis'
+      }),
+      multiValue: styles => ({ ...styles, color: 'black', maxWidth: '100px' }),
+      multiValueLabel: styles => ({ ...styles, color: 'black' }),
+      multiValueRemove: styles => ({ ...styles, color: 'black' })
+    });
+  }
+
   const handleSearchButtonClick = () => {
     setIsOpen(!isOpen);
+  }
+
+  const handleBlur = () => {
+    setIsOpen(false);
+  }
+
+  const handleChange = ({ value: stationCode }) => {
+    const {
+      railStations,
+      setSelectedRailStations,
+      receiveRailPredictions
+    } = props;
+    const stationCodes = getStationCodesList(stationCode, railStations);
+    //TODO: Is this null check necessary? Shouldn't the fetchRailPredictions safegaurds make this not so
+    receiveRailPredictions(null);
+    setSelectedRailStations(stationCodes);
+    const station = railStations.find(({Code}) => Code === stationCode);
+    props.leafletMapElt.flyTo(
+      [station.Lat, station.Lon],
+      15
+    );
+  }
+
+  if (!railStations) {
+    return false;
   }
 
   const stationDropdownOptions = railStations ?
@@ -49,7 +95,7 @@ const StationSearch = props => {
       const { Code, Name } = station;
       return {
         key: Code,
-        text: Name,
+        label: Name,
         value: Code,
       };
     }) : [];
@@ -63,17 +109,42 @@ const StationSearch = props => {
       }
       {isOpen &&
         <div className="station-search-dropdown-wrapper">
-          <Dropdown
-            placeholder='Select Country'
-            fluid
-            search
-            selection
-            options={stationDropdownOptions}
-          />
+          <Select
+            onBlur={handleBlur}
+            autoFocus
+            menuIsOpen
+            styles={getSelectStyles()}
+            menuPlacement="auto"
+            placeholder={`Select a station`}
+            onChange={s =>
+              handleChange(s)
+            }
+            options={stationDropdownOptions} />
         </div>
       }
     </div>
   );
 }
 
-export default StationSearch;
+StationSearch.propTypes = propTypes;
+
+const mapStateToProps = state => ({
+  railStations: state.railStations.railStations,
+  displayMode: state.displayMode,
+  leafletMapElt: state.leafletMapElt,
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      setSelectedRailStations,
+      receiveRailPredictions,
+      setMapPosition,
+    },
+    dispatch
+  );
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(StationSearch);

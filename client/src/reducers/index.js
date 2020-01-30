@@ -16,12 +16,13 @@ import {
   showcaseMode,
   visibleRailLines,
 } from './controls';
-import { center, zoom } from './persistence';
+import { center, zoom, leafletMapElt } from './persistence';
 
 export default history =>
   combineReducers({
     center,
     displayMode,
+    leafletMapElt,
     outages,
     railAlerts,
     railLines,

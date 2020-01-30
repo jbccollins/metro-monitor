@@ -5,12 +5,12 @@ div.global-tooltip.show {
 }
 
 // These things fade out when display mode is enabled
-.leaflet-control-zoom, .geolocation-button, .bm-burger-button, .geolocation-button-shadow, .close-button, .dismiss, .expand-button, .expand-button-shadow {
+.station-search-button, .leaflet-control-zoom, .geolocation-button, .bm-burger-button, .geolocation-button-shadow, .close-button, .dismiss, .expand-button, .expand-button-shadow {
     transition: opacity 0.5s ease-in-out;
 }
 
 .showcasing {
-    .leaflet-control-zoom, .geolocation-button, .bm-burger-button, .geolocation-button-shadow, .close-button, .dismiss, .expand-button, .expand-button-shadow  {
+    .station-search-button, .leaflet-control-zoom, .geolocation-button, .bm-burger-button, .geolocation-button-shadow, .close-button, .dismiss, .expand-button, .expand-button-shadow  {
         opacity: 0;
         pointer-events: none;
     }

@@ -13,46 +13,9 @@ const LINE_NAMES = [
     SILVER,
 ];
 
-const LINE_MERGES = [
-    // {
-    //     // Fort Totten through L'Enfant Plaza
-    //     dominant: GREEN,
-    //     subordinate: YELLOW,
-    //     dominantRange: [529, 922],
-    //     subordinateRange: [1020, 1163],
-    //     reverseDominant: true
-    // },
-    // {
-    //     dominant: ORANGE,
-    //     subordinate: SILVER,
-    //     dominantRange: [2690, 5617],
-    //     subordinateRange: [385, 3227],
-    //     reverseDominant: false,
-    // },
-    // {
-    //     dominant: SILVER,
-    //     subordinate: BLUE,
-    //     dominantRange: [2254, 3547],        
-    //     subordinateRange: [1326, 2517],
-    //     reverseDominant: false,
-    // },
-    // {
-    //     dominant: BLUE,
-    //     subordinate: YELLOW,
-    //     dominantRange: [427, 1151],
-    //     subordinateRange: [56, 828],
-    //     reverseDominant: false,
-    // }
-];
-
 const directions = {
     1: 'forward',
     2: 'backward'
-};
-
-const invertedDirections = {
-    1: 'backward',
-    2: 'forward',
 };
 
 const LINE_PROPERTIES = {
@@ -68,8 +31,7 @@ const LINE_PROPERTIES = {
                 lineCap: 'round'
             }
         ],
-        directions: invertedDirections,
-        invertGeometry: true,
+        directions: directions,
         complementColor: 'white',
         commonDestinationStationCodes: ['A15', 'A11', 'B11', 'B08'],
     },
@@ -86,7 +48,6 @@ const LINE_PROPERTIES = {
             }
         ],
         directions: directions,
-        invertGeometry: false,
         complementColor: 'black',
         commonDestinationStationCodes: ['K08', 'D13'],
     },
@@ -129,7 +90,6 @@ const LINE_PROPERTIES = {
             },
         ],
         directions: directions,
-        invertGeometry: false,
         complementColor: 'black',
         commonDestinationStationCodes: ['E10', 'C15'],
     },
@@ -145,8 +105,7 @@ const LINE_PROPERTIES = {
                 lineCap:'round'
             }
         ],
-        directions: invertedDirections,
-        invertGeometry: true,
+        directions: directions,
         complementColor: 'white',
         commonDestinationStationCodes: ['F11', 'E10'],
     },
@@ -181,7 +140,6 @@ const LINE_PROPERTIES = {
             },
         ],
         directions: directions,
-        invertGeometry: false,
         complementColor: 'white',
         commonDestinationStationCodes: ['J03', 'G05'],
     },
@@ -224,7 +182,6 @@ const LINE_PROPERTIES = {
             },
         ],
         directions: directions,
-        invertGeometry: false,
         complementColor: 'black',
         commonDestinationStationCodes: ['N06', 'G05'],
     }

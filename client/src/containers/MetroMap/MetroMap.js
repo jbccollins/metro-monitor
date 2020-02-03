@@ -522,11 +522,7 @@ class MetroMap extends React.Component {
                   t.properties.closestLineSegment.l.geometry.coordinates[0],
                   t.properties.closestLineSegment.l.geometry.coordinates[1]
                 ];
-                // TODO: Don't do a reverse reverse when the trip direction is 2 and invertGeometry is 2. XOR this.
                 if (TRIP_DIRECTION === '2') {
-                  nearestSegmentCoords = nearestSegmentCoords.reverse();
-                }
-                if (lineProperties['invertGeometry']) {
                   nearestSegmentCoords = nearestSegmentCoords.reverse();
                 }
                 const offsetLine = lineString(

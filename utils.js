@@ -21,6 +21,38 @@ const calcAngleDegrees = (p1, p2) => {
   return Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
 }
 
+const LINE_MERGES = [
+    // {
+    //     // Fort Totten through L'Enfant Plaza
+    //     dominant: GREEN,
+    //     subordinate: YELLOW,
+    //     dominantRange: [529, 922],
+    //     subordinateRange: [1020, 1163],
+    //     reverseDominant: true
+    // },
+    // {
+    //     dominant: ORANGE,
+    //     subordinate: SILVER,
+    //     dominantRange: [2690, 5617],
+    //     subordinateRange: [385, 3227],
+    //     reverseDominant: false,
+    // },
+    // {
+    //     dominant: SILVER,
+    //     subordinate: BLUE,
+    //     dominantRange: [2254, 3547],        
+    //     subordinateRange: [1326, 2517],
+    //     reverseDominant: false,
+    // },
+    // {
+    //     dominant: BLUE,
+    //     subordinate: YELLOW,
+    //     dominantRange: [427, 1151],
+    //     subordinateRange: [56, 828],
+    //     reverseDominant: false,
+    // }
+];
+
 const mergeLines = (railLines, merges) => {
     let dominantLine = null;
     let subordinateLine = null;
